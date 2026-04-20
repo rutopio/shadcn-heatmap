@@ -9,7 +9,7 @@ import type { Locale } from "date-fns";
 import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
 
 export type DateHourlyActivity = {
-  date: string; // YYYY-MM-DD
+  date: string; // YYYY-MM-DD, or "sum" for hourly sum row
   hour: number; // 0-23, 24 for daily sum column
   count: number; // Total time in seconds
 };
@@ -41,6 +41,7 @@ type DateContributionHeatmapContextType = {
 export type DateContributionHeatmapLabels = {
   hours?: string[];
   endHour?: string | null; // null = hide the end hour label
+  sum?: string;
   legend?: {
     less?: string;
     more?: string;
@@ -128,7 +129,7 @@ export type DateContributionHeatmapProps = HTMLAttributes<HTMLDivElement> & {
  * Date Contribution Heatmap
  *
  * A time-range analysis heatmap showing hourly activity across specific dates.
- * Each row represents a date, columns represent hours (0-23), with optional daily sum column.
+ * Each row represents a date, columns represent hours (0-23), with optional daily sum column and hourly sum row.
  *
  * @example
  * ```tsx
@@ -148,7 +149,7 @@ export type DateContributionHeatmapProps = HTMLAttributes<HTMLDivElement> & {
  * </DateContributionHeatmap>
  * ```
  *
- * @param data - Array of activities with date (YYYY-MM-DD), hour (0-23, 24 for daily sum), and count
+ * @param data - Array of activities with date (YYYY-MM-DD or "sum" for hourly sum row), hour (0-23, 24 for daily sum column), and count
  * @param use12Hour - Use 12-hour format for hour labels. Default: false
  * @param dateFormat - Date format string for date labels. Default: "MMM dd, yyyy"
  * @param blockSizeRatio - Width/height ratio of blocks. Default: 2
@@ -179,14 +180,23 @@ export const DateContributionHeatmap = ({
   const dataWithLevels = useMemo((): DateHourlyActivityWithLevel[] => {
     if (data.length === 0) return [];
 
-    const regularCells = data.filter((a) => a.hour < 24);
-    const dailySumColumn = data.filter((a) => a.hour === 24);
+    const regularCells = data.filter((a) => a.date !== "sum" && a.hour < 24);
+    const dailySumColumn = data.filter((a) => a.date !== "sum" && a.hour === 24);
+    const hourlySumRow = data.filter((a) => a.date === "sum" && a.hour < 24);
 
     const maxRegular = Math.max(...regularCells.map((d) => d.count), 1);
     const maxDailySum = Math.max(...dailySumColumn.map((d) => d.count), 1);
+    const maxHourlySum = Math.max(...hourlySumRow.map((d) => d.count), 1);
 
     return data.map((activity) => {
-      const maxCount = activity.hour < 24 ? maxRegular : maxDailySum;
+      let maxCount: number;
+      if (activity.date === "sum") {
+        maxCount = maxHourlySum;
+      } else if (activity.hour === 24) {
+        maxCount = maxDailySum;
+      } else {
+        maxCount = maxRegular;
+      }
 
       return {
         ...activity,
@@ -200,6 +210,7 @@ export const DateContributionHeatmap = ({
   const labels = {
     hours: use12Hour ? TWELVE_HOUR_LABELS : DEFAULT_HOUR_LABELS,
     endHour: use12Hour ? "12" : "00",
+    sum: "Sum",
     legend: { less: "Less", more: "More" },
     ...labelsProp,
   };
@@ -208,7 +219,9 @@ export const DateContributionHeatmap = ({
   const dates = useMemo(() => {
     const uniqueDates = new Set<string>();
     dataWithLevels.forEach((activity) => {
-      uniqueDates.add(activity.date);
+      if (activity.date !== "sum") {
+        uniqueDates.add(activity.date);
+      }
     });
     return Array.from(uniqueDates).sort();
   }, [dataWithLevels]);
@@ -295,11 +308,13 @@ export const DateContributionHeatmapBlock = forwardRef<
   }
 
   const labelHeight = fontSize + 8;
-  const yPosition = labelHeight + (blockSize + blockMargin) * dateIndex;
+  const sumRowGap = activity.date === "sum" ? blockSize + blockMargin : 0;
+  const yPosition = labelHeight + (blockSize + blockMargin) * dateIndex + sumRowGap;
 
+  const sumColumnGap = activity.hour === 24 ? blockWidth + blockMargin : 0;
   const xPosition =
     activity.hour === 24
-      ? labelWidth + 24 * (blockWidth + blockMargin) + blockSize / 2
+      ? labelWidth + 24 * (blockWidth + blockMargin) + blockSize / 2 + sumColumnGap
       : labelWidth + (blockWidth + blockMargin) * activity.hour;
 
   const isHighlighted =
@@ -336,6 +351,7 @@ export type DateContributionHeatmapCalendarProps = Omit<
   hideDateLabels?: boolean;
   hideHourLabels?: boolean;
   hideSumColumn?: boolean;
+  hideSumRow?: boolean;
   className?: string;
   labelTextClass?: string;
   renderTooltip?: (activity: DateHourlyActivityWithLevel, children: ReactNode) => ReactNode;
@@ -349,6 +365,7 @@ export const DateContributionHeatmapCalendar = ({
   hideDateLabels = false,
   hideHourLabels = false,
   hideSumColumn = false,
+  hideSumRow = false,
   className,
   labelTextClass,
   renderTooltip,
@@ -372,9 +389,16 @@ export const DateContributionHeatmapCalendar = ({
 
   const PADDING = 20;
 
+  const sumRowGap = hideSumRow ? 0 : blockSize + blockMargin;
+  const sumColumnGap = hideSumColumn ? 0 : blockWidth + blockMargin;
+
   const svgWidth = hideSumColumn
     ? width - (blockWidth + blockMargin) - blockSize / 2
-    : width;
+    : width + sumColumnGap;
+
+  const svgHeight = hideSumRow
+    ? height
+    : height + (blockSize + blockMargin) + sumRowGap;
 
   const activityMap = useMemo(() => {
     const map = new Map<string, DateHourlyActivityWithLevel>();
@@ -388,6 +412,8 @@ export const DateContributionHeatmapCalendar = ({
   const allActivities = useMemo(() => {
     const activities: DateHourlyActivityWithLevel[] = [];
     const maxHour = hideSumColumn ? 23 : 24;
+
+    // Regular date rows
     dates.forEach((date) => {
       for (let hour = 0; hour <= maxHour; hour++) {
         const key = `${date}-${hour}`;
@@ -402,8 +428,25 @@ export const DateContributionHeatmapCalendar = ({
         );
       }
     });
+
+    // Sum row (hours 0-23 only, no corner cell for sum-24)
+    if (!hideSumRow) {
+      for (let hour = 0; hour < 24; hour++) {
+        const key = `sum-${hour}`;
+        const existing = activityMap.get(key);
+        activities.push(
+          existing || {
+            date: "sum",
+            hour,
+            count: 0,
+            level: 0,
+          },
+        );
+      }
+    }
+
     return activities;
-  }, [dates, activityMap, hideSumColumn]);
+  }, [dates, activityMap, hideSumColumn, hideSumRow]);
 
   return (
     <div
@@ -412,8 +455,8 @@ export const DateContributionHeatmapCalendar = ({
     >
       <svg
         className="block overflow-visible"
-        height={height + PADDING * 2}
-        viewBox={`${-PADDING} ${-PADDING} ${svgWidth + PADDING * 2} ${height + PADDING * 2}`}
+        height={svgHeight + PADDING * 2}
+        viewBox={`${-PADDING} ${-PADDING} ${svgWidth + PADDING * 2} ${svgHeight + PADDING * 2}`}
         width={svgWidth + PADDING * 2}
       >
         {!hideDateLabels && (
@@ -438,6 +481,24 @@ export const DateContributionHeatmapCalendar = ({
                 </text>
               );
             })}
+            {!hideSumRow && (
+              <text
+                key="date-sum"
+                x={labelWidth - 8}
+                y={
+                  fontSize +
+                  8 +
+                  (blockSize + blockMargin) * dates.length +
+                  sumRowGap +
+                  blockSize / 2
+                }
+                dominantBaseline="middle"
+                textAnchor="end"
+                style={{ fontSize: `${fontSize * 0.75}px` }}
+              >
+                {labels.sum}
+              </text>
+            )}
           </g>
         )}
 
@@ -484,14 +545,14 @@ export const DateContributionHeatmapCalendar = ({
                 dominantBaseline="hanging"
                 style={{ fontSize: `${fontSize * 0.75}px` }}
               >
-                Sum
+                {labels.sum}
               </text>
             )}
           </g>
         )}
 
         {allActivities.map((activity) => {
-          const dateIndex = dates.indexOf(activity.date);
+          const dateIndex = activity.date === "sum" ? dates.length : dates.indexOf(activity.date);
           const key = `${activity.date}-${activity.hour}`;
           const block = children({ activity, dateIndex });
           return (

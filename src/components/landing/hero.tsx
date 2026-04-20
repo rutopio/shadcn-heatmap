@@ -3,7 +3,7 @@ import { ArrowRight, BookOpen } from "@phosphor-icons/react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 
-import { MonthDefaultDemo } from "./demos";
+import { Playground } from "./playground";
 
 export function Hero() {
   return (
@@ -44,10 +44,8 @@ export function Hero() {
             </Button>
           </div>
         </div>
-        <div className="mt-14 flex justify-center">
-          <div className="w-full rounded-xl border bg-card/60 p-6 shadow-xs backdrop-blur-sm sm:p-8">
-            <MonthDefaultDemo />
-          </div>
+        <div className="mt-14">
+          <Playground />
         </div>
       </div>
     </section>

@@ -125,16 +125,30 @@ export const weekVariants: VariantSpec[] = [
   {
     title: "i18n labels (Japanese)",
     description:
-      "Pass a date-fns locale to auto-generate localised weekday labels.",
+      "Pass a date-fns locale to auto-generate localised weekday labels, plus custom sum column/row label, legend, and total count text.",
     code: `import { ja } from "date-fns/locale";
 
-<WeekContributionHeatmap data={data} locale={ja}>
+<WeekContributionHeatmap
+  data={data}
+  locale={ja}
+  labels={{
+    sum: "合計",
+    legend: { less: "少ない", more: "多い" },
+  }}
+>
   <WeekContributionHeatmapCalendar>
     {({ activity }) => (
       <WeekContributionHeatmapBlock activity={activity} />
     )}
   </WeekContributionHeatmapCalendar>
   <WeekContributionHeatmapFooter>
+    <WeekContributionHeatmapTotalCount>
+      {({ totalCount }) => (
+        <div className="text-muted-foreground">
+          {totalCount} 件の活動
+        </div>
+      )}
+    </WeekContributionHeatmapTotalCount>
     <WeekContributionHeatmapLegend />
   </WeekContributionHeatmapFooter>
 </WeekContributionHeatmap>`,
@@ -210,7 +224,7 @@ export const weekVariants: VariantSpec[] = [
     description:
       "Use labelClass to customize the appearance of hour and weekday labels with Tailwind classes.",
     code: `<WeekContributionHeatmap data={data}>
-  <WeekContributionHeatmapCalendar labelClass="text-red-500 font-bold">
+  <WeekContributionHeatmapCalendar labelClass="text-green-500 font-bold">
     {({ activity }) => (
       <WeekContributionHeatmapBlock activity={activity} />
     )}

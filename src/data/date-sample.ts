@@ -10,7 +10,7 @@ function formatDate(date: Date): string {
 }
 
 /**
- * N consecutive days x 24 hours + daily Sum column (hour = 24).
+ * N consecutive days x 24 hours + daily Sum column (hour = 24) + hourly Sum row (date = "sum").
  * Default 14 days ending 2025-12-24 for a deterministic snapshot.
  */
 export function generateDateSample(
@@ -24,6 +24,8 @@ export function generateDateSample(
   const start = new Date(endDate);
   start.setDate(endDate.getDate() - (days - 1));
 
+  const hourlySums: number[] = Array(24).fill(0);
+
   for (let i = 0; i < days; i++) {
     const current = new Date(start);
     current.setDate(start.getDate() + i);
@@ -35,6 +37,7 @@ export function generateDateSample(
       const weight = weightedHour(rng, hour) * (isWeekend ? 0.4 : 1);
       const count = Math.round(weight * 8);
       rowRaw.push(count);
+      hourlySums[hour] += count;
       if (count > 0) {
         result.push({ date: dateStr, hour, count });
       }
@@ -42,6 +45,13 @@ export function generateDateSample(
 
     const sum = rowRaw.reduce((a, b) => a + b, 0);
     result.push({ date: dateStr, hour: 24, count: sum });
+  }
+
+  // Add hourly sum row
+  for (let hour = 0; hour < 24; hour++) {
+    if (hourlySums[hour] > 0) {
+      result.push({ date: "sum", hour, count: hourlySums[hour] });
+    }
   }
 
   return result;

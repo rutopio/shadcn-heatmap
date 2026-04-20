@@ -147,7 +147,7 @@ export const monthVariants: VariantSpec[] = [
   {
     title: "i18n labels (German)",
     description:
-      "Pass a date-fns locale to auto-generate localised month, weekday labels, and format tooltip dates.",
+      "Pass a date-fns locale to auto-generate localised month and weekday labels. Use labels.totalCount template and labels.legend for custom text. Format tooltip dates with the locale.",
     code: `import { de } from "date-fns/locale";
 import { format, parseISO } from "date-fns";
 
@@ -293,7 +293,7 @@ import { format, parseISO } from "date-fns";
     description:
       "Use labelClass to customize the appearance of month and weekday labels with Tailwind classes.",
     code: `<MonthContributionHeatmap data={activities}>
-  <MonthContributionHeatmapCalendar labelClass="text-red-500 font-bold">
+  <MonthContributionHeatmapCalendar labelClass="text-green-500 font-bold">
     {({ activity, dayIndex, weekIndex }) => (
       <MonthContributionHeatmapBlock
         activity={activity}

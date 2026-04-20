@@ -213,6 +213,7 @@ export function DateSpanishDemo() {
                 data={dateData}
                 locale={es}
                 labels={{
+                    sum: "Total",
                     legend: { less: "Menos", more: "Más" },
                 }}
             >
@@ -222,7 +223,9 @@ export function DateSpanishDemo() {
                             content={
                                 <>
                                     <p className="font-medium">
-                                        {format(parseISO(activity.date), "PPP", { locale: es })}
+                                        {activity.date === "sum"
+                                            ? "Total"
+                                            : format(parseISO(activity.date), "PPP", { locale: es })}
                                         {" "}
                                         {activity.hour === 24
                                             ? "Total"
@@ -260,7 +263,7 @@ export function DateCustomLabelDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
             <DateContributionHeatmap data={dateData}>
-                <DateContributionHeatmapCalendar labelTextClass="text-red-500 font-bold">
+                <DateContributionHeatmapCalendar labelTextClass="text-green-500 font-bold">
                     {({ activity, dateIndex }) => (
                         <HeatmapTooltip
                             content={<DateTooltipContent activity={activity} />}

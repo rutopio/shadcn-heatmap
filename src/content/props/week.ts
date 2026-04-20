@@ -91,7 +91,7 @@ export const weekProps: ComponentPropsSection[] = [
         name: "labels",
         type: "WeekContributionHeatmapLabels",
         description:
-          "Override `weekdays` (length 7), `hours` (length 24), `endHour`, and `legend.less`/`legend.more` strings. Set `endHour: null` to suppress the trailing hour label.",
+          "Override `weekdays` (length 7), `hours` (length 24), `endHour`, `sum` (for sum row/column labels), and `legend.less`/`legend.more` strings. Set `endHour: null` to suppress the trailing hour label. Useful for internationalization.",
       },
       // 6. 其他
       {

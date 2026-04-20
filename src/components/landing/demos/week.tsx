@@ -129,6 +129,7 @@ export function WeekJapaneseDemo() {
                 data={weekData}
                 locale={ja}
                 labels={{
+                    sum: "合計",
                     legend: { less: "少ない", more: "多い" },
                 }}
             >
@@ -256,7 +257,7 @@ export function WeekCustomLabelDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
             <WeekContributionHeatmap data={weekData}>
-                <WeekContributionHeatmapCalendar labelTextClass="text-red-500 font-bold">
+                <WeekContributionHeatmapCalendar labelTextClass="text-green-500 font-bold">
                     {({ activity }) => (
                         <HeatmapTooltip
                             content={<WeekTooltipContent activity={activity} />}

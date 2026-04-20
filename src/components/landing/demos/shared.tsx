@@ -112,10 +112,15 @@ export function DateTooltipContent({
         activity.hour === 24
             ? "Total"
             : `${String(activity.hour).padStart(2, "0")}:00`;
+
+    const dateLabel = activity.date === "sum"
+        ? "Total"
+        : format(parseISO(activity.date), dateFormat, locale ? { locale } : undefined);
+
     return (
         <>
             <p className="font-medium">
-                {format(parseISO(activity.date), dateFormat, locale ? { locale } : undefined)} {hour}
+                {dateLabel} {hour}
             </p>
             <p className="text-muted-foreground">
                 {activity.count} contribution{activity.count !== 1 ? "s" : ""}

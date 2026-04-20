@@ -329,7 +329,7 @@ export function MonthCustomLabelDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
             <MonthContributionHeatmap data={monthData}>
-                <MonthContributionHeatmapCalendar labelTextClass="text-red-500 font-bold">
+                <MonthContributionHeatmapCalendar labelTextClass="text-green-500 font-bold">
                     {({ activity, dayIndex, weekIndex }) => (
                         <HeatmapTooltip
                             content={<MonthTooltipContent activity={activity} />}

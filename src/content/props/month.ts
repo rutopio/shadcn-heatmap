@@ -138,7 +138,7 @@ export const monthProps: ComponentPropsSection[] = [
         name: "labelTextClass",
         type: "string",
         description:
-          "Additional CSS classes for month and weekday label text. Example: 'text-red-500 font-bold'.",
+          "Additional CSS classes for month and weekday label text. Example: 'text-green-500 font-bold'.",
       },
       {
         name: "yearTextClass",

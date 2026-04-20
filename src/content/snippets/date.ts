@@ -1,7 +1,7 @@
 import type { VariantSpec } from "../types";
 
 export const dateSampleData = `// type DateHourlyActivity = { date: string; hour: number; count: number }
-//   date: "YYYY-MM-DD"
+//   date: "YYYY-MM-DD", "sum" = hourly Sum row
 //   hour: 0–23,  24 = daily Sum column
 //   count: number (e.g. seconds)
 
@@ -18,6 +18,11 @@ const data: DateHourlyActivity[] = [
   // Daily Sum column (hour = 24) — total across all hours for that date
   { date: "2025-12-11", hour: 24, count: 28800 },
   { date: "2025-12-12", hour: 24, count: 14400 },
+  // ...
+
+  // Hourly Sum row (date = "sum") — total across all dates for each hour
+  { date: "sum", hour: 8,  count: 4200 },
+  { date: "sum", hour: 9,  count: 8400 },
   // ...
 ];`;
 
@@ -183,17 +188,18 @@ export const dateVariants: VariantSpec[] = [
 </DateContributionHeatmap>`,
   },
   {
-    title: "i18n labels (German)",
+    title: "i18n labels (Spanish)",
     description:
-      "Pass a date-fns locale to auto-generate localised date labels and format tooltip dates.",
-    code: `import { de } from "date-fns/locale";
+      "Pass a date-fns locale to auto-generate localised date labels, plus custom sum column label, legend, and total count text. Format tooltip dates accordingly.",
+    code: `import { es } from "date-fns/locale";
 import { format, parseISO } from "date-fns";
 
 <DateContributionHeatmap
   data={data}
-  locale={de}
+  locale={es}
   labels={{
-    legend: { less: "Weniger", more: "Mehr" },
+    sum: "Total",
+    legend: { less: "Menos", more: "Más" },
   }}
 >
   <DateContributionHeatmapCalendar>
@@ -207,19 +213,27 @@ import { format, parseISO } from "date-fns";
         </TooltipTrigger>
         <TooltipContent>
           <p className="font-medium">
-            {format(parseISO(activity.date), "PPP", { locale: de })}
+            {format(parseISO(activity.date), "PPP", { locale: es })}
             {" "}
-            {activity.hour === 24 ? "Gesamt" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
+            {activity.hour === 24
+              ? "Total"
+              : \`\${String(activity.hour).padStart(2, "0")}:00\`}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} Aktivität{activity.count !== 1 ? "en" : ""}
+            {activity.count} contribución{activity.count !== 1 ? "es" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
     )}
   </DateContributionHeatmapCalendar>
   <DateContributionHeatmapFooter>
-    <DateContributionHeatmapTotalCount />
+    <DateContributionHeatmapTotalCount>
+      {({ totalCount }) => (
+        <div className="text-muted-foreground">
+          {totalCount} contribuciones
+        </div>
+      )}
+    </DateContributionHeatmapTotalCount>
     <DateContributionHeatmapLegend />
   </DateContributionHeatmapFooter>
 </DateContributionHeatmap>`,
@@ -229,7 +243,7 @@ import { format, parseISO } from "date-fns";
     description:
       "Use labelClass to customize the appearance of date and hour labels with Tailwind classes.",
     code: `<DateContributionHeatmap data={data}>
-  <DateContributionHeatmapCalendar labelClass="text-red-500 font-bold">
+  <DateContributionHeatmapCalendar labelClass="text-green-500 font-bold">
     {({ activity, dateIndex }) => (
       <DateContributionHeatmapBlock
         activity={activity}

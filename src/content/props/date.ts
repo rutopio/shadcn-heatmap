@@ -93,7 +93,7 @@ export const dateProps: ComponentPropsSection[] = [
         name: "labels",
         type: "DateContributionHeatmapLabels",
         description:
-          "Override `hours` (24 strings), `endHour` (set to `null` to hide), and legend strings (`legend.less`, `legend.more`).",
+          "Override `hours` (24 strings), `endHour` (set to `null` to hide), `sum` (for sum column label), and legend strings (`legend.less`, `legend.more`). Useful for internationalization.",
       },
       // 6. 其他
       {
@@ -134,10 +134,16 @@ export const dateProps: ComponentPropsSection[] = [
         description: "Hide the daily Sum column (hour = 24) and its label.",
       },
       {
+        name: "hideSumRow",
+        type: "boolean",
+        default: "false",
+        description: "Hide the hourly Sum row (date = \"sum\") and its label.",
+      },
+      {
         name: "labelTextClass",
         type: "string",
         description:
-          "Additional CSS classes for axis labels (date and hour labels). Example: 'text-red-500 font-bold'.",
+          "Additional CSS classes for axis labels (date and hour labels). Example: 'text-green-500 font-bold'.",
       },
     ],
   },

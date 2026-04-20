@@ -40,6 +40,7 @@ export type WeekContributionHeatmapLabels = {
   hours?: string[];
   endHour?: string | null;
   weekdays?: string[];
+  sum?: string;
   legend?: {
     less?: string;
     more?: string;
@@ -226,6 +227,7 @@ export const WeekContributionHeatmap = ({
     hours: use12Hour ? TWELVE_HOUR_LABELS : DEFAULT_HOUR_LABELS,
     endHour: use12Hour ? "12" : "00",
     weekdays: weekdayLabels,
+    sum: "Sum",
     legend: { less: "Less", more: "More" },
     ...labelsProp,
   };
@@ -244,11 +246,11 @@ export const WeekContributionHeatmap = ({
   const width =
     24 * (blockWidth + blockMargin) +
     blockSize / 2 +
-    (blockWidth + blockMargin) -
+    (blockWidth + blockMargin) * 2 -
     blockMargin +
     labelWidth;
-  // 7 weekdays + 1 sum row = 8 rows
-  const height = 8 * (blockSize + blockMargin) - blockMargin + labelHeight;
+  // 7 weekdays + 1 sum row = 8 rows + extra gap before sum row
+  const height = 8 * (blockSize + blockMargin) + (blockSize + blockMargin) - blockMargin + labelHeight;
 
   if (data.length === 0) {
     return emptyState ? <>{emptyState}</> : null;
@@ -316,11 +318,13 @@ export const WeekContributionHeatmapBlock = forwardRef<
   const labelHeight = fontSize + 8;
   const rowIndex =
     activity.weekday === 7 ? 7 : (activity.weekday - weekStart + 7) % 7;
-  const yPosition = labelHeight + (blockSize + blockMargin) * rowIndex;
+  const sumRowGap = activity.weekday === 7 ? blockSize + blockMargin : 0;
+  const yPosition = labelHeight + (blockSize + blockMargin) * rowIndex + sumRowGap;
 
+  const sumColumnGap = activity.hour === 24 ? blockWidth + blockMargin : 0;
   const xPosition =
     activity.hour === 24
-      ? labelWidth + 24 * (blockWidth + blockMargin) + blockSize / 2
+      ? labelWidth + 24 * (blockWidth + blockMargin) + blockSize / 2 + sumColumnGap
       : labelWidth + (blockWidth + blockMargin) * activity.hour;
 
   const isHighlighted =
@@ -426,14 +430,17 @@ export const WeekContributionHeatmapCalendar = ({
   }, [activityMap, hideSumRow, hideSumColumn, weekStart]);
 
   const rowCount = hideSumRow ? 7 : 8;
+  const sumRowGap = hideSumRow ? 0 : blockSize + blockMargin;
   const svgHeight =
-    rowCount * (blockSize + blockMargin) - blockMargin + labelHeight;
+    rowCount * (blockSize + blockMargin) + sumRowGap - blockMargin + labelHeight;
+  const sumColumnGap = hideSumColumn ? 0 : blockWidth + blockMargin;
   const svgWidth = hideSumColumn
     ? labelWidth + 24 * (blockWidth + blockMargin) - blockMargin
     : labelWidth +
       24 * (blockWidth + blockMargin) +
       blockSize / 2 +
-      (blockWidth + blockMargin);
+      (blockWidth + blockMargin) +
+      sumColumnGap;
 
   const orderedWeekdayIndices = Array.from(
     { length: 7 },
@@ -487,6 +494,7 @@ export const WeekContributionHeatmapCalendar = ({
                   labelWidth +
                   24 * (blockWidth + blockMargin) +
                   blockSize / 2 +
+                  (blockWidth + blockMargin) +
                   blockWidth / 2
                 }
                 y={0}
@@ -494,7 +502,7 @@ export const WeekContributionHeatmapCalendar = ({
                 dominantBaseline="hanging"
                 style={{ fontSize: `${fontSize * 0.75}px` }}
               >
-                Sum
+                {labels.sum}
               </text>
             )}
           </g>
@@ -526,13 +534,13 @@ export const WeekContributionHeatmapCalendar = ({
                 key="weekday-sum"
                 x={labelWidth - 8}
                 y={
-                  labelHeight + (blockSize + blockMargin) * 7 + blockSize / 2
+                  labelHeight + (blockSize + blockMargin) * 7 + (blockSize + blockMargin) + blockSize / 2
                 }
                 dominantBaseline="middle"
                 textAnchor="end"
                 style={{ fontSize: `${fontSize * 0.75}px` }}
               >
-                Sum
+                {labels.sum}
               </text>
             )}
           </g>
