@@ -12,7 +12,7 @@ import {
   MonthBinaryDemo,
   MonthChunkyDemo,
   MonthCustomDateFormatDemo,
-  MonthCustomLabelDemo,
+  MonthCustomStylingDemo,
   MonthDefaultDemo,
   MonthGermanDemo,
   MonthLargeBlocksDemo,
@@ -26,14 +26,14 @@ import { VariantGrid } from "./variant-grid";
 
 export function MonthShowcase() {
   return (
-    <section className="py-20 sm:py-24" aria-label="MonthContributionHeatmap">
+    <section className="py-20 sm:py-24" aria-label="CalendarHeatmap">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mb-10 flex flex-col gap-2">
           <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Component
           </span>
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            MonthContributionHeatmap
+            CalendarHeatmap
           </h2>
           <p className="max-w-2xl text-muted-foreground">
             GitHub-style, 7-row × N-week grid. Handles multiple years by
@@ -114,7 +114,7 @@ export function MonthShowcase() {
                 },
                 {
                   ...monthVariants[9],
-                  preview: <MonthCustomLabelDemo />,
+                  preview: <MonthCustomStylingDemo />,
                 },
               ]}
             />

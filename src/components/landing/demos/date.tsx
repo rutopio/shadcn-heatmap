@@ -2,13 +2,13 @@ import { es } from "date-fns/locale";
 import { format, parseISO } from "date-fns";
 
 import {
-    DateContributionHeatmap,
-    DateContributionHeatmapBlock,
-    DateContributionHeatmapCalendar,
-    DateContributionHeatmapFooter,
-    DateContributionHeatmapLegend,
-    DateContributionHeatmapTotalCount,
-} from "@/components/heatmap/date-contribution-heatmap";
+    DateHeatmap,
+    DateHeatmapBlock,
+    DateHeatmapBody,
+    DateHeatmapFooter,
+    DateHeatmapLegend,
+    DateHeatmapTotalCount,
+} from "@/components/heatmap/date-heatmap";
 import { generateDateSample } from "@/data/date-sample";
 
 import { DateTooltipContent, HeatmapTooltip, TooltipProvider } from "./shared";
@@ -18,24 +18,24 @@ const dateData = generateDateSample(31, 14);
 export function DateDefaultDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <DateContributionHeatmap data={dateData}>
-                <DateContributionHeatmapCalendar>
+            <DateHeatmap data={dateData}>
+                <DateHeatmapBody>
                     {({ activity, dateIndex }) => (
                         <HeatmapTooltip
                             content={<DateTooltipContent activity={activity} />}
                         >
-                            <DateContributionHeatmapBlock
+                            <DateHeatmapBlock
                                 activity={activity}
                                 dateIndex={dateIndex}
                             />
                         </HeatmapTooltip>
                     )}
-                </DateContributionHeatmapCalendar>
-                <DateContributionHeatmapFooter>
-                    <DateContributionHeatmapTotalCount />
-                    <DateContributionHeatmapLegend />
-                </DateContributionHeatmapFooter>
-            </DateContributionHeatmap>
+                </DateHeatmapBody>
+                <DateHeatmapFooter>
+                    <DateHeatmapTotalCount />
+                    <DateHeatmapLegend />
+                </DateHeatmapFooter>
+            </DateHeatmap>
         </TooltipProvider>
     );
 }
@@ -43,23 +43,23 @@ export function DateDefaultDemo() {
 export function DateTenLevelsDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <DateContributionHeatmap data={dateData} maxLevel={10}>
-                <DateContributionHeatmapCalendar>
+            <DateHeatmap data={dateData} maxLevel={10}>
+                <DateHeatmapBody>
                     {({ activity, dateIndex }) => (
                         <HeatmapTooltip
                             content={<DateTooltipContent activity={activity} />}
                         >
-                            <DateContributionHeatmapBlock
+                            <DateHeatmapBlock
                                 activity={activity}
                                 dateIndex={dateIndex}
                             />
                         </HeatmapTooltip>
                     )}
-                </DateContributionHeatmapCalendar>
-                <DateContributionHeatmapFooter>
-                    <DateContributionHeatmapLegend />
-                </DateContributionHeatmapFooter>
-            </DateContributionHeatmap>
+                </DateHeatmapBody>
+                <DateHeatmapFooter>
+                    <DateHeatmapLegend />
+                </DateHeatmapFooter>
+            </DateHeatmap>
         </TooltipProvider>
     );
 }
@@ -67,20 +67,20 @@ export function DateTenLevelsDemo() {
 export function DateIsoDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <DateContributionHeatmap data={dateData} dateFormat="yyyy-MM-dd">
-                <DateContributionHeatmapCalendar>
+            <DateHeatmap data={dateData} dateFormat="yyyy-MM-dd">
+                <DateHeatmapBody>
                     {({ activity, dateIndex }) => (
                         <HeatmapTooltip
                             content={<DateTooltipContent activity={activity} />}
                         >
-                            <DateContributionHeatmapBlock
+                            <DateHeatmapBlock
                                 activity={activity}
                                 dateIndex={dateIndex}
                             />
                         </HeatmapTooltip>
                     )}
-                </DateContributionHeatmapCalendar>
-            </DateContributionHeatmap>
+                </DateHeatmapBody>
+            </DateHeatmap>
         </TooltipProvider>
     );
 }
@@ -88,7 +88,7 @@ export function DateIsoDemo() {
 export function DateSparseTicksDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <DateContributionHeatmap
+            <DateHeatmap
                 data={dateData}
                 labels={{
                     hours: Array.from({ length: 24 }, (_, i) =>
@@ -97,19 +97,19 @@ export function DateSparseTicksDemo() {
                     endHour: null,
                 }}
             >
-                <DateContributionHeatmapCalendar>
+                <DateHeatmapBody>
                     {({ activity, dateIndex }) => (
                         <HeatmapTooltip
                             content={<DateTooltipContent activity={activity} />}
                         >
-                            <DateContributionHeatmapBlock
+                            <DateHeatmapBlock
                                 activity={activity}
                                 dateIndex={dateIndex}
                             />
                         </HeatmapTooltip>
                     )}
-                </DateContributionHeatmapCalendar>
-            </DateContributionHeatmap>
+                </DateHeatmapBody>
+            </DateHeatmap>
         </TooltipProvider>
     );
 }
@@ -117,20 +117,20 @@ export function DateSparseTicksDemo() {
 export function DateHideSumColumnDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <DateContributionHeatmap data={dateData}>
-                <DateContributionHeatmapCalendar hideSumColumn>
+            <DateHeatmap data={dateData}>
+                <DateHeatmapBody hideSumColumn>
                     {({ activity, dateIndex }) => (
                         <HeatmapTooltip
                             content={<DateTooltipContent activity={activity} />}
                         >
-                            <DateContributionHeatmapBlock
+                            <DateHeatmapBlock
                                 activity={activity}
                                 dateIndex={dateIndex}
                             />
                         </HeatmapTooltip>
                     )}
-                </DateContributionHeatmapCalendar>
-            </DateContributionHeatmap>
+                </DateHeatmapBody>
+            </DateHeatmap>
         </TooltipProvider>
     );
 }
@@ -138,20 +138,20 @@ export function DateHideSumColumnDemo() {
 export function DateNoLabelsDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <DateContributionHeatmap data={dateData}>
-                <DateContributionHeatmapCalendar hideDateLabels hideHourLabels>
+            <DateHeatmap data={dateData}>
+                <DateHeatmapBody hideDateLabels hideHourLabels>
                     {({ activity, dateIndex }) => (
                         <HeatmapTooltip
                             content={<DateTooltipContent activity={activity} />}
                         >
-                            <DateContributionHeatmapBlock
+                            <DateHeatmapBlock
                                 activity={activity}
                                 dateIndex={dateIndex}
                             />
                         </HeatmapTooltip>
                     )}
-                </DateContributionHeatmapCalendar>
-            </DateContributionHeatmap>
+                </DateHeatmapBody>
+            </DateHeatmap>
         </TooltipProvider>
     );
 }
@@ -159,24 +159,24 @@ export function DateNoLabelsDemo() {
 export function DateLargeBlocksDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <DateContributionHeatmap data={dateData} blockSize={18} blockMargin={3}>
-                <DateContributionHeatmapCalendar>
+            <DateHeatmap data={dateData} blockSize={18} blockMargin={3}>
+                <DateHeatmapBody>
                     {({ activity, dateIndex }) => (
                         <HeatmapTooltip
                             content={<DateTooltipContent activity={activity} />}
                         >
-                            <DateContributionHeatmapBlock
+                            <DateHeatmapBlock
                                 activity={activity}
                                 dateIndex={dateIndex}
                             />
                         </HeatmapTooltip>
                     )}
-                </DateContributionHeatmapCalendar>
-                <DateContributionHeatmapFooter>
-                    <DateContributionHeatmapTotalCount />
-                    <DateContributionHeatmapLegend />
-                </DateContributionHeatmapFooter>
-            </DateContributionHeatmap>
+                </DateHeatmapBody>
+                <DateHeatmapFooter>
+                    <DateHeatmapTotalCount />
+                    <DateHeatmapLegend />
+                </DateHeatmapFooter>
+            </DateHeatmap>
         </TooltipProvider>
     );
 }
@@ -184,24 +184,24 @@ export function DateLargeBlocksDemo() {
 export function Date12HourDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <DateContributionHeatmap data={dateData} use12Hour>
-                <DateContributionHeatmapCalendar>
+            <DateHeatmap data={dateData} use12Hour>
+                <DateHeatmapBody>
                     {({ activity, dateIndex }) => (
                         <HeatmapTooltip
                             content={<DateTooltipContent activity={activity} />}
                         >
-                            <DateContributionHeatmapBlock
+                            <DateHeatmapBlock
                                 activity={activity}
                                 dateIndex={dateIndex}
                             />
                         </HeatmapTooltip>
                     )}
-                </DateContributionHeatmapCalendar>
-                <DateContributionHeatmapFooter>
-                    <DateContributionHeatmapTotalCount />
-                    <DateContributionHeatmapLegend />
-                </DateContributionHeatmapFooter>
-            </DateContributionHeatmap>
+                </DateHeatmapBody>
+                <DateHeatmapFooter>
+                    <DateHeatmapTotalCount />
+                    <DateHeatmapLegend />
+                </DateHeatmapFooter>
+            </DateHeatmap>
         </TooltipProvider>
     );
 }
@@ -209,7 +209,7 @@ export function Date12HourDemo() {
 export function DateSpanishDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <DateContributionHeatmap
+            <DateHeatmap
                 data={dateData}
                 locale={es}
                 labels={{
@@ -217,7 +217,7 @@ export function DateSpanishDemo() {
                     legend: { less: "Menos", more: "Más" },
                 }}
             >
-                <DateContributionHeatmapCalendar>
+                <DateHeatmapBody>
                     {({ activity, dateIndex }) => (
                         <HeatmapTooltip
                             content={
@@ -237,49 +237,49 @@ export function DateSpanishDemo() {
                                 </>
                             }
                         >
-                            <DateContributionHeatmapBlock
+                            <DateHeatmapBlock
                                 activity={activity}
                                 dateIndex={dateIndex}
                             />
                         </HeatmapTooltip>
                     )}
-                </DateContributionHeatmapCalendar>
-                <DateContributionHeatmapFooter>
-                    <DateContributionHeatmapTotalCount>
+                </DateHeatmapBody>
+                <DateHeatmapFooter>
+                    <DateHeatmapTotalCount>
                         {({ totalCount }) => (
                             <div className="text-muted-foreground">
                                 {totalCount} contribuciones
                             </div>
                         )}
-                    </DateContributionHeatmapTotalCount>
-                    <DateContributionHeatmapLegend />
-                </DateContributionHeatmapFooter>
-            </DateContributionHeatmap>
+                    </DateHeatmapTotalCount>
+                    <DateHeatmapLegend />
+                </DateHeatmapFooter>
+            </DateHeatmap>
         </TooltipProvider>
     );
 }
 
-export function DateCustomLabelDemo() {
+export function DateCustomStylingDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <DateContributionHeatmap data={dateData}>
-                <DateContributionHeatmapCalendar labelTextClass="text-green-500 font-bold">
+            <DateHeatmap data={dateData} colors={{ scale: "#22c55e" }}>
+                <DateHeatmapBody labelTextClass="text-green-700 font-bold">
                     {({ activity, dateIndex }) => (
                         <HeatmapTooltip
                             content={<DateTooltipContent activity={activity} />}
                         >
-                            <DateContributionHeatmapBlock
+                            <DateHeatmapBlock
                                 activity={activity}
                                 dateIndex={dateIndex}
                             />
                         </HeatmapTooltip>
                     )}
-                </DateContributionHeatmapCalendar>
-                <DateContributionHeatmapFooter>
-                    <DateContributionHeatmapTotalCount />
-                    <DateContributionHeatmapLegend />
-                </DateContributionHeatmapFooter>
-            </DateContributionHeatmap>
+                </DateHeatmapBody>
+                <DateHeatmapFooter>
+                    <DateHeatmapTotalCount className="text-green-700" />
+                    <DateHeatmapLegend className="text-green-700" />
+                </DateHeatmapFooter>
+            </DateHeatmap>
         </TooltipProvider>
     );
 }

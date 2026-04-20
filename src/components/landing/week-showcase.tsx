@@ -10,8 +10,7 @@ import { DemoFrame } from "./demo-frame";
 import {
   Week12HourDemo,
   WeekBinaryDemo,
-  WeekCompactDemo,
-  WeekCustomLabelDemo,
+  WeekCustomStylingDemo,
   WeekDefaultDemo,
   WeekHideSumDemo,
   WeekJapaneseDemo,
@@ -26,14 +25,14 @@ import { VariantGrid } from "./variant-grid";
 
 export function WeekShowcase() {
   return (
-    <section className="py-20 sm:py-24" aria-label="WeekContributionHeatmap">
+    <section className="py-20 sm:py-24" aria-label="WeekdayHeatmap">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mb-10 flex flex-col gap-2">
           <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Component
           </span>
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            WeekContributionHeatmap
+            WeekdayHeatmap
           </h2>
           <p className="max-w-2xl text-muted-foreground">
             Weekday × hour-of-day matrix with optional Sum row and Sum column.
@@ -99,27 +98,23 @@ export function WeekShowcase() {
                 },
                 {
                   ...weekVariants[5],
-                  preview: <WeekCompactDemo />,
-                },
-                {
-                  ...weekVariants[6],
                   preview: <WeekHideSumDemo />,
                 },
                 {
-                  ...weekVariants[7],
+                  ...weekVariants[6],
                   preview: <WeekMiniDemo />,
                 },
                 {
-                  ...weekVariants[8],
+                  ...weekVariants[7],
                   preview: <WeekLargeBlocksDemo />,
                 },
                 {
-                  ...weekVariants[9],
+                  ...weekVariants[8],
                   preview: <Week12HourDemo />,
                 },
                 {
-                  ...weekVariants[10],
-                  preview: <WeekCustomLabelDemo />,
+                  ...weekVariants[9],
+                  preview: <WeekCustomStylingDemo />,
                 },
               ]}
             />

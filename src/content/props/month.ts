@@ -2,7 +2,7 @@ import type { ComponentPropsSection } from "../types";
 
 export const monthProps: ComponentPropsSection[] = [
   {
-    componentName: "MonthContributionHeatmap",
+    componentName: "CalendarHeatmap",
     description:
       "Root provider. Accepts the activity array and layout options and shares them with its children via context.",
     props: [
@@ -118,7 +118,7 @@ export const monthProps: ComponentPropsSection[] = [
     ],
   },
   {
-    componentName: "MonthContributionHeatmapCalendar",
+    componentName: "CalendarHeatmapBody",
     description:
       "Renders the SVG grid. Children is a render-prop that receives `{ activity, dayIndex, weekIndex }`.",
     props: [
@@ -138,7 +138,7 @@ export const monthProps: ComponentPropsSection[] = [
         name: "labelTextClass",
         type: "string",
         description:
-          "Additional CSS classes for month and weekday label text. Example: 'text-green-500 font-bold'.",
+          "Additional CSS classes for month and weekday label text. Example: 'text-green-700 font-bold'.",
       },
       {
         name: "yearTextClass",
@@ -157,20 +157,20 @@ export const monthProps: ComponentPropsSection[] = [
         type: "(args) => ReactNode",
         required: true,
         description:
-          "Render-prop for each cell. Typically returns `<MonthContributionHeatmapBlock activity={...} dayIndex={...} weekIndex={...} />`.",
+          "Render-prop for each cell. Typically returns `<CalendarHeatmapBlock activity={...} dayIndex={...} weekIndex={...} />`.",
       },
     ],
   },
   {
-    componentName: "MonthContributionHeatmapBlock",
+    componentName: "CalendarHeatmapBlock",
     description:
-      'A single SVG rect element representing one day. Uses `--color-chart-1` for activity colors and `--color-secondary` for empty cells. Colors can be customized via the root `colors` prop.',
+      "A single SVG rect element representing one day. Uses `--color-chart-1` for activity colors and `--color-secondary` for empty cells. Colors can be customized via the root `colors` prop.",
     props: [
       {
         name: "activity",
         type: "ActivityWithLevel",
         required: true,
-        description: "The activity record including its computed level 0–4.",
+        description: "The activity record including its computed level (0–maxLevel). Received directly from the `CalendarHeatmapBody` render-prop.",
       },
       {
         name: "dayIndex",
@@ -185,6 +185,11 @@ export const monthProps: ComponentPropsSection[] = [
         description: "Column index within the current year row.",
       },
       {
+        name: "className",
+        type: "string",
+        description: "Additional CSS classes for the SVG rect element.",
+      },
+      {
         name: 'data-highlighted="true"',
         type: "attribute",
         description:
@@ -193,7 +198,7 @@ export const monthProps: ComponentPropsSection[] = [
     ],
   },
   {
-    componentName: "MonthContributionHeatmapFooter",
+    componentName: "CalendarHeatmapFooter",
     description:
       "Container for footer elements like TotalCount and Legend. Provides default flex layout.",
     props: [
@@ -205,7 +210,7 @@ export const monthProps: ComponentPropsSection[] = [
     ],
   },
   {
-    componentName: "MonthContributionHeatmapTotalCount",
+    componentName: "CalendarHeatmapTotalCount",
     description:
       "Displays total contributions count and year. Supports custom render function.",
     props: [
@@ -223,7 +228,7 @@ export const monthProps: ComponentPropsSection[] = [
     ],
   },
   {
-    componentName: "MonthContributionHeatmapLegend",
+    componentName: "CalendarHeatmapLegend",
     description:
       "Displays intensity level legend (Less → More) with color-coded blocks.",
     props: [

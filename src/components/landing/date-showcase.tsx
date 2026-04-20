@@ -9,7 +9,7 @@ import {
 import { DemoFrame } from "./demo-frame";
 import {
   Date12HourDemo,
-  DateCustomLabelDemo,
+  DateCustomStylingDemo,
   DateDefaultDemo,
   DateHideSumColumnDemo,
   DateIsoDemo,
@@ -24,14 +24,14 @@ import { VariantGrid } from "./variant-grid";
 
 export function DateShowcase() {
   return (
-    <section className="py-20 sm:py-24" aria-label="DateContributionHeatmap">
+    <section className="py-20 sm:py-24" aria-label="DateHeatmap">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mb-10 flex flex-col gap-2">
           <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
             Component
           </span>
           <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
-            DateContributionHeatmap
+            DateHeatmap
           </h2>
           <p className="max-w-2xl text-muted-foreground">
             One row per calendar date × 24 hours + a daily Sum column. Perfect
@@ -108,7 +108,7 @@ export function DateShowcase() {
                 },
                 {
                   ...dateVariants[8],
-                  preview: <DateCustomLabelDemo />,
+                  preview: <DateCustomStylingDemo />,
                 },
               ]}
             />

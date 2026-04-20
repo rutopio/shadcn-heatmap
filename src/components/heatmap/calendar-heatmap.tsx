@@ -123,6 +123,7 @@ type ContributionGraphContextType = {
 };
 
 const EMPTY_STYLE: CSSProperties = {};
+const LABEL_MARGIN = 8;
 
 const ContributionGraphContext =
   createContext<ContributionGraphContextType | null>(null);
@@ -381,7 +382,7 @@ const getMonthLabels = (
     });
 };
 
-export type MonthContributionHeatmapProps = HTMLAttributes<HTMLDivElement> & {
+export type CalendarHeatmapProps = HTMLAttributes<HTMLDivElement> & {
   data: Activity[];
   weekStart?: WeekDay;
   dateFormat?: string;
@@ -404,28 +405,28 @@ export type MonthContributionHeatmapProps = HTMLAttributes<HTMLDivElement> & {
 };
 
 /**
- * Month Contribution Heatmap
+ * Calendar Heatmap
  *
  * A GitHub-style contribution calendar showing daily activity over months and years.
  * Each cell represents one day, arranged in weeks (rows) and months (columns).
  *
  * @example
  * ```tsx
- * <MonthContributionHeatmap data={data} weekStart={1} continuousMonths>
- *   <MonthContributionHeatmapCalendar>
+ * <CalendarHeatmap data={data} weekStart={1} continuousMonths>
+ *   <CalendarHeatmapBody>
  *     {({ activity, dayIndex, weekIndex }) => (
- *       <MonthContributionHeatmapBlock
+ *       <CalendarHeatmapBlock
  *         activity={activity}
  *         dayIndex={dayIndex}
  *         weekIndex={weekIndex}
  *       />
  *     )}
- *   </MonthContributionHeatmapCalendar>
- *   <MonthContributionHeatmapFooter>
- *     <MonthContributionHeatmapTotalCount />
- *     <MonthContributionHeatmapLegend />
- *   </MonthContributionHeatmapFooter>
- * </MonthContributionHeatmap>
+ *   </CalendarHeatmapBody>
+ *   <CalendarHeatmapFooter>
+ *     <CalendarHeatmapTotalCount />
+ *     <CalendarHeatmapLegend />
+ *   </CalendarHeatmapFooter>
+ * </CalendarHeatmap>
  * ```
  *
  * @param data - Array of activities with date (YYYY-MM-DD) and count
@@ -435,7 +436,7 @@ export type MonthContributionHeatmapProps = HTMLAttributes<HTMLDivElement> & {
  * @param blockSizeRatio - Width/height ratio of blocks. Default: 1
  * @param maxLevel - Maximum intensity level (0 to maxLevel). Default: 4
  */
-export const MonthContributionHeatmap = ({
+export const CalendarHeatmap = ({
   data,
   weekStart = 0,
   dateFormat = "PPP",
@@ -456,13 +457,13 @@ export const MonthContributionHeatmap = ({
   className,
   children,
   ...props
-}: MonthContributionHeatmapProps) => {
+}: CalendarHeatmapProps) => {
   const maxLevel = Math.max(1, maxLevelProp);
 
   const dataWithLevels = useMemo((): ActivityWithLevel[] => {
     if (data.length === 0) return [];
 
-    const maxCount = Math.max(...data.map((d) => d.count), 1);
+    const maxCount = data.reduce((max, d) => Math.max(max, d.count), 1);
 
     return data.map((activity) => ({
       ...activity,
@@ -478,15 +479,14 @@ export const MonthContributionHeatmap = ({
     [dataWithLevels, weekStart, hasEmptyColumn, continuousMonths],
   );
   const weeks = useMemo(() => yearRows.flatMap((r) => r.weeks), [yearRows]);
-  const LABEL_MARGIN = 8;
 
-  const labels = {
+  const labels = useMemo(() => ({
     months: generateMonthLabels(locale),
     weekdays: generateWeekdayLabels(locale),
     totalCount: "{{count}} contributions in {{year}}",
     legend: { less: "Less", more: "More" },
     ...labelsProp,
-  };
+  }), [locale, labelsProp]);
   const labelHeight = fontSize + LABEL_MARGIN;
 
   const year =
@@ -545,16 +545,16 @@ export const MonthContributionHeatmap = ({
   );
 };
 
-export type MonthContributionHeatmapBlockProps =
+export type CalendarHeatmapBlockProps =
   HTMLAttributes<SVGRectElement> & {
     activity: ActivityWithLevel;
     dayIndex: number;
     weekIndex: number;
   };
 
-export const MonthContributionHeatmapBlock = forwardRef<
+export const CalendarHeatmapBlock = forwardRef<
   SVGRectElement,
-  MonthContributionHeatmapBlockProps
+  CalendarHeatmapBlockProps
 >(({ activity, dayIndex, weekIndex, className, style: styleProp, ...props }, ref) => {
   const {
     blockSize,
@@ -596,9 +596,9 @@ export const MonthContributionHeatmapBlock = forwardRef<
     />
   );
 });
-MonthContributionHeatmapBlock.displayName = "MonthContributionHeatmapBlock";
+CalendarHeatmapBlock.displayName = "CalendarHeatmapBlock";
 
-export type MonthContributionHeatmapCalendarProps = Omit<
+export type CalendarHeatmapBodyProps = Omit<
   HTMLAttributes<HTMLDivElement>,
   "children"
 > & {
@@ -607,7 +607,6 @@ export type MonthContributionHeatmapCalendarProps = Omit<
   className?: string;
   labelTextClass?: string;
   yearTextClass?: string;
-  renderTooltip?: (activity: ActivityWithLevel, children: ReactNode) => ReactNode;
   children: (props: {
     activity: ActivityWithLevel;
     dayIndex: number;
@@ -616,17 +615,16 @@ export type MonthContributionHeatmapCalendarProps = Omit<
   renderYearFooter?: (props: { year: number; totalCount: number }) => ReactNode;
 };
 
-export const MonthContributionHeatmapCalendar = ({
+export const CalendarHeatmapBody = ({
   hideMonthLabels = false,
   hideWeekdayLabels = false,
   className,
   labelTextClass,
   yearTextClass,
-  renderTooltip,
   children,
   renderYearFooter,
   ...props
-}: MonthContributionHeatmapCalendarProps) => {
+}: CalendarHeatmapBodyProps) => {
   const {
     yearRows,
     blockSize,
@@ -686,7 +684,7 @@ export const MonthContributionHeatmapCalendar = ({
 
         return (
           <div key={`year-row-${yearRow.year}`}>
-            <div className={cn("text-muted-foreground mb-2 font-mono text-base font-medium", yearTextClass)}>
+            <div className={cn("text-muted-foreground mb-2", yearTextClass)}>
               {yearRow.year}
             </div>
             <svg
@@ -750,10 +748,9 @@ export const MonthContributionHeatmapCalendar = ({
                         return null;
                       }
 
-                      const block = children({ activity, dayIndex, weekIndex });
                       return (
                         <Fragment key={`${yearRow.year}-${activity.date}`}>
-                          {renderTooltip ? renderTooltip(activity, block) : block}
+                          {children({ activity, dayIndex, weekIndex })}
                         </Fragment>
                       );
                     }),
@@ -770,13 +767,13 @@ export const MonthContributionHeatmapCalendar = ({
   );
 };
 
-export type MonthContributionHeatmapFooterProps =
+export type CalendarHeatmapFooterProps =
   HTMLAttributes<HTMLDivElement>;
 
-export const MonthContributionHeatmapFooter = ({
+export const CalendarHeatmapFooter = ({
   className,
   ...props
-}: MonthContributionHeatmapFooterProps) => (
+}: CalendarHeatmapFooterProps) => (
   <div
     className={cn(
       "flex flex-wrap gap-1 whitespace-nowrap sm:gap-x-4",
@@ -786,18 +783,18 @@ export const MonthContributionHeatmapFooter = ({
   />
 );
 
-export type MonthContributionHeatmapTotalCountProps = Omit<
+export type CalendarHeatmapTotalCountProps = Omit<
   HTMLAttributes<HTMLDivElement>,
   "children"
 > & {
   children?: (props: { totalCount: number; year: number }) => ReactNode;
 };
 
-export const MonthContributionHeatmapTotalCount = ({
+export const CalendarHeatmapTotalCount = ({
   className,
   children,
   ...props
-}: MonthContributionHeatmapTotalCountProps) => {
+}: CalendarHeatmapTotalCountProps) => {
   const { totalCount, year, labels } = useContributionGraph();
 
   if (children) {
@@ -815,27 +812,27 @@ export const MonthContributionHeatmapTotalCount = ({
   );
 };
 
-export type MonthContributionHeatmapLegendProps = Omit<
+export type CalendarHeatmapLegendProps = Omit<
   HTMLAttributes<HTMLDivElement>,
   "children"
 > & {
   children?: (props: { level: number }) => ReactNode;
 };
 
-export const MonthContributionHeatmapLegend = ({
+export const CalendarHeatmapLegend = ({
   className,
   children,
   ...props
-}: MonthContributionHeatmapLegendProps) => {
+}: CalendarHeatmapLegendProps) => {
   const { labels, maxLevel, blockSize, blockWidth, blockRadius, colors } =
     useContributionGraph();
 
   return (
     <div
-      className={cn("ml-auto flex items-center gap-[3px]", className)}
+      className={cn("ml-auto flex items-center gap-[3px] text-muted-foreground", className)}
       {...props}
     >
-      <span className="text-muted-foreground mr-1 text-sm font-medium">
+      <span className="mr-1 text-sm font-medium">
         {labels.legend?.less || "Less"}
       </span>
       {Array.from({ length: maxLevel + 1 }, (_, i) => i).map((level) =>
@@ -865,7 +862,7 @@ export const MonthContributionHeatmapLegend = ({
           </svg>
         ),
       )}
-      <span className="text-muted-foreground ml-1 text-sm font-medium">
+      <span className="ml-1 text-sm font-medium">
         {labels.legend?.more || "More"}
       </span>
     </div>

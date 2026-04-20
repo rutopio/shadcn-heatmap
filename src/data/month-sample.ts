@@ -1,4 +1,4 @@
-import type { Activity } from "@/components/heatmap/month-contribution-heatmap";
+import type { Activity } from "@/components/heatmap/calendar-heatmap";
 
 import { createRng } from "./rng";
 

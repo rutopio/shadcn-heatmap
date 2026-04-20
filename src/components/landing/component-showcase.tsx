@@ -21,7 +21,7 @@ import {
   MonthMondayStartDemo,
   MonthMultiYearDemo,
   WeekBinaryDemo,
-  WeekCompactDemo,
+  WeekMinimalTicksDemo,
   WeekDefaultDemo,
   WeekMiniDemo,
   WeekMondayStartDemo,
@@ -68,7 +68,7 @@ export function ComponentShowcase() {
           <TabsContent value="month" className="space-y-10">
             <div className="flex flex-col gap-1">
               <h3 className="text-2xl font-semibold">
-                MonthContributionHeatmap
+                CalendarHeatmap
               </h3>
               <p className="text-muted-foreground">
                 GitHub-style, 7-row × N-week grid. Handles multiple years by
@@ -121,7 +121,7 @@ export function ComponentShowcase() {
           <TabsContent value="week" className="space-y-10">
             <div className="flex flex-col gap-1">
               <h3 className="text-2xl font-semibold">
-                WeekContributionHeatmap
+                WeekdayHeatmap
               </h3>
               <p className="text-muted-foreground">
                 Weekday × hour-of-day matrix with optional Sum row and Sum
@@ -152,7 +152,7 @@ export function ComponentShowcase() {
                   },
                   {
                     ...weekVariants[1],
-                    preview: <WeekCompactDemo />,
+                    preview: <WeekMinimalTicksDemo />,
                   },
                   {
                     ...weekVariants[2],
@@ -171,7 +171,7 @@ export function ComponentShowcase() {
           <TabsContent value="date" className="space-y-10">
             <div className="flex flex-col gap-1">
               <h3 className="text-2xl font-semibold">
-                DateContributionHeatmap
+                DateHeatmap
               </h3>
               <p className="text-muted-foreground">
                 One row per calendar date × 24 hours + a daily Sum column.

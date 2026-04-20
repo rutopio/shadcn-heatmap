@@ -9,8 +9,8 @@ import { ThemeToggle } from "./theme-toggle";
 const GITHUB_URL = "https://github.com/chingru/shadcn-heatmap";
 
 const navLinks = [
-    { to: "/month" as const, label: "Month" },
-    { to: "/week" as const, label: "Week" },
+    { to: "/calendar" as const, label: "Calendar" },
+    { to: "/weekday" as const, label: "Weekday" },
     { to: "/date" as const, label: "Date" },
 ];
 

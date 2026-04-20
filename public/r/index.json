@@ -4,21 +4,21 @@
   "homepage": "https://shadcn-heatmap.pages.dev",
   "items": [
     {
-      "name": "month-contribution-heatmap",
+      "name": "calendar-heatmap",
       "type": "registry:component",
-      "title": "MonthContributionHeatmap",
+      "title": "CalendarHeatmap",
       "description": "GitHub-style yearly contribution heatmap with multi-year, weekStart, and i18n support."
     },
     {
-      "name": "week-contribution-heatmap",
+      "name": "weekday-heatmap",
       "type": "registry:component",
-      "title": "WeekContributionHeatmap",
+      "title": "WeekdayHeatmap",
       "description": "Weekday × hour-of-day matrix with Sum row/column and independent colour scales."
     },
     {
-      "name": "date-contribution-heatmap",
+      "name": "date-heatmap",
       "type": "registry:component",
-      "title": "DateContributionHeatmap",
+      "title": "DateHeatmap",
       "description": "Date × hour matrix for zooming into a narrow time window with daily Sum column."
     }
   ]

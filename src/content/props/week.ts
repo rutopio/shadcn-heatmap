@@ -2,7 +2,7 @@ import type { ComponentPropsSection } from "../types";
 
 export const weekProps: ComponentPropsSection[] = [
   {
-    componentName: "WeekContributionHeatmap",
+    componentName: "WeekdayHeatmap",
     description:
       "Root provider for the weekday × hour matrix. The grid includes a right-hand daily Sum column and a bottom hourly Sum row.",
     props: [
@@ -38,16 +38,16 @@ export const weekProps: ComponentPropsSection[] = [
       {
         name: "blockSize",
         type: "number",
-        default: "12",
+        default: "24",
         description:
           "Block **height** in pixels. Width is `blockSize × blockSizeRatio`.",
       },
       {
         name: "blockSizeRatio",
         type: "number",
-        default: "2",
+        default: "1",
         description:
-          "Width-to-height ratio for each block. `2` = landscape (default), `1` = square, `0.5` = portrait.",
+          "Width-to-height ratio for each block. `2` = landscape, `1` = square (default), `0.5` = portrait.",
       },
       {
         name: "blockMargin",
@@ -89,7 +89,7 @@ export const weekProps: ComponentPropsSection[] = [
       },
       {
         name: "labels",
-        type: "WeekContributionHeatmapLabels",
+        type: "WeekdayHeatmapLabels",
         description:
           "Override `weekdays` (length 7), `hours` (length 24), `endHour`, `sum` (for sum row/column labels), and `legend.less`/`legend.more` strings. Set `endHour: null` to suppress the trailing hour label. Useful for internationalization.",
       },
@@ -102,7 +102,7 @@ export const weekProps: ComponentPropsSection[] = [
     ],
   },
   {
-    componentName: "WeekContributionHeatmapCalendar",
+    componentName: "WeekdayHeatmapBody",
     description:
       "Renders the SVG grid. Children render-prop: `({ activity }) => ReactNode`.",
     props: [
@@ -111,7 +111,7 @@ export const weekProps: ComponentPropsSection[] = [
         type: "(args) => ReactNode",
         required: true,
         description:
-          "Render function receiving `{ activity }`. Typically returns `<WeekContributionHeatmapBlock activity={activity} />`.",
+          "Render function receiving `{ activity }`. Typically returns `<WeekdayHeatmapBlock activity={activity} />`.",
       },
       {
         name: "hideSumRow",
@@ -145,7 +145,7 @@ export const weekProps: ComponentPropsSection[] = [
     ],
   },
   {
-    componentName: "WeekContributionHeatmapBlock",
+    componentName: "WeekdayHeatmapBlock",
     description:
       'A single SVG rect element representing one cell. Uses `--color-chart-1` for activity colors and `--color-secondary` for empty cells. Colors can be customized via the root `colors` prop.',
     props: [
@@ -170,7 +170,7 @@ export const weekProps: ComponentPropsSection[] = [
     ],
   },
   {
-    componentName: "WeekContributionHeatmapFooter",
+    componentName: "WeekdayHeatmapFooter",
     description: "Container for footer elements like TotalCount and Legend.",
     props: [
       {
@@ -181,7 +181,7 @@ export const weekProps: ComponentPropsSection[] = [
     ],
   },
   {
-    componentName: "WeekContributionHeatmapTotalCount",
+    componentName: "WeekdayHeatmapTotalCount",
     description: "Displays total contributions count. Supports custom render function.",
     props: [
       {
@@ -197,7 +197,7 @@ export const weekProps: ComponentPropsSection[] = [
     ],
   },
   {
-    componentName: "WeekContributionHeatmapLegend",
+    componentName: "WeekdayHeatmapLegend",
     description: "Displays intensity level legend (Less → More).",
     props: [
       {

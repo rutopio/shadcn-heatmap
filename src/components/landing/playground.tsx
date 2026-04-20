@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { de, ja, es, enUS, zhTW, fr } from "date-fns/locale";
 import type { Locale, Day } from "date-fns";
+import { format, parseISO } from "date-fns";
 
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -16,38 +17,42 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import {
-  MonthContributionHeatmap,
-  MonthContributionHeatmapBlock,
-  MonthContributionHeatmapCalendar,
-  MonthContributionHeatmapFooter,
-  MonthContributionHeatmapLegend,
-  MonthContributionHeatmapTotalCount,
-} from "@/components/heatmap/month-contribution-heatmap";
+  CalendarHeatmap,
+  CalendarHeatmapBlock,
+  CalendarHeatmapBody,
+  CalendarHeatmapFooter,
+  CalendarHeatmapLegend,
+  CalendarHeatmapTotalCount,
+} from "@/components/heatmap/calendar-heatmap";
 import {
-  WeekContributionHeatmap,
-  WeekContributionHeatmapBlock,
-  WeekContributionHeatmapCalendar,
-  WeekContributionHeatmapFooter,
-  WeekContributionHeatmapLegend,
-  WeekContributionHeatmapTotalCount,
-} from "@/components/heatmap/week-contribution-heatmap";
+  WeekdayHeatmap,
+  WeekdayHeatmapBlock,
+  WeekdayHeatmapCalendar,
+  WeekdayHeatmapFooter,
+  WeekdayHeatmapLegend,
+  WeekdayHeatmapTotalCount,
+} from "@/components/heatmap/weekday-heatmap";
 import {
-  DateContributionHeatmap,
-  DateContributionHeatmapBlock,
-  DateContributionHeatmapCalendar,
-  DateContributionHeatmapFooter,
-  DateContributionHeatmapLegend,
-  DateContributionHeatmapTotalCount,
-} from "@/components/heatmap/date-contribution-heatmap";
+  DateHeatmap,
+  DateHeatmapBlock,
+  DateHeatmapCalendar,
+  DateHeatmapFooter,
+  DateHeatmapLegend,
+  DateHeatmapTotalCount,
+} from "@/components/heatmap/date-heatmap";
 import { generateMonthSample } from "@/data/month-sample";
 import { generateWeekSample } from "@/data/week-sample";
 import { generateDateSample } from "@/data/date-sample";
 import {
-  HeatmapTooltip,
-  MonthTooltipContent,
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+import {
   WeekTooltipContent,
   DateTooltipContent,
-  TooltipProvider,
+  HeatmapTooltip,
 } from "./demos/shared";
 
 const LOCALES: Record<string, Locale> = {
@@ -96,7 +101,7 @@ type DateProps = {
 function MonthPlayground({ props }: { props: MonthProps }) {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <MonthContributionHeatmap
+      <CalendarHeatmap
         data={monthData}
         continuousMonths={props.continuousMonths}
         hasEmptyColumn={props.hasEmptyColumn}
@@ -107,22 +112,30 @@ function MonthPlayground({ props }: { props: MonthProps }) {
         blockRadius={props.blockRadius}
         locale={LOCALES[props.locale]}
       >
-        <MonthContributionHeatmapCalendar>
+        <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
-            <HeatmapTooltip content={<MonthTooltipContent activity={activity} />}>
-              <MonthContributionHeatmapBlock
-                activity={activity}
-                dayIndex={dayIndex}
-                weekIndex={weekIndex}
-              />
-            </HeatmapTooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <CalendarHeatmapBlock
+                  activity={activity}
+                  dayIndex={dayIndex}
+                  weekIndex={weekIndex}
+                />
+              </TooltipTrigger>
+              <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
+                <p className="font-medium">{format(parseISO(activity.date), "PPP")}</p>
+                <p className="text-muted-foreground">
+                  {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+                </p>
+              </TooltipContent>
+            </Tooltip>
           )}
-        </MonthContributionHeatmapCalendar>
-        <MonthContributionHeatmapFooter>
-          <MonthContributionHeatmapTotalCount />
-          <MonthContributionHeatmapLegend />
-        </MonthContributionHeatmapFooter>
-      </MonthContributionHeatmap>
+        </CalendarHeatmapBody>
+        <CalendarHeatmapFooter>
+          <CalendarHeatmapTotalCount />
+          <CalendarHeatmapLegend />
+        </CalendarHeatmapFooter>
+      </CalendarHeatmap>
     </TooltipProvider>
   );
 }
@@ -130,7 +143,7 @@ function MonthPlayground({ props }: { props: MonthProps }) {
 function WeekPlayground({ props }: { props: WeekProps }) {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <WeekContributionHeatmap
+      <WeekdayHeatmap
         data={weekData}
         weekStart={props.weekStart}
         use12Hour={props.use12Hour}
@@ -140,18 +153,18 @@ function WeekPlayground({ props }: { props: WeekProps }) {
         blockRadius={props.blockRadius}
         locale={LOCALES[props.locale]}
       >
-        <WeekContributionHeatmapCalendar>
+        <WeekdayHeatmapCalendar>
           {({ activity }) => (
             <HeatmapTooltip content={<WeekTooltipContent activity={activity} />}>
-              <WeekContributionHeatmapBlock activity={activity} />
+              <WeekdayHeatmapBlock activity={activity} />
             </HeatmapTooltip>
           )}
-        </WeekContributionHeatmapCalendar>
-        <WeekContributionHeatmapFooter>
-          <WeekContributionHeatmapTotalCount />
-          <WeekContributionHeatmapLegend />
-        </WeekContributionHeatmapFooter>
-      </WeekContributionHeatmap>
+        </WeekdayHeatmapCalendar>
+        <WeekdayHeatmapFooter>
+          <WeekdayHeatmapTotalCount />
+          <WeekdayHeatmapLegend />
+        </WeekdayHeatmapFooter>
+      </WeekdayHeatmap>
     </TooltipProvider>
   );
 }
@@ -159,7 +172,7 @@ function WeekPlayground({ props }: { props: WeekProps }) {
 function DatePlayground({ props }: { props: DateProps }) {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <DateContributionHeatmap
+      <DateHeatmap
         data={dateData}
         use12Hour={props.use12Hour}
         maxLevel={props.maxLevel}
@@ -168,18 +181,18 @@ function DatePlayground({ props }: { props: DateProps }) {
         blockRadius={props.blockRadius}
         locale={LOCALES[props.locale]}
       >
-        <DateContributionHeatmapCalendar>
+        <DateHeatmapCalendar>
           {({ activity, dateIndex }) => (
             <HeatmapTooltip content={<DateTooltipContent activity={activity} />}>
-              <DateContributionHeatmapBlock activity={activity} dateIndex={dateIndex} />
+              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
             </HeatmapTooltip>
           )}
-        </DateContributionHeatmapCalendar>
-        <DateContributionHeatmapFooter>
-          <DateContributionHeatmapTotalCount />
-          <DateContributionHeatmapLegend />
-        </DateContributionHeatmapFooter>
-      </DateContributionHeatmap>
+        </DateHeatmapCalendar>
+        <DateHeatmapFooter>
+          <DateHeatmapTotalCount />
+          <DateHeatmapLegend />
+        </DateHeatmapFooter>
+      </DateHeatmap>
     </TooltipProvider>
   );
 }

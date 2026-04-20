@@ -2,7 +2,7 @@ import type { ComponentPropsSection } from "../types";
 
 export const dateProps: ComponentPropsSection[] = [
   {
-    componentName: "DateContributionHeatmap",
+    componentName: "DateHeatmap",
     description:
       "Root provider for a date × hour matrix (one row per date). A Sum column aggregates each day across all hours and is coloured against its own scale.",
     props: [
@@ -38,16 +38,16 @@ export const dateProps: ComponentPropsSection[] = [
       {
         name: "blockSize",
         type: "number",
-        default: "12",
+        default: "24",
         description:
           "Block **height** in pixels. Width is `blockSize × blockSizeRatio`.",
       },
       {
         name: "blockSizeRatio",
         type: "number",
-        default: "2",
+        default: "1",
         description:
-          "Width-to-height ratio for each block. `2` = landscape (default), `1` = square, `0.5` = portrait.",
+          "Width-to-height ratio for each block. `2` = landscape, `1` = square (default), `0.5` = portrait.",
       },
       {
         name: "blockMargin",
@@ -91,7 +91,7 @@ export const dateProps: ComponentPropsSection[] = [
       },
       {
         name: "labels",
-        type: "DateContributionHeatmapLabels",
+        type: "DateHeatmapLabels",
         description:
           "Override `hours` (24 strings), `endHour` (set to `null` to hide), `sum` (for sum column label), and legend strings (`legend.less`, `legend.more`). Useful for internationalization.",
       },
@@ -99,12 +99,13 @@ export const dateProps: ComponentPropsSection[] = [
       {
         name: "totalCount",
         type: "number",
-        description: "Pre-calculated total. If omitted, computed from data automatically.",
+        description:
+          "Pre-calculated total. If omitted, computed from data automatically.",
       },
     ],
   },
   {
-    componentName: "DateContributionHeatmapCalendar",
+    componentName: "DateHeatmapBody",
     description:
       "Renders the SVG grid. Children render-prop: `({ activity, dateIndex }) => ReactNode`.",
     props: [
@@ -113,7 +114,7 @@ export const dateProps: ComponentPropsSection[] = [
         type: "(args) => ReactNode",
         required: true,
         description:
-          "Render function receiving `{ activity, dateIndex }`. Typically returns `<DateContributionHeatmapBlock activity={activity} dateIndex={dateIndex} />`.",
+          "Render function receiving `{ activity, dateIndex }`. Typically returns `<DateHeatmapBlock activity={activity} dateIndex={dateIndex} />`.",
       },
       {
         name: "hideDateLabels",
@@ -137,20 +138,20 @@ export const dateProps: ComponentPropsSection[] = [
         name: "hideSumRow",
         type: "boolean",
         default: "false",
-        description: "Hide the hourly Sum row (date = \"sum\") and its label.",
+        description: 'Hide the hourly Sum row (date = "sum") and its label.',
       },
       {
         name: "labelTextClass",
         type: "string",
         description:
-          "Additional CSS classes for axis labels (date and hour labels). Example: 'text-green-500 font-bold'.",
+          "Additional CSS classes for axis labels (date and hour labels). Example: 'text-green-700 font-bold'.",
       },
     ],
   },
   {
-    componentName: "DateContributionHeatmapBlock",
+    componentName: "DateHeatmapBlock",
     description:
-      'A single SVG rect element representing one hour. Uses `--color-chart-1` for activity colors and `--color-secondary` for empty cells. Colors can be customized via the root `colors` prop.',
+      "A single SVG rect element representing one hour. Uses `--color-chart-1` for activity colors and `--color-secondary` for empty cells. Colors can be customized via the root `colors` prop.",
     props: [
       {
         name: "activity",
@@ -179,7 +180,7 @@ export const dateProps: ComponentPropsSection[] = [
     ],
   },
   {
-    componentName: "DateContributionHeatmapFooter",
+    componentName: "DateHeatmapFooter",
     description: "Container for footer elements like TotalCount and Legend.",
     props: [
       {
@@ -190,8 +191,9 @@ export const dateProps: ComponentPropsSection[] = [
     ],
   },
   {
-    componentName: "DateContributionHeatmapTotalCount",
-    description: "Displays total contributions count. Supports custom render function.",
+    componentName: "DateHeatmapTotalCount",
+    description:
+      "Displays total contributions count. Supports custom render function.",
     props: [
       {
         name: "children",
@@ -207,7 +209,7 @@ export const dateProps: ComponentPropsSection[] = [
     ],
   },
   {
-    componentName: "DateContributionHeatmapLegend",
+    componentName: "DateHeatmapLegend",
     description: "Displays intensity level legend (Less → More).",
     props: [
       {

@@ -3,7 +3,7 @@ export {
     MonthBinaryDemo,
     MonthChunkyDemo,
     MonthCustomDateFormatDemo,
-    MonthCustomLabelDemo,
+    MonthCustomStylingDemo,
     MonthDefaultDemo,
     MonthGermanDemo,
     MonthLargeBlocksDemo,
@@ -17,8 +17,7 @@ export {
 export {
     Week12HourDemo,
     WeekBinaryDemo,
-    WeekCompactDemo,
-    WeekCustomLabelDemo,
+    WeekCustomStylingDemo,
     WeekDefaultDemo,
     WeekHideSumDemo,
     WeekJapaneseDemo,
@@ -32,7 +31,7 @@ export {
 // Date demos
 export {
     Date12HourDemo,
-    DateCustomLabelDemo,
+    DateCustomStylingDemo,
     DateDefaultDemo,
     DateHideSumColumnDemo,
     DateIsoDemo,

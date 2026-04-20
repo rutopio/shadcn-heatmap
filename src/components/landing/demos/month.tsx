@@ -2,46 +2,57 @@ import { de } from "date-fns/locale";
 import { format, parseISO } from "date-fns";
 
 import {
-    MonthContributionHeatmap,
-    MonthContributionHeatmapBlock,
-    MonthContributionHeatmapCalendar,
-    MonthContributionHeatmapFooter,
-    MonthContributionHeatmapLegend,
-    MonthContributionHeatmapTotalCount,
-} from "@/components/heatmap/month-contribution-heatmap";
+    CalendarHeatmap,
+    CalendarHeatmapBlock,
+    CalendarHeatmapBody,
+    CalendarHeatmapFooter,
+    CalendarHeatmapLegend,
+    CalendarHeatmapTotalCount,
+} from "@/components/heatmap/calendar-heatmap";
 import { generateMonthSample } from "@/data/month-sample";
-
 import {
-    HeatmapTooltip,
-    MonthBinaryTooltipContent,
-    MonthTooltipContent,
+    Tooltip,
+    TooltipContent,
     TooltipProvider,
-} from "./shared";
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 
 const monthData = generateMonthSample(42, 2025);
+
+function MonthTooltip({ activity }: { activity: { date: string; count: number } }) {
+    return (
+        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
+            <p className="font-medium">{format(parseISO(activity.date), "PPP")}</p>
+            <p className="text-muted-foreground">
+                {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            </p>
+        </TooltipContent>
+    );
+}
 
 export function MonthDefaultDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <MonthContributionHeatmap data={monthData}>
-                <MonthContributionHeatmapCalendar>
+            <CalendarHeatmap data={monthData}>
+                <CalendarHeatmapBody>
                     {({ activity, dayIndex, weekIndex }) => (
-                        <HeatmapTooltip
-                            content={<MonthTooltipContent activity={activity} />}
-                        >
-                            <MonthContributionHeatmapBlock
-                                activity={activity}
-                                dayIndex={dayIndex}
-                                weekIndex={weekIndex}
-                            />
-                        </HeatmapTooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <CalendarHeatmapBlock
+                                    activity={activity}
+                                    dayIndex={dayIndex}
+                                    weekIndex={weekIndex}
+                                />
+                            </TooltipTrigger>
+                            <MonthTooltip activity={activity} />
+                        </Tooltip>
                     )}
-                </MonthContributionHeatmapCalendar>
-                <MonthContributionHeatmapFooter>
-                    <MonthContributionHeatmapTotalCount />
-                    <MonthContributionHeatmapLegend />
-                </MonthContributionHeatmapFooter>
-            </MonthContributionHeatmap>
+                </CalendarHeatmapBody>
+                <CalendarHeatmapFooter>
+                    <CalendarHeatmapTotalCount />
+                    <CalendarHeatmapLegend />
+                </CalendarHeatmapFooter>
+            </CalendarHeatmap>
         </TooltipProvider>
     );
 }
@@ -49,25 +60,26 @@ export function MonthDefaultDemo() {
 export function MonthMondayStartDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <MonthContributionHeatmap data={monthData} weekStart={1}>
-                <MonthContributionHeatmapCalendar>
+            <CalendarHeatmap data={monthData} weekStart={1}>
+                <CalendarHeatmapBody>
                     {({ activity, dayIndex, weekIndex }) => (
-                        <HeatmapTooltip
-                            content={<MonthTooltipContent activity={activity} />}
-                        >
-                            <MonthContributionHeatmapBlock
-                                activity={activity}
-                                dayIndex={dayIndex}
-                                weekIndex={weekIndex}
-                            />
-                        </HeatmapTooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <CalendarHeatmapBlock
+                                    activity={activity}
+                                    dayIndex={dayIndex}
+                                    weekIndex={weekIndex}
+                                />
+                            </TooltipTrigger>
+                            <MonthTooltip activity={activity} />
+                        </Tooltip>
                     )}
-                </MonthContributionHeatmapCalendar>
-                <MonthContributionHeatmapFooter>
-                    <MonthContributionHeatmapTotalCount />
-                    <MonthContributionHeatmapLegend />
-                </MonthContributionHeatmapFooter>
-            </MonthContributionHeatmap>
+                </CalendarHeatmapBody>
+                <CalendarHeatmapFooter>
+                    <CalendarHeatmapTotalCount />
+                    <CalendarHeatmapLegend />
+                </CalendarHeatmapFooter>
+            </CalendarHeatmap>
         </TooltipProvider>
     );
 }
@@ -75,28 +87,26 @@ export function MonthMondayStartDemo() {
 export function MonthChunkyDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <MonthContributionHeatmap
-                data={monthData}
-                continuousMonths={false}
-            >
-                <MonthContributionHeatmapCalendar>
+            <CalendarHeatmap data={monthData} continuousMonths={false}>
+                <CalendarHeatmapBody>
                     {({ activity, dayIndex, weekIndex }) => (
-                        <HeatmapTooltip
-                            content={<MonthTooltipContent activity={activity} />}
-                        >
-                            <MonthContributionHeatmapBlock
-                                activity={activity}
-                                dayIndex={dayIndex}
-                                weekIndex={weekIndex}
-                            />
-                        </HeatmapTooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <CalendarHeatmapBlock
+                                    activity={activity}
+                                    dayIndex={dayIndex}
+                                    weekIndex={weekIndex}
+                                />
+                            </TooltipTrigger>
+                            <MonthTooltip activity={activity} />
+                        </Tooltip>
                     )}
-                </MonthContributionHeatmapCalendar>
-                <MonthContributionHeatmapFooter>
-                    <MonthContributionHeatmapTotalCount />
-                    <MonthContributionHeatmapLegend />
-                </MonthContributionHeatmapFooter>
-            </MonthContributionHeatmap>
+                </CalendarHeatmapBody>
+                <CalendarHeatmapFooter>
+                    <CalendarHeatmapTotalCount />
+                    <CalendarHeatmapLegend />
+                </CalendarHeatmapFooter>
+            </CalendarHeatmap>
         </TooltipProvider>
     );
 }
@@ -104,31 +114,35 @@ export function MonthChunkyDemo() {
 export function MonthBinaryDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <MonthContributionHeatmap
+            <CalendarHeatmap
                 data={monthData}
                 maxLevel={1}
-                labels={{
-                    legend: { less: "Disabled", more: "Enabled" },
-                }}
+                labels={{ legend: { less: "Disabled", more: "Enabled" } }}
             >
-                <MonthContributionHeatmapCalendar>
+                <CalendarHeatmapBody>
                     {({ activity, dayIndex, weekIndex }) => (
-                        <HeatmapTooltip
-                            content={<MonthBinaryTooltipContent activity={activity} locale={undefined} />}
-                        >
-                            <MonthContributionHeatmapBlock
-                                activity={activity}
-                                dayIndex={dayIndex}
-                                weekIndex={weekIndex}
-                            />
-                        </HeatmapTooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <CalendarHeatmapBlock
+                                    activity={activity}
+                                    dayIndex={dayIndex}
+                                    weekIndex={weekIndex}
+                                />
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
+                                <p className="font-medium">{format(parseISO(activity.date), "PPP")}</p>
+                                <p className="text-muted-foreground">
+                                    {activity.count > 0 ? "Enabled" : "Disabled"}
+                                </p>
+                            </TooltipContent>
+                        </Tooltip>
                     )}
-                </MonthContributionHeatmapCalendar>
-                <MonthContributionHeatmapFooter>
-                    <MonthContributionHeatmapTotalCount />
-                    <MonthContributionHeatmapLegend />
-                </MonthContributionHeatmapFooter>
-            </MonthContributionHeatmap>
+                </CalendarHeatmapBody>
+                <CalendarHeatmapFooter>
+                    <CalendarHeatmapTotalCount />
+                    <CalendarHeatmapLegend />
+                </CalendarHeatmapFooter>
+            </CalendarHeatmap>
         </TooltipProvider>
     );
 }
@@ -136,25 +150,26 @@ export function MonthBinaryDemo() {
 export function MonthTenLevelsDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <MonthContributionHeatmap data={monthData} maxLevel={10}>
-                <MonthContributionHeatmapCalendar>
+            <CalendarHeatmap data={monthData} maxLevel={10}>
+                <CalendarHeatmapBody>
                     {({ activity, dayIndex, weekIndex }) => (
-                        <HeatmapTooltip
-                            content={<MonthTooltipContent activity={activity} />}
-                        >
-                            <MonthContributionHeatmapBlock
-                                activity={activity}
-                                dayIndex={dayIndex}
-                                weekIndex={weekIndex}
-                            />
-                        </HeatmapTooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <CalendarHeatmapBlock
+                                    activity={activity}
+                                    dayIndex={dayIndex}
+                                    weekIndex={weekIndex}
+                                />
+                            </TooltipTrigger>
+                            <MonthTooltip activity={activity} />
+                        </Tooltip>
                     )}
-                </MonthContributionHeatmapCalendar>
-                <MonthContributionHeatmapFooter>
-                    <MonthContributionHeatmapTotalCount />
-                    <MonthContributionHeatmapLegend />
-                </MonthContributionHeatmapFooter>
-            </MonthContributionHeatmap>
+                </CalendarHeatmapBody>
+                <CalendarHeatmapFooter>
+                    <CalendarHeatmapTotalCount />
+                    <CalendarHeatmapLegend />
+                </CalendarHeatmapFooter>
+            </CalendarHeatmap>
         </TooltipProvider>
     );
 }
@@ -162,7 +177,7 @@ export function MonthTenLevelsDemo() {
 export function MonthGermanDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <MonthContributionHeatmap
+            <CalendarHeatmap
                 data={monthData}
                 locale={de}
                 labels={{
@@ -170,33 +185,32 @@ export function MonthGermanDemo() {
                     legend: { less: "Weniger", more: "Mehr" },
                 }}
             >
-                <MonthContributionHeatmapCalendar>
+                <CalendarHeatmapBody>
                     {({ activity, dayIndex, weekIndex }) => (
-                        <HeatmapTooltip
-                            content={
-                                <>
-                                    <p className="font-medium">
-                                        {format(parseISO(activity.date), "PPP", { locale: de })}
-                                    </p>
-                                    <p className="text-muted-foreground">
-                                        {activity.count} Aktivität{activity.count !== 1 ? "en" : ""}
-                                    </p>
-                                </>
-                            }
-                        >
-                            <MonthContributionHeatmapBlock
-                                activity={activity}
-                                dayIndex={dayIndex}
-                                weekIndex={weekIndex}
-                            />
-                        </HeatmapTooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <CalendarHeatmapBlock
+                                    activity={activity}
+                                    dayIndex={dayIndex}
+                                    weekIndex={weekIndex}
+                                />
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
+                                <p className="font-medium">
+                                    {format(parseISO(activity.date), "PPP", { locale: de })}
+                                </p>
+                                <p className="text-muted-foreground">
+                                    {activity.count} Aktivität{activity.count !== 1 ? "en" : ""}
+                                </p>
+                            </TooltipContent>
+                        </Tooltip>
                     )}
-                </MonthContributionHeatmapCalendar>
-                <MonthContributionHeatmapFooter>
-                    <MonthContributionHeatmapTotalCount />
-                    <MonthContributionHeatmapLegend />
-                </MonthContributionHeatmapFooter>
-            </MonthContributionHeatmap>
+                </CalendarHeatmapBody>
+                <CalendarHeatmapFooter>
+                    <CalendarHeatmapTotalCount />
+                    <CalendarHeatmapLegend />
+                </CalendarHeatmapFooter>
+            </CalendarHeatmap>
         </TooltipProvider>
     );
 }
@@ -204,25 +218,26 @@ export function MonthGermanDemo() {
 export function MonthLargeBlocksDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <MonthContributionHeatmap data={monthData} blockSize={18} blockMargin={3}>
-                <MonthContributionHeatmapCalendar>
+            <CalendarHeatmap data={monthData} blockSize={18} blockMargin={3}>
+                <CalendarHeatmapBody>
                     {({ activity, dayIndex, weekIndex }) => (
-                        <HeatmapTooltip
-                            content={<MonthTooltipContent activity={activity} />}
-                        >
-                            <MonthContributionHeatmapBlock
-                                activity={activity}
-                                dayIndex={dayIndex}
-                                weekIndex={weekIndex}
-                            />
-                        </HeatmapTooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <CalendarHeatmapBlock
+                                    activity={activity}
+                                    dayIndex={dayIndex}
+                                    weekIndex={weekIndex}
+                                />
+                            </TooltipTrigger>
+                            <MonthTooltip activity={activity} />
+                        </Tooltip>
                     )}
-                </MonthContributionHeatmapCalendar>
-                <MonthContributionHeatmapFooter>
-                    <MonthContributionHeatmapTotalCount />
-                    <MonthContributionHeatmapLegend />
-                </MonthContributionHeatmapFooter>
-            </MonthContributionHeatmap>
+                </CalendarHeatmapBody>
+                <CalendarHeatmapFooter>
+                    <CalendarHeatmapTotalCount />
+                    <CalendarHeatmapLegend />
+                </CalendarHeatmapFooter>
+            </CalendarHeatmap>
         </TooltipProvider>
     );
 }
@@ -237,33 +252,34 @@ const multiYearYears = [2024, 2025];
 export function MonthMultiYearDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <MonthContributionHeatmap data={monthMultiYear} blockSize={10}>
-                <MonthContributionHeatmapCalendar
+            <CalendarHeatmap data={monthMultiYear} blockSize={10}>
+                <CalendarHeatmapBody
                     renderYearFooter={({ year, totalCount }) => {
                         const isLastYear = year === Math.max(...multiYearYears);
                         return (
-                            <MonthContributionHeatmapFooter>
+                            <CalendarHeatmapFooter>
                                 <div className="text-muted-foreground">
                                     {totalCount} contributions in {year}
                                 </div>
-                                {isLastYear && <MonthContributionHeatmapLegend />}
-                            </MonthContributionHeatmapFooter>
+                                {isLastYear && <CalendarHeatmapLegend />}
+                            </CalendarHeatmapFooter>
                         );
                     }}
                 >
                     {({ activity, dayIndex, weekIndex }) => (
-                        <HeatmapTooltip
-                            content={<MonthTooltipContent activity={activity} />}
-                        >
-                            <MonthContributionHeatmapBlock
-                                activity={activity}
-                                dayIndex={dayIndex}
-                                weekIndex={weekIndex}
-                            />
-                        </HeatmapTooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <CalendarHeatmapBlock
+                                    activity={activity}
+                                    dayIndex={dayIndex}
+                                    weekIndex={weekIndex}
+                                />
+                            </TooltipTrigger>
+                            <MonthTooltip activity={activity} />
+                        </Tooltip>
                     )}
-                </MonthContributionHeatmapCalendar>
-            </MonthContributionHeatmap>
+                </CalendarHeatmapBody>
+            </CalendarHeatmap>
         </TooltipProvider>
     );
 }
@@ -271,21 +287,22 @@ export function MonthMultiYearDemo() {
 export function MonthNoFooterDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <MonthContributionHeatmap data={monthData}>
-                <MonthContributionHeatmapCalendar>
+            <CalendarHeatmap data={monthData}>
+                <CalendarHeatmapBody>
                     {({ activity, dayIndex, weekIndex }) => (
-                        <HeatmapTooltip
-                            content={<MonthTooltipContent activity={activity} />}
-                        >
-                            <MonthContributionHeatmapBlock
-                                activity={activity}
-                                dayIndex={dayIndex}
-                                weekIndex={weekIndex}
-                            />
-                        </HeatmapTooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <CalendarHeatmapBlock
+                                    activity={activity}
+                                    dayIndex={dayIndex}
+                                    weekIndex={weekIndex}
+                                />
+                            </TooltipTrigger>
+                            <MonthTooltip activity={activity} />
+                        </Tooltip>
                     )}
-                </MonthContributionHeatmapCalendar>
-            </MonthContributionHeatmap>
+                </CalendarHeatmapBody>
+            </CalendarHeatmap>
         </TooltipProvider>
     );
 }
@@ -293,60 +310,63 @@ export function MonthNoFooterDemo() {
 export function MonthCustomDateFormatDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <MonthContributionHeatmap data={monthData} dateFormat="MMM d, yyyy">
-                <MonthContributionHeatmapCalendar>
+            <CalendarHeatmap data={monthData} dateFormat="MMM d, yyyy">
+                <CalendarHeatmapBody>
                     {({ activity, dayIndex, weekIndex }) => (
-                        <HeatmapTooltip
-                            content={
-                                <>
-                                    <p className="font-medium">
-                                        {format(parseISO(activity.date), "MMM d, yyyy")}
-                                    </p>
-                                    <p className="text-muted-foreground">
-                                        {activity.count} contribution{activity.count !== 1 ? "s" : ""}
-                                    </p>
-                                </>
-                            }
-                        >
-                            <MonthContributionHeatmapBlock
-                                activity={activity}
-                                dayIndex={dayIndex}
-                                weekIndex={weekIndex}
-                            />
-                        </HeatmapTooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <CalendarHeatmapBlock
+                                    activity={activity}
+                                    dayIndex={dayIndex}
+                                    weekIndex={weekIndex}
+                                />
+                            </TooltipTrigger>
+                            <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
+                                <p className="font-medium">
+                                    {format(parseISO(activity.date), "MMM d, yyyy")}
+                                </p>
+                                <p className="text-muted-foreground">
+                                    {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+                                </p>
+                            </TooltipContent>
+                        </Tooltip>
                     )}
-                </MonthContributionHeatmapCalendar>
-                <MonthContributionHeatmapFooter>
-                    <MonthContributionHeatmapTotalCount />
-                    <MonthContributionHeatmapLegend />
-                </MonthContributionHeatmapFooter>
-            </MonthContributionHeatmap>
+                </CalendarHeatmapBody>
+                <CalendarHeatmapFooter>
+                    <CalendarHeatmapTotalCount />
+                    <CalendarHeatmapLegend />
+                </CalendarHeatmapFooter>
+            </CalendarHeatmap>
         </TooltipProvider>
     );
 }
 
-export function MonthCustomLabelDemo() {
+export function MonthCustomStylingDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <MonthContributionHeatmap data={monthData}>
-                <MonthContributionHeatmapCalendar labelTextClass="text-green-500 font-bold">
+            <CalendarHeatmap data={monthData} colors={{ scale: "#22c55e" }}>
+                <CalendarHeatmapBody
+                    labelTextClass="text-green-700 font-bold"
+                    yearTextClass="text-green-700 font-bold"
+                >
                     {({ activity, dayIndex, weekIndex }) => (
-                        <HeatmapTooltip
-                            content={<MonthTooltipContent activity={activity} />}
-                        >
-                            <MonthContributionHeatmapBlock
-                                activity={activity}
-                                dayIndex={dayIndex}
-                                weekIndex={weekIndex}
-                            />
-                        </HeatmapTooltip>
+                        <Tooltip>
+                            <TooltipTrigger asChild>
+                                <CalendarHeatmapBlock
+                                    activity={activity}
+                                    dayIndex={dayIndex}
+                                    weekIndex={weekIndex}
+                                />
+                            </TooltipTrigger>
+                            <MonthTooltip activity={activity} />
+                        </Tooltip>
                     )}
-                </MonthContributionHeatmapCalendar>
-                <MonthContributionHeatmapFooter>
-                    <MonthContributionHeatmapTotalCount />
-                    <MonthContributionHeatmapLegend />
-                </MonthContributionHeatmapFooter>
-            </MonthContributionHeatmap>
+                </CalendarHeatmapBody>
+                <CalendarHeatmapFooter>
+                    <CalendarHeatmapTotalCount className="text-green-700" />
+                    <CalendarHeatmapLegend className="text-green-700" />
+                </CalendarHeatmapFooter>
+            </CalendarHeatmap>
         </TooltipProvider>
     );
 }

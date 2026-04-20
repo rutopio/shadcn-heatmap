@@ -24,13 +24,21 @@ const data: HeatmapActivity[] = [
 ];`;
 
 export const weekBasicCode = `import {
-  WeekContributionHeatmap,
-  WeekContributionHeatmapBlock,
-  WeekContributionHeatmapCalendar,
-  WeekContributionHeatmapFooter,
-  WeekContributionHeatmapLegend,
-  WeekContributionHeatmapTotalCount,
-} from "@/components/heatmap/week-contribution-heatmap";
+  WeekdayHeatmap,
+  WeekdayHeatmapBlock,
+  WeekdayHeatmapBody,
+  WeekdayHeatmapFooter,
+  WeekdayHeatmapLegend,
+  WeekdayHeatmapTotalCount,
+} from "@/components/heatmap/weekday-heatmap";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
+
+const WEEKDAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sum"];
 
 const data = [
   // Regular cells — weekday 0..6, hour 0..23
@@ -45,17 +53,34 @@ const data = [
 
 export function WeeklyRhythm() {
   return (
-    <WeekContributionHeatmap data={data}>
-      <WeekContributionHeatmapCalendar>
-        {({ activity }) => (
-          <WeekContributionHeatmapBlock activity={activity} />
-        )}
-      </WeekContributionHeatmapCalendar>
-      <WeekContributionHeatmapFooter>
-        <WeekContributionHeatmapTotalCount />
-        <WeekContributionHeatmapLegend />
-      </WeekContributionHeatmapFooter>
-    </WeekContributionHeatmap>
+    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+      <WeekdayHeatmap data={data}>
+        <WeekdayHeatmapBody>
+          {({ activity }) => (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <WeekdayHeatmapBlock activity={activity} />
+              </TooltipTrigger>
+              <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
+                <p className="font-medium">
+                  {WEEKDAY_NAMES[activity.weekday]}{" "}
+                  {activity.hour === 24
+                    ? "Total"
+                    : \`\${String(activity.hour).padStart(2, "0")}:00\`}
+                </p>
+                <p className="text-muted-foreground">
+                  {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+                </p>
+              </TooltipContent>
+            </Tooltip>
+          )}
+        </WeekdayHeatmapBody>
+        <WeekdayHeatmapFooter>
+          <WeekdayHeatmapTotalCount />
+          <WeekdayHeatmapLegend />
+        </WeekdayHeatmapFooter>
+      </WeekdayHeatmap>
+    </TooltipProvider>
   );
 }`;
 
@@ -64,19 +89,32 @@ export const weekVariants: VariantSpec[] = [
     title: "Monday-start week (ISO)",
     description:
       "Rotate the weekday axis to start on Monday instead of Sunday.",
-    code: `<WeekContributionHeatmap data={data} weekStart={1}>
-  <WeekContributionHeatmapCalendar>
+    code: `<WeekdayHeatmap data={data} weekStart={1}>
+  <WeekdayHeatmapBody>
     {({ activity }) => (
-      <WeekContributionHeatmapBlock activity={activity} />
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <WeekdayHeatmapBlock activity={activity} />
+        </TooltipTrigger>
+        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
+          <p className="font-medium">
+            {WEEKDAY_NAMES[activity.weekday]}{" "}
+            {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
+          </p>
+          <p className="text-muted-foreground">
+            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+          </p>
+        </TooltipContent>
+      </Tooltip>
     )}
-  </WeekContributionHeatmapCalendar>
-</WeekContributionHeatmap>`,
+  </WeekdayHeatmapBody>
+</WeekdayHeatmap>`,
   },
   {
     title: "Minimal hour ticks",
     description:
       "Only label every 6th hour (00 / 06 / 12 / 18) and drop the trailing tick to reduce axis noise.",
-    code: `<WeekContributionHeatmap
+    code: `<WeekdayHeatmap
   data={data}
   labels={{
     hours: Array.from({ length: 24 }, (_, i) =>
@@ -85,42 +123,81 @@ export const weekVariants: VariantSpec[] = [
     endHour: null,
   }}
 >
-  <WeekContributionHeatmapCalendar>
+  <WeekdayHeatmapBody>
     {({ activity }) => (
-      <WeekContributionHeatmapBlock activity={activity} />
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <WeekdayHeatmapBlock activity={activity} />
+        </TooltipTrigger>
+        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
+          <p className="font-medium">
+            {WEEKDAY_NAMES[activity.weekday]}{" "}
+            {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
+          </p>
+          <p className="text-muted-foreground">
+            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+          </p>
+        </TooltipContent>
+      </Tooltip>
     )}
-  </WeekContributionHeatmapCalendar>
-</WeekContributionHeatmap>`,
+  </WeekdayHeatmapBody>
+</WeekdayHeatmap>`,
   },
   {
     title: "Binary on/off",
     description:
       "Two colours only — active or inactive. Useful when presence matters more than intensity.",
-    code: `<WeekContributionHeatmap data={data} maxLevel={1}>
-  <WeekContributionHeatmapCalendar>
+    code: `<WeekdayHeatmap data={data} maxLevel={1}>
+  <WeekdayHeatmapBody>
     {({ activity }) => (
-      <WeekContributionHeatmapBlock activity={activity} />
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <WeekdayHeatmapBlock activity={activity} />
+        </TooltipTrigger>
+        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
+          <p className="font-medium">
+            {WEEKDAY_NAMES[activity.weekday]}{" "}
+            {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
+          </p>
+          <p className="text-muted-foreground">
+            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+          </p>
+        </TooltipContent>
+      </Tooltip>
     )}
-  </WeekContributionHeatmapCalendar>
-  <WeekContributionHeatmapFooter>
-    <WeekContributionHeatmapLegend />
-  </WeekContributionHeatmapFooter>
-</WeekContributionHeatmap>`,
+  </WeekdayHeatmapBody>
+  <WeekdayHeatmapFooter>
+    <WeekdayHeatmapLegend />
+  </WeekdayHeatmapFooter>
+</WeekdayHeatmap>`,
   },
   {
     title: "Ten levels",
     description:
       "Expand the intensity scale to 10 levels for fine-grained differentiation of high-frequency data.",
-    code: `<WeekContributionHeatmap data={data} maxLevel={10}>
-  <WeekContributionHeatmapCalendar>
+    code: `<WeekdayHeatmap data={data} maxLevel={10}>
+  <WeekdayHeatmapBody>
     {({ activity }) => (
-      <WeekContributionHeatmapBlock activity={activity} />
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <WeekdayHeatmapBlock activity={activity} />
+        </TooltipTrigger>
+        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
+          <p className="font-medium">
+            {WEEKDAY_NAMES[activity.weekday]}{" "}
+            {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
+          </p>
+          <p className="text-muted-foreground">
+            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+          </p>
+        </TooltipContent>
+      </Tooltip>
     )}
-  </WeekContributionHeatmapCalendar>
-  <WeekContributionHeatmapFooter>
-    <WeekContributionHeatmapLegend />
-  </WeekContributionHeatmapFooter>
-</WeekContributionHeatmap>`,
+  </WeekdayHeatmapBody>
+  <WeekdayHeatmapFooter>
+    <WeekdayHeatmapLegend />
+  </WeekdayHeatmapFooter>
+</WeekdayHeatmap>`,
   },
   {
     title: "i18n labels (Japanese)",
@@ -128,7 +205,7 @@ export const weekVariants: VariantSpec[] = [
       "Pass a date-fns locale to auto-generate localised weekday labels, plus custom sum column/row label, legend, and total count text.",
     code: `import { ja } from "date-fns/locale";
 
-<WeekContributionHeatmap
+<WeekdayHeatmap
   data={data}
   locale={ja}
   labels={{
@@ -136,103 +213,169 @@ export const weekVariants: VariantSpec[] = [
     legend: { less: "少ない", more: "多い" },
   }}
 >
-  <WeekContributionHeatmapCalendar>
+  <WeekdayHeatmapBody>
     {({ activity }) => (
-      <WeekContributionHeatmapBlock activity={activity} />
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <WeekdayHeatmapBlock activity={activity} />
+        </TooltipTrigger>
+        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
+          <p className="font-medium">
+            {WEEKDAY_NAMES[activity.weekday]}{" "}
+            {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
+          </p>
+          <p className="text-muted-foreground">
+            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+          </p>
+        </TooltipContent>
+      </Tooltip>
     )}
-  </WeekContributionHeatmapCalendar>
-  <WeekContributionHeatmapFooter>
-    <WeekContributionHeatmapTotalCount>
+  </WeekdayHeatmapBody>
+  <WeekdayHeatmapFooter>
+    <WeekdayHeatmapTotalCount>
       {({ totalCount }) => (
         <div className="text-muted-foreground">
           {totalCount} 件の活動
         </div>
       )}
-    </WeekContributionHeatmapTotalCount>
-    <WeekContributionHeatmapLegend />
-  </WeekContributionHeatmapFooter>
-</WeekContributionHeatmap>`,
-  },
-  {
-    title: "Compact layout",
-    description:
-      "Large blocks with full corner radius — a pill-shaped grid ideal for dense dashboards.",
-    code: `<WeekContributionHeatmap data={data} blockSize={18} blockMargin={3}>
-  <WeekContributionHeatmapCalendar>
-    {({ activity }) => (
-      <WeekContributionHeatmapBlock activity={activity} />
-    )}
-  </WeekContributionHeatmapCalendar>
-</WeekContributionHeatmap>`,
+    </WeekdayHeatmapTotalCount>
+    <WeekdayHeatmapLegend />
+  </WeekdayHeatmapFooter>
+</WeekdayHeatmap>`,
   },
   {
     title: "Hide Sum column + row",
     description:
       "Drop both aggregate axes for a clean 7 × 24 grid without totals.",
-    code: `<WeekContributionHeatmap data={data}>
-  <WeekContributionHeatmapCalendar hideSumColumn hideSumRow>
+    code: `<WeekdayHeatmap data={data}>
+  <WeekdayHeatmapBody hideSumColumn hideSumRow>
     {({ activity }) => (
-      <WeekContributionHeatmapBlock activity={activity} />
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <WeekdayHeatmapBlock activity={activity} />
+        </TooltipTrigger>
+        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
+          <p className="font-medium">
+            {WEEKDAY_NAMES[activity.weekday]}{" "}
+            {\`\${String(activity.hour).padStart(2, "0")}:00\`}
+          </p>
+          <p className="text-muted-foreground">
+            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+          </p>
+        </TooltipContent>
+      </Tooltip>
     )}
-  </WeekContributionHeatmapCalendar>
-  <WeekContributionHeatmapFooter>
-    <WeekContributionHeatmapLegend />
-  </WeekContributionHeatmapFooter>
-</WeekContributionHeatmap>`,
+  </WeekdayHeatmapBody>
+  <WeekdayHeatmapFooter>
+    <WeekdayHeatmapLegend />
+  </WeekdayHeatmapFooter>
+</WeekdayHeatmap>`,
   },
   {
     title: "Hide axes for embedding",
     description:
       "Strip both axis labels — great for inline cards or a hero preview.",
-    code: `<WeekContributionHeatmap data={data}>
-  <WeekContributionHeatmapCalendar hideHourLabels hideWeekdayLabels>
+    code: `<WeekdayHeatmap data={data}>
+  <WeekdayHeatmapBody hideHourLabels hideWeekdayLabels>
     {({ activity }) => (
-      <WeekContributionHeatmapBlock activity={activity} />
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <WeekdayHeatmapBlock activity={activity} />
+        </TooltipTrigger>
+        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
+          <p className="font-medium">
+            {WEEKDAY_NAMES[activity.weekday]}{" "}
+            {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
+          </p>
+          <p className="text-muted-foreground">
+            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+          </p>
+        </TooltipContent>
+      </Tooltip>
     )}
-  </WeekContributionHeatmapCalendar>
-</WeekContributionHeatmap>`,
+  </WeekdayHeatmapBody>
+</WeekdayHeatmap>`,
   },
   {
     title: "Large flat blocks",
     description:
       "Bigger blocks with tighter margin — more visual weight, ideal for focused dashboards.",
-    code: `<WeekContributionHeatmap data={data} blockSize={18} blockMargin={3}>
-  <WeekContributionHeatmapCalendar>
+    code: `<WeekdayHeatmap data={data} blockSize={18} blockMargin={3}>
+  <WeekdayHeatmapBody>
     {({ activity }) => (
-      <WeekContributionHeatmapBlock activity={activity} />
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <WeekdayHeatmapBlock activity={activity} />
+        </TooltipTrigger>
+        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
+          <p className="font-medium">
+            {WEEKDAY_NAMES[activity.weekday]}{" "}
+            {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
+          </p>
+          <p className="text-muted-foreground">
+            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+          </p>
+        </TooltipContent>
+      </Tooltip>
     )}
-  </WeekContributionHeatmapCalendar>
-</WeekContributionHeatmap>`,
+  </WeekdayHeatmapBody>
+</WeekdayHeatmap>`,
   },
   {
     title: "12-hour axis labels",
     description:
       "Switch the hour axis to 12-hour AM/PM format with a single prop.",
-    code: `<WeekContributionHeatmap data={data} use12Hour>
-  <WeekContributionHeatmapCalendar>
+    code: `<WeekdayHeatmap data={data} use12Hour>
+  <WeekdayHeatmapBody>
     {({ activity }) => (
-      <WeekContributionHeatmapBlock activity={activity} />
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <WeekdayHeatmapBlock activity={activity} />
+        </TooltipTrigger>
+        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
+          <p className="font-medium">
+            {WEEKDAY_NAMES[activity.weekday]}{" "}
+            {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
+          </p>
+          <p className="text-muted-foreground">
+            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+          </p>
+        </TooltipContent>
+      </Tooltip>
     )}
-  </WeekContributionHeatmapCalendar>
-  <WeekContributionHeatmapFooter>
-    <WeekContributionHeatmapLegend />
-  </WeekContributionHeatmapFooter>
-</WeekContributionHeatmap>`,
+  </WeekdayHeatmapBody>
+  <WeekdayHeatmapFooter>
+    <WeekdayHeatmapLegend />
+  </WeekdayHeatmapFooter>
+</WeekdayHeatmap>`,
   },
   {
-    title: "Custom label styling",
+    title: "Custom styling",
     description:
-      "Use labelClass to customize the appearance of hour and weekday labels with Tailwind classes.",
-    code: `<WeekContributionHeatmap data={data}>
-  <WeekContributionHeatmapCalendar labelClass="text-green-500 font-bold">
+      "Use colors to theme the blocks, labelTextClass to style axis labels, and className on TotalCount and Legend to style the footer.",
+    code: `<WeekdayHeatmap data={data} colors={{ scale: "#22c55e" }}>
+  <WeekdayHeatmapBody labelTextClass="text-green-700 font-bold">
     {({ activity }) => (
-      <WeekContributionHeatmapBlock activity={activity} />
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <WeekdayHeatmapBlock activity={activity} />
+        </TooltipTrigger>
+        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
+          <p className="font-medium">
+            {WEEKDAY_NAMES[activity.weekday]}{" "}
+            {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
+          </p>
+          <p className="text-muted-foreground">
+            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+          </p>
+        </TooltipContent>
+      </Tooltip>
     )}
-  </WeekContributionHeatmapCalendar>
-  <WeekContributionHeatmapFooter>
-    <WeekContributionHeatmapTotalCount />
-    <WeekContributionHeatmapLegend />
-  </WeekContributionHeatmapFooter>
-</WeekContributionHeatmap>`,
+  </WeekdayHeatmapBody>
+  <WeekdayHeatmapFooter>
+    <WeekdayHeatmapTotalCount className="text-green-700" />
+    <WeekdayHeatmapLegend className="text-green-700" />
+  </WeekdayHeatmapFooter>
+</WeekdayHeatmap>`,
   },
 ];

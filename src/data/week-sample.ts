@@ -1,4 +1,4 @@
-import type { HeatmapActivity } from "@/components/heatmap/week-contribution-heatmap";
+import type { HeatmapActivity } from "@/components/heatmap/weekday-heatmap";
 
 import { createRng, weightedHour } from "./rng";
 

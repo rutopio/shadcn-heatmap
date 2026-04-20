@@ -1,4 +1,4 @@
-import type { DateHourlyActivity } from "@/components/heatmap/date-contribution-heatmap";
+import type { DateHourlyActivity } from "@/components/heatmap/date-heatmap";
 
 import { createRng, weightedHour } from "./rng";
 

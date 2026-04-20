@@ -11,21 +11,21 @@ import { QuickStart } from "@/components/landing/quick-start";
 
 const components = [
   {
-    name: "MonthContributionHeatmap",
+    name: "CalendarHeatmap",
     description:
       "GitHub-style, 7-row × N-week grid. Handles multiple years, ISO week starts, and i18n labels.",
     icon: GridFour,
-    to: "/month" as const,
+    to: "/calendar" as const,
   },
   {
-    name: "WeekContributionHeatmap",
+    name: "WeekdayHeatmap",
     description:
       "Weekday × hour-of-day matrix with Sum row and column. Independent colour scales for each axis.",
     icon: Clock,
-    to: "/week" as const,
+    to: "/weekday" as const,
   },
   {
-    name: "DateContributionHeatmap",
+    name: "DateHeatmap",
     description:
       "One row per calendar date × 24 hours + daily Sum column. Perfect for recent 1–4 week windows.",
     icon: CalendarCheck,

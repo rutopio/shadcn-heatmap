@@ -1,9 +1,9 @@
 export const REGISTRY_BASE_URL = "https://shadcn-heatmap.pages.dev/r"; // update to your deployment URL
 
 export const cliInstallCommands = {
-  month: `npx shadcn@latest add ${REGISTRY_BASE_URL}/month-contribution-heatmap.json`,
-  week: `npx shadcn@latest add ${REGISTRY_BASE_URL}/week-contribution-heatmap.json`,
-  date: `npx shadcn@latest add ${REGISTRY_BASE_URL}/date-contribution-heatmap.json`,
+  month: `npx shadcn@latest add ${REGISTRY_BASE_URL}/calendar-heatmap.json`,
+  week: `npx shadcn@latest add ${REGISTRY_BASE_URL}/weekday-heatmap.json`,
+  date: `npx shadcn@latest add ${REGISTRY_BASE_URL}/date-heatmap.json`,
 } as const;
 
 export const packageManagerCommands = {

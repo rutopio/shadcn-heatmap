@@ -33,25 +33,25 @@ const components: {
   extraDeps: string[];
 }[] = [
   {
-    filename: "month-contribution-heatmap.tsx",
-    name: "month-contribution-heatmap",
-    title: "MonthContributionHeatmap",
+    filename: "calendar-heatmap.tsx",
+    name: "calendar-heatmap",
+    title: "CalendarHeatmap",
     description:
       "GitHub-style yearly contribution heatmap with multi-year, weekStart, and i18n support.",
     extraDeps: ["date-fns"],
   },
   {
-    filename: "week-contribution-heatmap.tsx",
-    name: "week-contribution-heatmap",
-    title: "WeekContributionHeatmap",
+    filename: "weekday-heatmap.tsx",
+    name: "weekday-heatmap",
+    title: "WeekdayHeatmap",
     description:
       "Weekday × hour-of-day matrix with Sum row/column and independent colour scales.",
     extraDeps: [],
   },
   {
-    filename: "date-contribution-heatmap.tsx",
-    name: "date-contribution-heatmap",
-    title: "DateContributionHeatmap",
+    filename: "date-heatmap.tsx",
+    name: "date-heatmap",
+    title: "DateHeatmap",
     description:
       "Date × hour matrix for zooming into a narrow time window with daily Sum column.",
     extraDeps: [],

@@ -9,24 +9,24 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
-import { Route as WeekRouteImport } from './routes/week'
-import { Route as MonthRouteImport } from './routes/month'
+import { Route as WeekdayRouteImport } from './routes/weekday'
 import { Route as DateRouteImport } from './routes/date'
+import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as IndexRouteImport } from './routes/index'
 
-const WeekRoute = WeekRouteImport.update({
-  id: '/week',
-  path: '/week',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const MonthRoute = MonthRouteImport.update({
-  id: '/month',
-  path: '/month',
+const WeekdayRoute = WeekdayRouteImport.update({
+  id: '/weekday',
+  path: '/weekday',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DateRoute = DateRouteImport.update({
   id: '/date',
   path: '/date',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CalendarRoute = CalendarRouteImport.update({
+  id: '/calendar',
+  path: '/calendar',
   getParentRoute: () => rootRouteImport,
 } as any)
 const IndexRoute = IndexRouteImport.update({
@@ -37,52 +37,45 @@ const IndexRoute = IndexRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/calendar': typeof CalendarRoute
   '/date': typeof DateRoute
-  '/month': typeof MonthRoute
-  '/week': typeof WeekRoute
+  '/weekday': typeof WeekdayRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/calendar': typeof CalendarRoute
   '/date': typeof DateRoute
-  '/month': typeof MonthRoute
-  '/week': typeof WeekRoute
+  '/weekday': typeof WeekdayRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/calendar': typeof CalendarRoute
   '/date': typeof DateRoute
-  '/month': typeof MonthRoute
-  '/week': typeof WeekRoute
+  '/weekday': typeof WeekdayRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/date' | '/month' | '/week'
+  fullPaths: '/' | '/calendar' | '/date' | '/weekday'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/date' | '/month' | '/week'
-  id: '__root__' | '/' | '/date' | '/month' | '/week'
+  to: '/' | '/calendar' | '/date' | '/weekday'
+  id: '__root__' | '/' | '/calendar' | '/date' | '/weekday'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CalendarRoute: typeof CalendarRoute
   DateRoute: typeof DateRoute
-  MonthRoute: typeof MonthRoute
-  WeekRoute: typeof WeekRoute
+  WeekdayRoute: typeof WeekdayRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
-    '/week': {
-      id: '/week'
-      path: '/week'
-      fullPath: '/week'
-      preLoaderRoute: typeof WeekRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/month': {
-      id: '/month'
-      path: '/month'
-      fullPath: '/month'
-      preLoaderRoute: typeof MonthRouteImport
+    '/weekday': {
+      id: '/weekday'
+      path: '/weekday'
+      fullPath: '/weekday'
+      preLoaderRoute: typeof WeekdayRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/date': {
@@ -90,6 +83,13 @@ declare module '@tanstack/react-router' {
       path: '/date'
       fullPath: '/date'
       preLoaderRoute: typeof DateRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/calendar': {
+      id: '/calendar'
+      path: '/calendar'
+      fullPath: '/calendar'
+      preLoaderRoute: typeof CalendarRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -104,9 +104,9 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CalendarRoute: CalendarRoute,
   DateRoute: DateRoute,
-  MonthRoute: MonthRoute,
-  WeekRoute: WeekRoute,
+  WeekdayRoute: WeekdayRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
