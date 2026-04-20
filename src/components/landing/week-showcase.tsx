@@ -1,0 +1,131 @@
+import { CodeBlock } from "@/components/ui/code-block";
+import { weekProps } from "@/content/props/week";
+import {
+  weekBasicCode,
+  weekSampleData,
+  weekVariants,
+} from "@/content/snippets/week";
+
+import { DemoFrame } from "./demo-frame";
+import {
+  Week12HourDemo,
+  WeekBinaryDemo,
+  WeekCompactDemo,
+  WeekCustomLabelDemo,
+  WeekDefaultDemo,
+  WeekHideSumDemo,
+  WeekJapaneseDemo,
+  WeekLargeBlocksDemo,
+  WeekMiniDemo,
+  WeekMinimalTicksDemo,
+  WeekMondayStartDemo,
+  WeekThreeBucketsDemo,
+} from "./demos";
+import { PropsTable } from "./props-table";
+import { VariantGrid } from "./variant-grid";
+
+export function WeekShowcase() {
+  return (
+    <section className="py-20 sm:py-24" aria-label="WeekContributionHeatmap">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="mb-10 flex flex-col gap-2">
+          <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+            Component
+          </span>
+          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+            WeekContributionHeatmap
+          </h2>
+          <p className="max-w-2xl text-muted-foreground">
+            Weekday × hour-of-day matrix with optional Sum row and Sum column.
+            Each Sum axis is coloured against its own maximum so it visually
+            stands apart from the regular cells.
+          </p>
+        </div>
+
+        <div className="space-y-10">
+          <DemoFrame
+            title="Default usage"
+            preview={<WeekDefaultDemo />}
+            code={weekBasicCode}
+            filename="weekly-rhythm.tsx"
+          />
+
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Sample data</h3>
+            <p className="text-sm text-muted-foreground">
+              Regular cells are weekday 0–6 × hour 0–23. Use{" "}
+              <code className="text-xs">weekday = 7</code> for the Sum row and{" "}
+              <code className="text-xs">hour = 24</code> for the Sum column.
+            </p>
+            <CodeBlock
+              code={weekSampleData}
+              lang="tsx"
+              filename="sample-data.ts"
+              maxHeight="18rem"
+            />
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Props reference</h3>
+            <PropsTable sections={weekProps} />
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Variants</h3>
+            <p className="text-sm text-muted-foreground">
+              Drop in different props and see how the layout reacts.
+            </p>
+            <VariantGrid
+              variants={[
+                {
+                  ...weekVariants[0],
+                  preview: <WeekMondayStartDemo />,
+                },
+                {
+                  ...weekVariants[1],
+                  preview: <WeekMinimalTicksDemo />,
+                },
+                {
+                  ...weekVariants[2],
+                  preview: <WeekBinaryDemo />,
+                },
+                {
+                  ...weekVariants[3],
+                  preview: <WeekThreeBucketsDemo />,
+                },
+                {
+                  ...weekVariants[4],
+                  preview: <WeekJapaneseDemo />,
+                },
+                {
+                  ...weekVariants[5],
+                  preview: <WeekCompactDemo />,
+                },
+                {
+                  ...weekVariants[6],
+                  preview: <WeekHideSumDemo />,
+                },
+                {
+                  ...weekVariants[7],
+                  preview: <WeekMiniDemo />,
+                },
+                {
+                  ...weekVariants[8],
+                  preview: <WeekLargeBlocksDemo />,
+                },
+                {
+                  ...weekVariants[9],
+                  preview: <Week12HourDemo />,
+                },
+                {
+                  ...weekVariants[10],
+                  preview: <WeekCustomLabelDemo />,
+                },
+              ]}
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

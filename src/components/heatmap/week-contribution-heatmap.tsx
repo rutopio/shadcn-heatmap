@@ -1,0 +1,647 @@
+"use client";
+
+import { createContext, forwardRef, Fragment, use, useMemo } from "react";
+import { format } from "date-fns";
+import type { Day as WeekDay, Locale } from "date-fns";
+
+import { cn } from "@/lib/utils";
+
+import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
+
+export type HeatmapActivity = {
+  weekday: number; // 0-6 = Sun-Sat, 7 = hourly sum row
+  hour: number; // 0-23 = hour of day, 24 = daily sum column
+  count: number;
+};
+
+type HeatmapActivityWithLevel = HeatmapActivity & {
+  level: number;
+};
+
+type WeekContributionHeatmapContextType = {
+  data: HeatmapActivityWithLevel[];
+  blockMargin: number;
+  blockRadius: number;
+  blockSize: number;
+  blockSizeRatio: number;
+  blockWidth: number;
+  fontSize: number;
+  labels: Required<WeekContributionHeatmapLabels>;
+  labelWidth: number;
+  maxLevel: number;
+  totalCount: number;
+  width: number;
+  height: number;
+  weekStart: WeekDay;
+  colors?: ColorConfig;
+};
+
+export type WeekContributionHeatmapLabels = {
+  hours?: string[];
+  endHour?: string | null;
+  weekdays?: string[];
+  legend?: {
+    less?: string;
+    more?: string;
+  };
+};
+
+export type ColorConfig = {
+  empty?: string;
+  scale?: string;
+};
+
+const calculateLevel = (value: number, maxValue: number, maxLevel: number): number => {
+  if (value < 1 || maxValue <= 0) return 0;
+
+  const percentage = value / maxValue;
+  return Math.max(1, Math.min(maxLevel, Math.ceil(percentage * maxLevel)));
+};
+
+const getLevelFill = (
+  level: number,
+  maxLevel: number,
+  highlighted = false,
+  colors?: ColorConfig,
+): string => {
+  const emptyColor = colors?.empty ?? "var(--color-secondary)";
+  const scaleColor = colors?.scale ?? "var(--color-chart-1)";
+
+  if (level === 0) return emptyColor;
+  const opacity = Math.round((level * 100) / maxLevel);
+  const finalOpacity = highlighted ? Math.round(opacity * 0.6) : opacity;
+  return `color-mix(in oklch, ${scaleColor} ${finalOpacity}%, transparent)`;
+};
+
+const DEFAULT_HOUR_LABELS = Array.from({ length: 24 }, (_, i) =>
+  i.toString().padStart(2, "0"),
+);
+
+const TWELVE_HOUR_LABELS = Array.from({ length: 24 }, (_, i) => {
+  if (i === 0) return "AM";
+  if (i < 12) return String(i);
+  if (i === 12) return "PM";
+  return String(i - 12);
+});
+
+const HOURS = Array.from({ length: 24 }, (_, i) => i);
+
+const DEFAULT_WEEKDAY_LABELS = [
+  "Sun",
+  "Mon",
+  "Tue",
+  "Wed",
+  "Thu",
+  "Fri",
+  "Sat",
+];
+
+const generateWeekdayLabels = (locale: Locale): string[] =>
+  Array.from({ length: 7 }, (_, i) => {
+    const date = new Date(2000, 0, 2 + i); // Jan 2, 2000 is Sunday
+    return format(date, "EEE", { locale });
+  });
+
+const EMPTY_STYLE: CSSProperties = {};
+
+const WeekContributionHeatmapContext =
+  createContext<WeekContributionHeatmapContextType | null>(null);
+
+const useWeekContributionHeatmap = () => {
+  const context = use(WeekContributionHeatmapContext);
+
+  if (!context) {
+    throw new Error(
+      "WeekContributionHeatmap components must be used within a WeekContributionHeatmap",
+    );
+  }
+
+  return context;
+};
+
+export type WeekContributionHeatmapProps = HTMLAttributes<HTMLDivElement> & {
+  data: HeatmapActivity[];
+  weekStart?: WeekDay;
+  use12Hour?: boolean;
+  blockSize?: number;
+  blockMargin?: number;
+  blockRadius?: number;
+  blockSizeRatio?: number;
+  maxLevel?: number;
+  colors?: ColorConfig;
+  locale?: Locale;
+  labels?: WeekContributionHeatmapLabels;
+  fontSize?: number;
+  emptyState?: ReactNode;
+  totalCount?: number;
+  style?: CSSProperties;
+  className?: string;
+  children: ReactNode;
+};
+
+/**
+ * Week Contribution Heatmap
+ *
+ * A GitHub punch card style heatmap showing activity distribution by weekday (rows) and hour (columns).
+ * Displays intensity levels with optional sum row and sum column for daily and hourly totals.
+ *
+ * @example
+ * ```tsx
+ * <WeekContributionHeatmap data={data} weekStart={1} use12Hour>
+ *   <WeekContributionHeatmapCalendar>
+ *     {({ activity }) => (
+ *       <WeekContributionHeatmapBlock activity={activity} />
+ *     )}
+ *   </WeekContributionHeatmapCalendar>
+ *   <WeekContributionHeatmapFooter>
+ *     <WeekContributionHeatmapTotalCount />
+ *     <WeekContributionHeatmapLegend />
+ *   </WeekContributionHeatmapFooter>
+ * </WeekContributionHeatmap>
+ * ```
+ *
+ * @param data - Array of activities with weekday (0-6 for Sun-Sat, 7 for sum row), hour (0-23, 24 for sum column), and count
+ * @param weekStart - First day of week (0=Sunday, 1=Monday). Default: 0
+ * @param use12Hour - Use 12-hour format for hour labels. Default: false
+ * @param blockSizeRatio - Width/height ratio of blocks. Default: 2
+ * @param maxLevel - Maximum intensity level (0 to maxLevel). Default: 4
+ */
+export const WeekContributionHeatmap = ({
+  data,
+  weekStart = 0,
+  use12Hour = false,
+  blockSize = 12,
+  blockMargin = 4,
+  blockRadius = 2,
+  blockSizeRatio = 2,
+  maxLevel: maxLevelProp = 4,
+  colors,
+  locale,
+  labels: labelsProp = undefined,
+  fontSize = 14,
+  emptyState,
+  totalCount: totalCountProp = undefined,
+  style = EMPTY_STYLE,
+  className,
+  children,
+  ...props
+}: WeekContributionHeatmapProps) => {
+  const maxLevel = Math.max(1, maxLevelProp);
+
+  const dataWithLevels = useMemo((): HeatmapActivityWithLevel[] => {
+    if (data.length === 0) return [];
+
+    const regularCells = data.filter((a) => a.weekday < 7 && a.hour < 24);
+    const sumColumn = data.filter((a) => a.weekday < 7 && a.hour === 24);
+    const sumRow = data.filter((a) => a.weekday === 7 && a.hour < 24);
+
+    const maxRegular = Math.max(...regularCells.map((d) => d.count), 1);
+    const maxSumColumn = Math.max(...sumColumn.map((d) => d.count), 1);
+    const maxSumRow = Math.max(...sumRow.map((d) => d.count), 1);
+
+    return data.map((activity) => {
+      let maxCount: number;
+      if (activity.weekday === 7) {
+        maxCount = maxSumRow;
+      } else if (activity.hour === 24) {
+        maxCount = maxSumColumn;
+      } else {
+        maxCount = maxRegular;
+      }
+
+      return {
+        ...activity,
+        level: calculateLevel(activity.count, maxCount, maxLevel),
+      };
+    });
+  }, [data, maxLevel]);
+
+  const LABEL_MARGIN = 8;
+
+  const weekdayLabels = locale
+    ? generateWeekdayLabels(locale)
+    : DEFAULT_WEEKDAY_LABELS;
+
+  const labels: Required<WeekContributionHeatmapLabels> = {
+    hours: use12Hour ? TWELVE_HOUR_LABELS : DEFAULT_HOUR_LABELS,
+    endHour: use12Hour ? "12" : "00",
+    weekdays: weekdayLabels,
+    legend: { less: "Less", more: "More" },
+    ...labelsProp,
+  };
+
+  const labelWidth = fontSize * 3.5 + LABEL_MARGIN;
+
+  const totalCount =
+    typeof totalCountProp === "number"
+      ? totalCountProp
+      : dataWithLevels
+          .filter((a) => a.weekday < 7 && a.hour < 24)
+          .reduce((sum, a) => sum + a.count, 0);
+
+  const blockWidth = blockSize * blockSizeRatio;
+  const labelHeight = fontSize + LABEL_MARGIN;
+  const width =
+    24 * (blockWidth + blockMargin) +
+    blockSize / 2 +
+    (blockWidth + blockMargin) -
+    blockMargin +
+    labelWidth;
+  // 7 weekdays + 1 sum row = 8 rows
+  const height = 8 * (blockSize + blockMargin) - blockMargin + labelHeight;
+
+  if (data.length === 0) {
+    return emptyState ? <>{emptyState}</> : null;
+  }
+
+  return (
+    <WeekContributionHeatmapContext
+      value={{
+        data: dataWithLevels,
+        blockMargin,
+        blockRadius,
+        blockSize,
+        blockSizeRatio,
+        blockWidth,
+        fontSize,
+        labels,
+        labelWidth,
+        maxLevel,
+        totalCount,
+        width,
+        height,
+        weekStart,
+        colors,
+      }}
+    >
+      <div
+        className={cn("flex w-max max-w-full flex-col gap-2", className)}
+        style={{ fontSize, ...style }}
+        {...props}
+      >
+        {children}
+      </div>
+    </WeekContributionHeatmapContext>
+  );
+};
+
+export type WeekContributionHeatmapBlockProps =
+  HTMLAttributes<SVGRectElement> & {
+    activity: HeatmapActivityWithLevel;
+    className?: string;
+  };
+
+export const WeekContributionHeatmapBlock = forwardRef<
+  SVGRectElement,
+  WeekContributionHeatmapBlockProps
+>(({ activity, className, style: styleProp, ...props }, ref) => {
+  const {
+    blockSize,
+    blockWidth,
+    blockMargin,
+    blockRadius,
+    labelWidth,
+    maxLevel,
+    fontSize,
+    weekStart,
+    colors,
+  } = useWeekContributionHeatmap();
+
+  if (activity.level < 0 || activity.level > maxLevel) {
+    throw new RangeError(
+      `Provided activity level ${activity.level} for weekday ${activity.weekday} hour ${activity.hour} is out of range. It must be between 0 and ${maxLevel}.`,
+    );
+  }
+
+  const labelHeight = fontSize + 8;
+  const rowIndex =
+    activity.weekday === 7 ? 7 : (activity.weekday - weekStart + 7) % 7;
+  const yPosition = labelHeight + (blockSize + blockMargin) * rowIndex;
+
+  const xPosition =
+    activity.hour === 24
+      ? labelWidth + 24 * (blockWidth + blockMargin) + blockSize / 2
+      : labelWidth + (blockWidth + blockMargin) * activity.hour;
+
+  const isHighlighted =
+    (props as Record<string, unknown>)["data-highlighted"] === "true";
+
+  return (
+    <rect
+      ref={ref}
+      className={cn(className)}
+      data-count={activity.count}
+      data-weekday={activity.weekday}
+      data-hour={activity.hour}
+      data-level={activity.level}
+      height={blockSize}
+      rx={blockRadius}
+      ry={blockRadius}
+      width={blockWidth}
+      x={xPosition}
+      y={yPosition}
+      style={{
+        fill: getLevelFill(activity.level, maxLevel, isHighlighted, colors),
+        ...styleProp,
+      }}
+      {...props}
+    />
+  );
+});
+WeekContributionHeatmapBlock.displayName = "WeekContributionHeatmapBlock";
+
+export type WeekContributionHeatmapCalendarProps = Omit<
+  HTMLAttributes<HTMLDivElement>,
+  "children"
+> & {
+  hideSumRow?: boolean;
+  hideSumColumn?: boolean;
+  hideHourLabels?: boolean;
+  hideWeekdayLabels?: boolean;
+  className?: string;
+  labelTextClass?: string;
+  renderTooltip?: (activity: HeatmapActivityWithLevel, children: ReactNode) => ReactNode;
+  children: (props: { activity: HeatmapActivityWithLevel }) => ReactNode;
+};
+
+export const WeekContributionHeatmapCalendar = ({
+  hideSumRow = false,
+  hideSumColumn = false,
+  hideHourLabels = false,
+  hideWeekdayLabels = false,
+  className,
+  labelTextClass,
+  renderTooltip,
+  children,
+  ...props
+}: WeekContributionHeatmapCalendarProps) => {
+  const {
+    data,
+    blockSize,
+    blockWidth,
+    blockMargin,
+    labels,
+    labelWidth,
+    fontSize,
+    weekStart,
+  } = useWeekContributionHeatmap();
+
+  const PADDING = 20;
+  const labelHeight = fontSize + 8;
+
+  const activityMap = useMemo(() => {
+    const map = new Map<string, HeatmapActivityWithLevel>();
+    data.forEach((activity) => {
+      map.set(`${activity.weekday}-${activity.hour}`, activity);
+    });
+    return map;
+  }, [data]);
+
+  const allActivities = useMemo(() => {
+    const activities: HeatmapActivityWithLevel[] = [];
+    const maxHour = hideSumColumn ? 23 : 24;
+
+    // Regular weekdays in display order (respecting weekStart)
+    for (let di = 0; di < 7; di++) {
+      const weekday = (weekStart + di) % 7;
+      for (let hour = 0; hour <= maxHour; hour++) {
+        const key = `${weekday}-${hour}`;
+        activities.push(
+          activityMap.get(key) ?? { weekday, hour, count: 0, level: 0 },
+        );
+      }
+    }
+
+    // Sum row (hours 0-23 only, no corner cell)
+    if (!hideSumRow) {
+      for (let hour = 0; hour < 24; hour++) {
+        const key = `7-${hour}`;
+        activities.push(
+          activityMap.get(key) ?? { weekday: 7, hour, count: 0, level: 0 },
+        );
+      }
+    }
+
+    return activities;
+  }, [activityMap, hideSumRow, hideSumColumn, weekStart]);
+
+  const rowCount = hideSumRow ? 7 : 8;
+  const svgHeight =
+    rowCount * (blockSize + blockMargin) - blockMargin + labelHeight;
+  const svgWidth = hideSumColumn
+    ? labelWidth + 24 * (blockWidth + blockMargin) - blockMargin
+    : labelWidth +
+      24 * (blockWidth + blockMargin) +
+      blockSize / 2 +
+      (blockWidth + blockMargin);
+
+  const orderedWeekdayIndices = Array.from(
+    { length: 7 },
+    (_, i) => (weekStart + i) % 7,
+  );
+
+  return (
+    <div
+      className={cn("max-w-full overflow-x-auto overflow-y-hidden", className)}
+      {...props}
+    >
+      <svg
+        className="block overflow-visible"
+        height={svgHeight + PADDING * 2}
+        viewBox={`${-PADDING} ${-PADDING} ${svgWidth + PADDING * 2} ${svgHeight + PADDING * 2}`}
+        width={svgWidth + PADDING * 2}
+      >
+        {!hideHourLabels && (
+          <g className={cn("fill-current font-mono", labelTextClass)}>
+            {HOURS.map((hour) => {
+              const label = labels.hours?.[hour] ?? "";
+              return (
+                <text
+                  key={`hour-${hour}`}
+                  x={labelWidth + (blockWidth + blockMargin) * hour}
+                  y={0}
+                  textAnchor="middle"
+                  dominantBaseline="hanging"
+                  style={{ fontSize: `${fontSize * 0.75}px` }}
+                >
+                  {label}
+                </text>
+              );
+            })}
+            {labels.endHour != null && (
+              <text
+                key="hour-end"
+                x={labelWidth + (blockWidth + blockMargin) * 24}
+                y={0}
+                textAnchor="middle"
+                dominantBaseline="hanging"
+                style={{ fontSize: `${fontSize * 0.75}px` }}
+              >
+                {labels.endHour}
+              </text>
+            )}
+            {!hideSumColumn && (
+              <text
+                key="sum-col-label"
+                x={
+                  labelWidth +
+                  24 * (blockWidth + blockMargin) +
+                  blockSize / 2 +
+                  blockWidth / 2
+                }
+                y={0}
+                textAnchor="middle"
+                dominantBaseline="hanging"
+                style={{ fontSize: `${fontSize * 0.75}px` }}
+              >
+                Sum
+              </text>
+            )}
+          </g>
+        )}
+
+        {!hideWeekdayLabels && (
+          <g className={cn("fill-current font-mono", labelTextClass)}>
+            {orderedWeekdayIndices.map((weekday, displayIndex) => {
+              const label = labels.weekdays?.[weekday] ?? "";
+              const yPosition =
+                labelHeight +
+                (blockSize + blockMargin) * displayIndex +
+                blockSize / 2;
+              return (
+                <text
+                  key={`weekday-${weekday}`}
+                  x={labelWidth - 8}
+                  y={yPosition}
+                  dominantBaseline="middle"
+                  textAnchor="end"
+                  style={{ fontSize: `${fontSize * 0.75}px` }}
+                >
+                  {label}
+                </text>
+              );
+            })}
+            {!hideSumRow && (
+              <text
+                key="weekday-sum"
+                x={labelWidth - 8}
+                y={
+                  labelHeight + (blockSize + blockMargin) * 7 + blockSize / 2
+                }
+                dominantBaseline="middle"
+                textAnchor="end"
+                style={{ fontSize: `${fontSize * 0.75}px` }}
+              >
+                Sum
+              </text>
+            )}
+          </g>
+        )}
+
+        {allActivities.map((activity) => {
+          const key = `${activity.weekday}-${activity.hour}`;
+          const block = children({ activity });
+          return (
+            <Fragment key={key}>
+              {renderTooltip ? renderTooltip(activity, block) : block}
+            </Fragment>
+          );
+        })}
+      </svg>
+    </div>
+  );
+};
+
+export type WeekContributionHeatmapFooterProps =
+  HTMLAttributes<HTMLDivElement>;
+
+export const WeekContributionHeatmapFooter = ({
+  className,
+  ...props
+}: WeekContributionHeatmapFooterProps) => (
+  <div
+    className={cn(
+      "flex flex-wrap gap-1 whitespace-nowrap sm:gap-x-4",
+      className,
+    )}
+    {...props}
+  />
+);
+
+export type WeekContributionHeatmapTotalCountProps = Omit<
+  HTMLAttributes<HTMLDivElement>,
+  "children"
+> & {
+  children?: (props: { totalCount: number }) => ReactNode;
+};
+
+export const WeekContributionHeatmapTotalCount = ({
+  className,
+  children,
+  ...props
+}: WeekContributionHeatmapTotalCountProps) => {
+  const { totalCount } = useWeekContributionHeatmap();
+
+  if (children) {
+    return <>{children({ totalCount })}</>;
+  }
+
+  return (
+    <div className={cn("text-muted-foreground", className)} {...props}>
+      {`${totalCount} contributions`}
+    </div>
+  );
+};
+
+export type WeekContributionHeatmapLegendProps = Omit<
+  HTMLAttributes<HTMLDivElement>,
+  "children"
+> & {
+  children?: (props: { level: number }) => ReactNode;
+};
+
+export const WeekContributionHeatmapLegend = ({
+  className,
+  children,
+  ...props
+}: WeekContributionHeatmapLegendProps) => {
+  const { labels, maxLevel, blockSize, blockSizeRatio, blockRadius, colors } =
+    useWeekContributionHeatmap();
+
+  return (
+    <div
+      className={cn("ml-auto flex items-center gap-[3px]", className)}
+      {...props}
+    >
+      <span className="text-muted-foreground mr-1 text-xs font-medium">
+        {labels.legend?.less || "Less"}
+      </span>
+      {Array.from({ length: maxLevel + 1 }, (_, i) => i).map((level) =>
+        children ? (
+          <Fragment key={`legend-level-${level}`}>
+            {children({ level })}
+          </Fragment>
+        ) : (
+          <svg
+            height={blockSize}
+            key={`legend-level-${level}`}
+            width={blockSize * blockSizeRatio}
+          >
+            <title>{`Level ${level}`}</title>
+            <rect
+              data-level={level}
+              height={blockSize}
+              rx={blockRadius}
+              ry={blockRadius}
+              width={blockSize * blockSizeRatio}
+              style={{ fill: getLevelFill(level, maxLevel, false, colors) }}
+            />
+          </svg>
+        ),
+      )}
+      <span className="text-muted-foreground ml-1 text-xs font-medium">
+        {labels.legend?.more || "More"}
+      </span>
+    </div>
+  );
+};
