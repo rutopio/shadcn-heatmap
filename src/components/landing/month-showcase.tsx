@@ -50,7 +50,7 @@ export function MonthShowcase() {
           />
 
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Sample data</h3>
+            <h3 className="text-lg font-semibold text-balance">Sample data</h3>
             <p className="text-muted-foreground text-sm">
               Each entry is one day. Missing dates are auto-filled with{" "}
               <code className="text-xs">value: 0</code>.
@@ -64,12 +64,14 @@ export function MonthShowcase() {
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Props reference</h3>
+            <h3 className="text-lg font-semibold text-balance">
+              Props reference
+            </h3>
             <PropsTable sections={monthProps} />
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Variants</h3>
+            <h3 className="text-lg font-semibold text-balance">Variants</h3>
             <p className="text-muted-foreground text-sm">
               Drop in different props and see how the layout reacts.
             </p>

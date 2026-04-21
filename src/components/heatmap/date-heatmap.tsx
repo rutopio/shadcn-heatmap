@@ -336,7 +336,7 @@ export const DateHeatmapBlock = ({
     <rect
       ref={ref}
       className={cn(
-        "hover:stroke-foreground transition-all hover:stroke-1",
+        "hover:stroke-foreground transition-[stroke,stroke-width] hover:stroke-1",
         className
       )}
       data-value={activity.value}
@@ -469,6 +469,8 @@ export const DateHeatmapBody = ({
       {...props}
     >
       <svg
+        role="img"
+        aria-label="Activity heatmap by date and hour"
         className="block overflow-visible"
         height={svgHeight + PADDING * 2}
         viewBox={`${-PADDING} ${-PADDING} ${svgWidth + PADDING * 2} ${svgHeight + PADDING * 2}`}
@@ -655,6 +657,7 @@ export const DateHeatmapLegend = ({
           </Fragment>
         ) : (
           <svg
+            role="img"
             height={blockSize}
             key={`legend-level-${level}`}
             width={blockSize * blockSizeRatio}

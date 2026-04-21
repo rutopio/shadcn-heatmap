@@ -248,7 +248,7 @@ export const StatusHeatmapBlock = ({
     <rect
       ref={ref}
       className={cn(
-        "hover:stroke-foreground transition-all hover:stroke-1",
+        "hover:stroke-foreground transition-[stroke,stroke-width] hover:stroke-1",
         className
       )}
       data-value={activity.value}
@@ -331,6 +331,8 @@ export const StatusHeatmapBody = ({
       {...props}
     >
       <svg
+        role="img"
+        aria-label="Status heatmap"
         className="block overflow-visible"
         height={height + labelHeight + PADDING * 2}
         viewBox={`${-PADDING} ${-PADDING} ${width + PADDING * 2} ${height + labelHeight + PADDING * 2}`}
@@ -452,8 +454,11 @@ export const StatusHeatmapLegend = ({
             key={`status-${status.value}`}
             className="flex items-center gap-1"
           >
-            <svg height={blockSize / 2} width={blockSize * blockSizeRatio}>
-              <title>{status.label}</title>
+            <svg
+              aria-hidden="true"
+              height={blockSize / 2}
+              width={blockSize * blockSizeRatio}
+            >
               <rect
                 data-value={status.value}
                 height={blockSize / 2}

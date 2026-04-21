@@ -49,7 +49,9 @@ export function Hero() {
           {heatmaps.map(({ name, Demo, router }) => (
             <div key={name} className="item-center flex flex-col">
               <div className="flex items-center gap-2">
-                <h3 className="mr-auto text-lg font-semibold">{name}</h3>
+                <h3 className="mr-auto text-lg font-semibold text-balance">
+                  {name}
+                </h3>
                 <Link to={router}>
                   <Button variant="outline" size="sm">
                     Explore

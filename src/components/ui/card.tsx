@@ -44,7 +44,7 @@ export const CardTitle = ({
 }) => (
   <h3
     ref={ref}
-    className={cn("leading-none font-semibold tracking-tight", className)}
+    className={cn("leading-none font-semibold text-balance", className)}
     {...props}
   />
 );

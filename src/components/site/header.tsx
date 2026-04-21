@@ -1,5 +1,9 @@
 import { Link, useRouterState } from "@tanstack/react-router";
-import { GithubLogoIcon, SquaresFourIcon } from "@phosphor-icons/react";
+import {
+  CodeIcon,
+  GithubLogoIcon,
+  SquaresFourIcon,
+} from "@phosphor-icons/react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -9,7 +13,6 @@ import { ThemeToggle } from "./theme-toggle";
 const GITHUB_URL = "https://github.com/rutopio/shadcn-heatmap";
 
 const navLinks = [
-  { to: "/install" as const, label: "Install" },
   { to: "/calendar" as const, label: "Calendar" },
   { to: "/weekday" as const, label: "Weekday" },
   { to: "/date" as const, label: "Date" },
@@ -37,6 +40,12 @@ export function SiteHeader() {
           <span className="hidden sm:inline">shadcn-heatmap</span>
         </Link>
         <nav className="flex items-center gap-1">
+          <Button asChild variant="ghost" size="sm" className="mr-8">
+            <Link to="/install">
+              Install
+              <CodeIcon aria-hidden="true" weight="bold" className="size-4" />
+            </Link>
+          </Button>
           {navLinks.map((link) => (
             <Button
               key={link.to}
@@ -58,7 +67,7 @@ export function SiteHeader() {
           <Button
             asChild
             variant="ghost"
-            size="icon"
+            // size="icon"
             aria-label="View source on GitHub"
           >
             <a href={GITHUB_URL} target="_blank" rel="noreferrer">
@@ -67,6 +76,7 @@ export function SiteHeader() {
                 weight="bold"
                 className="size-4"
               />
+              rutopio/shadcn-heatmap
             </a>
           </Button>
           <ThemeToggle />

@@ -48,7 +48,7 @@ export function PropsTable({ sections }: PropsTableProps) {
       {sections.map((section) => (
         <div key={section.componentName} className="space-y-3">
           <div className="flex flex-col gap-1">
-            <h4 className="font-mono text-sm font-semibold">
+            <h4 className="font-mono text-sm font-semibold text-balance">
               {section.componentName}
             </h4>
             <p className="text-muted-foreground text-sm">

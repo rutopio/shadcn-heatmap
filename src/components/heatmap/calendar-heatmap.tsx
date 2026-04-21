@@ -590,7 +590,7 @@ export const CalendarHeatmapBlock = ({
     <rect
       ref={ref}
       className={cn(
-        "hover:stroke-foreground transition-all hover:stroke-1",
+        "hover:stroke-foreground transition-[stroke,stroke-width] hover:stroke-1",
         className
       )}
       data-value={activity.value}
@@ -699,6 +699,8 @@ export const CalendarHeatmapBody = ({
             {yearRow.year}
           </div>
           <svg
+            role="img"
+            aria-label={`Contribution heatmap for ${yearRow.year}`}
             className="block overflow-visible"
             height={height + strokePadding * 2}
             viewBox={`0 0 ${totalWidth} ${height + strokePadding * 2}`}
@@ -859,6 +861,7 @@ export const CalendarHeatmapLegend = ({
           </Fragment>
         ) : (
           <svg
+            role="img"
             height={blockSize}
             key={`legend-level-${level}`}
             width={blockWidth}

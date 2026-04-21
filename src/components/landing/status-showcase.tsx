@@ -45,7 +45,7 @@ export function StatusShowcase() {
           />
 
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Sample data</h3>
+            <h3 className="text-lg font-semibold text-balance">Sample data</h3>
             <p className="text-muted-foreground text-sm">
               Each entry represents one day with a status value. Missing dates
               are auto-filled with <code className="text-xs">value: 0</code>.
@@ -59,12 +59,14 @@ export function StatusShowcase() {
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Props reference</h3>
+            <h3 className="text-lg font-semibold text-balance">
+              Props reference
+            </h3>
             <PropsTable sections={statusProps} />
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Variants</h3>
+            <h3 className="text-lg font-semibold text-balance">Variants</h3>
             <p className="text-muted-foreground text-sm">
               Drop in different props and see how the layout reacts.
             </p>

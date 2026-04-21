@@ -48,7 +48,7 @@ export function DateShowcase() {
           />
 
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Sample data</h3>
+            <h3 className="text-lg font-semibold text-balance">Sample data</h3>
             <p className="text-muted-foreground text-sm">
               Each entry is one date × hour slot. Use{" "}
               <code className="text-xs">hour = 24</code> for the daily Sum
@@ -63,12 +63,14 @@ export function DateShowcase() {
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Props reference</h3>
+            <h3 className="text-lg font-semibold text-balance">
+              Props reference
+            </h3>
             <PropsTable sections={dateProps} />
           </div>
 
           <div className="space-y-4">
-            <h3 className="text-lg font-semibold">Variants</h3>
+            <h3 className="text-lg font-semibold text-balance">Variants</h3>
             <p className="text-muted-foreground text-sm">
               Drop in different props and see how the layout reacts.
             </p>
