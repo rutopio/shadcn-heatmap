@@ -1,6 +1,9 @@
-import type { StatusActivity, StatusValue } from "@/components/heatmap/status-heatmap";
-
 import { createRng } from "./rng";
+
+import type {
+  StatusActivity,
+  StatusValue,
+} from "@/components/heatmap/status-heatmap";
 
 function formatDate(date: Date): string {
   const y = date.getFullYear();
@@ -15,7 +18,7 @@ function formatDate(date: Date): string {
  */
 export function generateStatusSample(
   seed: number = 42,
-  days: number = 90,
+  days: number = 90
 ): StatusActivity[] {
   const rng = createRng(seed);
   const end = new Date();

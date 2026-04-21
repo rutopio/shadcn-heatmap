@@ -6,27 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta
       name="description"
-      content="Beautiful, accessible heatmap components for React. GitHub-style contribution graphs, weekday/hour patterns, and date/hour matrices. Built with shadcn/ui conventions."
+      content="Beautiful, accessible heatmap components for React. Calendar, Weekday, Date, and Status heatmaps built with SVG, Tailwind v4, and shadcn/ui conventions."
     />
-    <meta property="og:title" content="shadcn-heatmap — composable React heatmap components" />
+    <meta
+      property="og:title"
+      content="shadcn-heatmap — composable React heatmap components"
+    />
     <meta
       property="og:description"
-      content="Beautiful, accessible heatmap components for React. GitHub-style contribution graphs, weekday/hour patterns, and date/hour matrices. Built with shadcn/ui conventions."
+      content="Beautiful, accessible heatmap components for React. Calendar, Weekday, Date, and Status heatmaps built with SVG, Tailwind v4, and shadcn/ui conventions."
     />
     <meta property="og:type" content="website" />
     <meta property="og:url" content="https://shadcn-heatmap.pages.dev" />
     <link rel="canonical" href="https://shadcn-heatmap.pages.dev" />
     <meta name="twitter:card" content="summary" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
-    <meta name="theme-color" media="(prefers-color-scheme: light)" content="#ffffff" />
-    <meta name="theme-color" media="(prefers-color-scheme: dark)" content="#09090b" />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: light)"
+      content="#ffffff"
+    />
+    <meta
+      name="theme-color"
+      media="(prefers-color-scheme: dark)"
+      content="#09090b"
+    />
     <title>shadcn-heatmap — composable React heatmap components</title>
     <script>
       (() => {
         try {
           const stored = localStorage.getItem("theme");
           const prefersDark = window.matchMedia(
-            "(prefers-color-scheme: dark)",
+            "(prefers-color-scheme: dark)"
           ).matches;
           const isDark = stored ? stored === "dark" : prefersDark;
           if (isDark) document.documentElement.classList.add("dark");

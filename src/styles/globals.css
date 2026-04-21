@@ -43,7 +43,7 @@
   --color-primary: oklch(21% 0.006 285.9);
   --color-primary-foreground: oklch(98.5% 0 0);
 
-  --color-secondary: oklch(96.7% 0.001 286.4);
+  --color-secondary: oklch(90.7% 0.001 286.4);
   --color-secondary-foreground: oklch(21% 0.006 285.9);
 
   --color-muted: oklch(96.7% 0.001 286.4);
@@ -80,7 +80,7 @@
     --color-primary: oklch(92.2% 0.004 286.3);
     --color-primary-foreground: oklch(21% 0.006 285.9);
 
-    --color-secondary: oklch(27.4% 0.006 286.1);
+    --color-secondary: oklch(47.4% 0.006 286.1);
     --color-secondary-foreground: oklch(98.5% 0 0);
 
     --color-muted: oklch(27.4% 0.006 286.1);
@@ -96,7 +96,7 @@
     --color-input: oklch(100% 0 0 / 15%);
     --color-ring: oklch(55.2% 0.014 285.9);
 
-    --color-chart-1: oklch(72% 0.20 41.1);
+    --color-chart-1: oklch(72% 0.2 41.1);
     --color-chart-2: oklch(69.6% 0.17 162.5);
     --color-chart-3: oklch(76.9% 0.188 70.1);
     --color-chart-4: oklch(62.7% 0.265 303.9);
@@ -137,6 +137,34 @@
         transparent 1px
       );
     background-size: 56px 56px;
+  }
+}
+
+@utility container {
+  width: 100%;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 2rem;
+  padding-right: 2rem;
+
+  @media (min-width: 640px) {
+    max-width: 640px;
+  }
+
+  @media (min-width: 768px) {
+    max-width: 768px;
+  }
+
+  @media (min-width: 1024px) {
+    max-width: 1024px;
+  }
+
+  @media (min-width: 1280px) {
+    max-width: 1280px;
+  }
+
+  @media (min-width: 1536px) {
+    max-width: 1536px;
   }
 }
 

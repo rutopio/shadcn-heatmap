@@ -1,6 +1,6 @@
-import type { Activity } from "@/components/heatmap/calendar-heatmap";
-
 import { createRng } from "./rng";
+
+import type { Activity } from "@/components/heatmap/calendar-heatmap";
 
 function formatDate(date: Date): string {
   const y = date.getFullYear();
@@ -15,7 +15,7 @@ function formatDate(date: Date): string {
  */
 export function generateMonthSample(
   seed: number = 42,
-  year: number = 2025,
+  year: number = 2025
 ): Activity[] {
   const rng = createRng(seed);
   const start = new Date(year, 0, 1);

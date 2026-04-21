@@ -1,7 +1,7 @@
-import type { ReactNode } from "react";
-
 import { CodeBlock } from "@/components/ui/code-block";
+
 import type { VariantSpec } from "@/content/types";
+import type { ReactNode } from "react";
 
 type Variant = VariantSpec & {
   preview: ReactNode;
@@ -13,15 +13,15 @@ type VariantGridProps = {
 
 export function VariantGrid({ variants }: VariantGridProps) {
   return (
-    <div className="grid gap-6 grid-cols-1">
+    <div className="grid grid-cols-1 gap-6">
       {variants.map((variant) => (
         <div
           key={variant.title}
-          className="flex flex-col overflow-hidden rounded-xl border bg-card/40"
+          className="bg-card/40 flex flex-col overflow-hidden rounded-xl border"
         >
           <div className="border-b px-5 py-4">
             <h5 className="font-medium">{variant.title}</h5>
-            <p className="mt-1 text-xs text-muted-foreground">
+            <p className="text-muted-foreground mt-1 text-xs">
               {variant.description}
             </p>
           </div>

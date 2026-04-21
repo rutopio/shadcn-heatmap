@@ -4,6 +4,7 @@ export const cliInstallCommands = {
   month: `npx shadcn@latest add ${REGISTRY_BASE_URL}/calendar-heatmap.json`,
   week: `npx shadcn@latest add ${REGISTRY_BASE_URL}/weekday-heatmap.json`,
   date: `npx shadcn@latest add ${REGISTRY_BASE_URL}/date-heatmap.json`,
+  status: `npx shadcn@latest add ${REGISTRY_BASE_URL}/status-heatmap.json`,
 } as const;
 
 export const packageManagerCommands = {

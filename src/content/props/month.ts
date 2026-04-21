@@ -170,7 +170,8 @@ export const monthProps: ComponentPropsSection[] = [
         name: "activity",
         type: "ActivityWithLevel",
         required: true,
-        description: "The activity record including its computed level (0–maxLevel). Received directly from the `CalendarHeatmapBody` render-prop.",
+        description:
+          "The activity record including its computed level (0–maxLevel). Received directly from the `CalendarHeatmapBody` render-prop.",
       },
       {
         name: "dayIndex",

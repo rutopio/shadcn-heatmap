@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { createRouter, RouterProvider } from "@tanstack/react-router";
 
 import { routeTree } from "./routeTree.gen";
+
 import "./styles/globals.css";
 
 const router = createRouter({
@@ -25,5 +26,5 @@ if (!rootElement) {
 createRoot(rootElement).render(
   <StrictMode>
     <RouterProvider router={router} />
-  </StrictMode>,
+  </StrictMode>
 );

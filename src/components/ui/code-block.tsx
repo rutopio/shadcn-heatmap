@@ -1,14 +1,12 @@
-import { Check, Copy } from "@phosphor-icons/react";
 import * as React from "react";
+import { CheckIcon, CopyIcon } from "@phosphor-icons/react";
 
-import {
-  highlightTokens,
-  type HighlightedLine,
-  type SupportedLang,
-} from "@/lib/shiki";
+import { highlightTokens } from "@/lib/shiki";
 import { cn } from "@/lib/utils";
 
 import { Button } from "./button";
+
+import type { HighlightedLine, SupportedLang } from "@/lib/shiki";
 
 type CodeBlockProps = {
   code: string;
@@ -76,13 +74,13 @@ export function CodeBlock({
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-lg border bg-muted/40",
-        className,
+        "group bg-muted/40 relative overflow-hidden rounded-lg border",
+        className
       )}
     >
       {filename && (
-        <div className="flex items-center justify-between border-b bg-muted/60 px-4 py-2">
-          <span className="font-mono text-xs text-muted-foreground">
+        <div className="bg-muted/60 flex items-center justify-between border-b px-4 py-2">
+          <span className="text-muted-foreground font-mono text-xs">
             {filename}
           </span>
         </div>
@@ -91,18 +89,20 @@ export function CodeBlock({
         className="relative overflow-auto"
         style={maxHeight ? { maxHeight } : undefined}
       >
-        <pre className="px-4 py-4 font-mono text-[13px] leading-relaxed text-foreground/80">
+        <pre className="text-foreground/80 px-4 py-4 font-mono text-[13px] leading-relaxed">
           <code>
+            {/* Static syntax highlighting - using index as key is safe here as order never changes */}
+            {/* eslint-disable @eslint-react/no-array-index-key */}
             {lines
               ? lines.map((line, i) => (
-                  <React.Fragment key={i}>
+                  <React.Fragment key={`line-${i}`}>
                     {line.length === 0 ? (
                       "\n"
                     ) : (
                       <>
                         {line.map((token, j) => (
                           <HighlightedToken
-                            key={j}
+                            key={`token-${i}-${j}`}
                             light={token.light}
                             dark={token.dark}
                             fontStyle={token.fontStyle}
@@ -116,6 +116,7 @@ export function CodeBlock({
                   </React.Fragment>
                 ))
               : code}
+            {/* eslint-enable @eslint-react/no-array-index-key */}
           </code>
         </pre>
       </div>
@@ -125,12 +126,12 @@ export function CodeBlock({
           variant="ghost"
           aria-label={copied ? "Copied" : "Copy code"}
           onClick={handleCopy}
-          className="absolute right-2 top-2 size-8 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+          className="absolute top-2 right-2 size-8 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
         >
           {copied ? (
-            <Check weight="bold" className="size-4 text-chart-1" />
+            <CheckIcon weight="bold" className="text-chart-1 size-4" />
           ) : (
-            <Copy weight="bold" className="size-4" />
+            <CopyIcon weight="bold" className="size-4" />
           )}
         </Button>
       )}

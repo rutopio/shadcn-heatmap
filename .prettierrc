@@ -1,0 +1,34 @@
+{
+  "printWidth": 80,
+  "tabWidth": 2,
+  "semi": true,
+  "singleQuote": false,
+  "trailingComma": "es5",
+  "bracketSpacing": true,
+  "arrowParens": "always",
+  "bracketSameLine": false,
+  "endOfLine": "lf",
+  "plugins": [
+    "@ianvs/prettier-plugin-sort-imports",
+    "prettier-plugin-tailwindcss"
+  ],
+  "importOrder": [
+    "^react",
+    "^@tanstack/(.*)",
+    "@phosphor-icons/react",
+    "<THIRD_PARTY_MODULES>",
+    "",
+    "^@/components/(.*)",
+    "^@/content/(.*)",
+    "^@/data/(.*)",
+    "^@/lib/(.*)",
+    "",
+    "^\\.\\./(.*)",
+    "^\\./(.*)",
+    "",
+    "\\.(s?css|less)$",
+    "",
+    "<TYPES>",
+    ""
+  ]
+}

@@ -71,7 +71,8 @@ export const weekProps: ComponentPropsSection[] = [
         name: "weekStart",
         type: "WeekDay",
         default: "0",
-        description: "First day of week: `0` = Sunday, `1` = Monday, ..., `6` = Saturday.",
+        description:
+          "First day of week: `0` = Sunday, `1` = Monday, ..., `6` = Saturday.",
       },
       {
         name: "use12Hour",
@@ -97,7 +98,8 @@ export const weekProps: ComponentPropsSection[] = [
       {
         name: "totalCount",
         type: "number",
-        description: "Pre-calculated total. If omitted, computed from data automatically.",
+        description:
+          "Pre-calculated total. If omitted, computed from data automatically.",
       },
     ],
   },
@@ -147,7 +149,7 @@ export const weekProps: ComponentPropsSection[] = [
   {
     componentName: "WeekdayHeatmapBlock",
     description:
-      'A single SVG rect element representing one cell. Uses `--color-chart-1` for activity colors and `--color-secondary` for empty cells. Colors can be customized via the root `colors` prop.',
+      "A single SVG rect element representing one cell. Uses `--color-chart-1` for activity colors and `--color-secondary` for empty cells. Colors can be customized via the root `colors` prop.",
     props: [
       {
         name: "activity",
@@ -182,12 +184,14 @@ export const weekProps: ComponentPropsSection[] = [
   },
   {
     componentName: "WeekdayHeatmapTotalCount",
-    description: "Displays total contributions count. Supports custom render function.",
+    description:
+      "Displays total contributions count. Supports custom render function.",
     props: [
       {
         name: "children",
         type: "(args) => ReactNode",
-        description: "Render function receiving `{ totalCount }`. If omitted, displays default format.",
+        description:
+          "Render function receiving `{ totalCount }`. If omitted, displays default format.",
       },
       {
         name: "className",
@@ -203,7 +207,8 @@ export const weekProps: ComponentPropsSection[] = [
       {
         name: "children",
         type: "(args) => ReactNode",
-        description: "Custom render function receiving `{ level }` for each intensity level.",
+        description:
+          "Custom render function receiving `{ level }` for each intensity level.",
       },
       {
         name: "className",

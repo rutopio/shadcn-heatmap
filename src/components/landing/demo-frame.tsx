@@ -1,8 +1,8 @@
-import type { ReactNode } from "react";
-
 import { CodeBlock } from "@/components/ui/code-block";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { cn } from "@/lib/utils";
+
+import type { ReactNode } from "react";
 
 type DemoFrameProps = {
   title?: string;
@@ -22,12 +22,12 @@ export function DemoFrame({
   previewClassName,
 }: DemoFrameProps) {
   return (
-    <div className="rounded-xl border bg-card/50">
+    <div className="bg-card/50 rounded-xl border">
       {(title || description) && (
         <div className="flex flex-col gap-1 border-b px-6 py-4">
           {title && <h4 className="font-medium">{title}</h4>}
           {description && (
-            <p className="text-sm text-muted-foreground">{description}</p>
+            <p className="text-muted-foreground text-sm">{description}</p>
           )}
         </div>
       )}
@@ -38,17 +38,17 @@ export function DemoFrame({
             <TabsTrigger value="code">Code</TabsTrigger>
           </TabsList>
         </div>
-        <TabsContent value="preview" className="mt-0 px-6 pb-6 pt-4">
+        <TabsContent value="preview" className="mt-0 px-6 pt-4 pb-6">
           <div
             className={cn(
-              "flex min-h-[160px] items-center justify-center overflow-auto rounded-lg border bg-background p-6",
-              previewClassName,
+              "bg-background flex min-h-[160px] items-center justify-center overflow-auto rounded-lg border p-6",
+              previewClassName
             )}
           >
             {preview}
           </div>
         </TabsContent>
-        <TabsContent value="code" className="mt-0 px-4 pb-4 pt-4">
+        <TabsContent value="code" className="mt-0 px-4 pt-4 pb-4">
           <CodeBlock
             code={code}
             filename={filename}

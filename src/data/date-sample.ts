@@ -1,6 +1,6 @@
-import type { DateHourlyActivity } from "@/components/heatmap/date-heatmap";
-
 import { createRng, weightedHour } from "./rng";
+
+import type { DateHourlyActivity } from "@/components/heatmap/date-heatmap";
 
 function formatDate(date: Date): string {
   const y = date.getFullYear();
@@ -16,7 +16,7 @@ function formatDate(date: Date): string {
 export function generateDateSample(
   seed: number = 31,
   days: number = 14,
-  endDate: Date = new Date(2025, 11, 24),
+  endDate: Date = new Date(2025, 11, 24)
 ): DateHourlyActivity[] {
   const rng = createRng(seed);
   const result: DateHourlyActivity[] = [];

@@ -1,11 +1,10 @@
+import { CodeBlock } from "@/components/ui/code-block";
 import { monthProps } from "@/content/props/month";
 import {
   monthBasicCode,
   monthSampleData,
   monthVariants,
 } from "@/content/snippets/month";
-
-import { CodeBlock } from "@/components/ui/code-block";
 
 import { DemoFrame } from "./demo-frame";
 import {
@@ -27,15 +26,15 @@ import { VariantGrid } from "./variant-grid";
 export function MonthShowcase() {
   return (
     <section className="py-20 sm:py-24" aria-label="CalendarHeatmap">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+      <div className="container">
         <div className="mb-10 flex flex-col gap-2">
-          <span className="text-xs font-medium uppercase text-muted-foreground">
+          <span className="text-muted-foreground text-xs font-medium uppercase">
             Component
           </span>
           <h2 className="text-3xl font-semibold text-balance sm:text-4xl">
             CalendarHeatmap
           </h2>
-          <p className="max-w-2xl text-muted-foreground text-pretty">
+          <p className="text-muted-foreground max-w-2xl text-pretty">
             GitHub-style, 7-row × N-week grid. Handles multiple years by
             splitting into per-year rows and supports ISO week starts.
           </p>
@@ -52,7 +51,7 @@ export function MonthShowcase() {
 
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Sample data</h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Each entry is one day. Missing dates are auto-filled with{" "}
               <code className="text-xs">value: 0</code>.
             </p>
@@ -71,7 +70,7 @@ export function MonthShowcase() {
 
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Variants</h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Drop in different props and see how the layout reacts.
             </p>
             <VariantGrid

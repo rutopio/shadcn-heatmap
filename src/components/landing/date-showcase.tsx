@@ -15,8 +15,8 @@ import {
   DateIsoDemo,
   DateLargeBlocksDemo,
   DateNoLabelsDemo,
-  DateSparseTicksDemo,
   DateSpanishDemo,
+  DateSparseTicksDemo,
   DateTenLevelsDemo,
 } from "./demos";
 import { PropsTable } from "./props-table";
@@ -25,15 +25,15 @@ import { VariantGrid } from "./variant-grid";
 export function DateShowcase() {
   return (
     <section className="py-20 sm:py-24" aria-label="DateHeatmap">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+      <div className="container">
         <div className="mb-10 flex flex-col gap-2">
-          <span className="text-xs font-medium uppercase text-muted-foreground">
+          <span className="text-muted-foreground text-xs font-medium uppercase">
             Component
           </span>
           <h2 className="text-3xl font-semibold text-balance sm:text-4xl">
             DateHeatmap
           </h2>
-          <p className="max-w-2xl text-muted-foreground text-pretty">
+          <p className="text-muted-foreground max-w-2xl text-pretty">
             One row per calendar date × 24 hours + a daily Sum column. Perfect
             for zooming into a narrow window (recent 1–4 weeks).
           </p>
@@ -49,7 +49,7 @@ export function DateShowcase() {
 
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Sample data</h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Each entry is one date × hour slot. Use{" "}
               <code className="text-xs">hour = 24</code> for the daily Sum
               column. Dates are sorted automatically.
@@ -69,7 +69,7 @@ export function DateShowcase() {
 
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Variants</h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Drop in different props and see how the layout reacts.
             </p>
             <VariantGrid

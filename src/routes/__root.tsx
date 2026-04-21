@@ -1,11 +1,11 @@
-import { Outlet, createRootRoute } from "@tanstack/react-router";
+import { createRootRoute, Outlet } from "@tanstack/react-router";
 
-import { SiteHeader } from "@/components/site/header";
 import { SiteFooter } from "@/components/site/footer";
+import { SiteHeader } from "@/components/site/header";
 
 function RootLayout() {
   return (
-    <div className="relative flex min-h-screen flex-col bg-background text-foreground">
+    <div className="bg-background text-foreground relative flex min-h-screen flex-col">
       <SiteHeader />
       <main className="flex-1">
         <Outlet />

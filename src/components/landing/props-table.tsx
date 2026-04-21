@@ -1,4 +1,5 @@
 import { Badge } from "@/components/ui/badge";
+
 import type { ComponentPropsSection } from "@/content/types";
 import type { ReactNode } from "react";
 
@@ -24,7 +25,7 @@ function parseDescription(text: string): ReactNode {
     parts.push(
       <code
         key={match.index}
-        className="rounded bg-muted px-1 py-0.5 font-mono text-xs"
+        className="bg-muted rounded px-1 py-0.5 font-mono text-xs"
       >
         {match[1]}
       </code>
@@ -50,7 +51,7 @@ export function PropsTable({ sections }: PropsTableProps) {
             <h4 className="font-mono text-sm font-semibold">
               {section.componentName}
             </h4>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               {section.description}
             </p>
           </div>
@@ -89,21 +90,23 @@ export function PropsTable({ sections }: PropsTableProps) {
                       </div>
                     </td>
                     <td className="px-4 py-3 align-top">
-                      <code className="break-words font-mono text-[13px] text-chart-1">
+                      <code className="text-chart-1 font-mono text-[13px] break-words">
                         {prop.type}
                       </code>
                     </td>
                     <td className="px-4 py-3 align-top">
                       {prop.default ? (
-                        <code className="font-mono text-[13px] text-muted-foreground">
+                        <code className="text-muted-foreground font-mono text-[13px]">
                           {prop.default}
                         </code>
                       ) : (
                         <span className="text-muted-foreground/60">—</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 align-top text-muted-foreground">
-                      {prop.description ? parseDescription(prop.description) : null}
+                    <td className="text-muted-foreground px-4 py-3 align-top">
+                      {prop.description
+                        ? parseDescription(prop.description)
+                        : null}
                     </td>
                   </tr>
                 ))}

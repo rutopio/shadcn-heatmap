@@ -1,5 +1,5 @@
-import { Slot } from "@radix-ui/react-slot";
 import * as React from "react";
+import { Slot } from "@radix-ui/react-slot";
 
 import { cn } from "@/lib/utils";
 
@@ -37,31 +37,27 @@ type ButtonProps = React.ButtonHTMLAttributes<HTMLButtonElement> & {
   asChild?: boolean;
 };
 
-export const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
-  (
-    {
-      className,
-      variant = "default",
-      size = "default",
-      asChild = false,
-      ...props
-    },
-    ref,
-  ) => {
-    const Comp = asChild ? Slot : "button";
+export const Button = ({
+  ref,
+  className,
+  variant = "default",
+  size = "default",
+  asChild = false,
+  ...props
+}: ButtonProps & { ref?: React.RefObject<HTMLButtonElement | null> }) => {
+  const Comp = asChild ? Slot : "button";
 
-    return (
-      <Comp
-        ref={ref}
-        className={cn(
-          "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg:not([class*='size-'])]:size-4 [&_svg]:shrink-0",
-          variantClasses[variant],
-          sizeClasses[size],
-          className,
-        )}
-        {...props}
-      />
-    );
-  },
-);
+  return (
+    <Comp
+      ref={ref}
+      className={cn(
+        "focus-visible:ring-ring inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        variantClasses[variant],
+        sizeClasses[size],
+        className
+      )}
+      {...props}
+    />
+  );
+};
 Button.displayName = "Button";

@@ -8,11 +8,11 @@ import {
 
 import { DemoFrame } from "./demo-frame";
 import {
-  StatusDefaultDemo,
-  StatusWithLabelsDemo,
   StatusCustomColorDemo,
   StatusCustomSizeDemo,
+  StatusDefaultDemo,
   StatusUptimeDemo,
+  StatusWithLabelsDemo,
 } from "./demos/status";
 import { PropsTable } from "./props-table";
 import { VariantGrid } from "./variant-grid";
@@ -20,17 +20,18 @@ import { VariantGrid } from "./variant-grid";
 export function StatusShowcase() {
   return (
     <section className="py-20 sm:py-24" aria-label="StatusHeatmap">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+      <div className="container">
         <div className="mb-10 flex flex-col gap-2">
-          <span className="text-xs font-medium uppercase text-muted-foreground">
+          <span className="text-muted-foreground text-xs font-medium uppercase">
             Component
           </span>
           <h2 className="text-3xl font-semibold text-balance sm:text-4xl">
             StatusHeatmap
           </h2>
-          <p className="max-w-2xl text-muted-foreground text-pretty">
-            Timeline status indicator showing daily activity over a period (e.g., 90 days).
-            Similar to Atlassian Statuspage – each day is represented by a vertical bar.
+          <p className="text-muted-foreground max-w-2xl text-pretty">
+            Timeline status indicator showing daily activity over a period
+            (e.g., 90 days). Similar to Atlassian Statuspage – each day is
+            represented by a vertical bar.
           </p>
         </div>
 
@@ -45,9 +46,9 @@ export function StatusShowcase() {
 
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Sample data</h3>
-            <p className="text-sm text-muted-foreground">
-              Each entry represents one day with a status value. Missing dates are auto-filled with{" "}
-              <code className="text-xs">value: 0</code>.
+            <p className="text-muted-foreground text-sm">
+              Each entry represents one day with a status value. Missing dates
+              are auto-filled with <code className="text-xs">value: 0</code>.
             </p>
             <CodeBlock
               code={statusSampleData}
@@ -64,7 +65,7 @@ export function StatusShowcase() {
 
           <div className="space-y-4">
             <h3 className="text-lg font-semibold">Variants</h3>
-            <p className="text-sm text-muted-foreground">
+            <p className="text-muted-foreground text-sm">
               Drop in different props and see how the layout reacts.
             </p>
             <VariantGrid

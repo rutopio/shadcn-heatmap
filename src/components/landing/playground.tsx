@@ -1,11 +1,33 @@
 "use client";
 
 import { useState } from "react";
-import { de, ja, es, enUS, zhTW, fr } from "date-fns/locale";
-import type { Locale, Day } from "date-fns";
 import { format, parseISO } from "date-fns";
+import { de, enUS, es, fr, ja, zhTW } from "date-fns/locale";
 
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import {
+  CalendarHeatmap,
+  CalendarHeatmapBlock,
+  CalendarHeatmapBody,
+  CalendarHeatmapFooter,
+  CalendarHeatmapLegend,
+  CalendarHeatmapTotalCount,
+} from "@/components/heatmap/calendar-heatmap";
+import {
+  DateHeatmap,
+  DateHeatmapBlock,
+  DateHeatmapBody,
+  DateHeatmapFooter,
+  DateHeatmapLegend,
+  DateHeatmapTotalCount,
+} from "@/components/heatmap/date-heatmap";
+import {
+  WeekdayHeatmap,
+  WeekdayHeatmapBlock,
+  WeekdayHeatmapBody,
+  WeekdayHeatmapFooter,
+  WeekdayHeatmapLegend,
+  WeekdayHeatmapTotalCount,
+} from "@/components/heatmap/weekday-heatmap";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -16,44 +38,24 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import {
-  CalendarHeatmap,
-  CalendarHeatmapBlock,
-  CalendarHeatmapBody,
-  CalendarHeatmapFooter,
-  CalendarHeatmapLegend,
-  CalendarHeatmapTotalCount,
-} from "@/components/heatmap/calendar-heatmap";
-import {
-  WeekdayHeatmap,
-  WeekdayHeatmapBlock,
-  WeekdayHeatmapBody,
-  WeekdayHeatmapFooter,
-  WeekdayHeatmapLegend,
-  WeekdayHeatmapTotalCount,
-} from "@/components/heatmap/weekday-heatmap";
-import {
-  DateHeatmap,
-  DateHeatmapBlock,
-  DateHeatmapBody,
-  DateHeatmapFooter,
-  DateHeatmapLegend,
-  DateHeatmapTotalCount,
-} from "@/components/heatmap/date-heatmap";
-import { generateMonthSample } from "@/data/month-sample";
-import { generateWeekSample } from "@/data/week-sample";
-import { generateDateSample } from "@/data/date-sample";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { generateDateSample } from "@/data/date-sample";
+import { generateMonthSample } from "@/data/month-sample";
+import { generateWeekSample } from "@/data/week-sample";
+
 import {
-  WeekTooltipContent,
   DateTooltipContent,
   HeatmapTooltip,
+  WeekTooltipContent,
 } from "./demos/shared";
+
+import type { Day, Locale } from "date-fns";
 
 const LOCALES: Record<string, Locale> = {
   en: enUS,
@@ -122,8 +124,14 @@ function MonthPlayground({ props }: { props: MonthProps }) {
                   weekIndex={weekIndex}
                 />
               </TooltipTrigger>
-              <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
-                <p className="font-medium">{format(parseISO(activity.date), "PPP")}</p>
+              <TooltipContent
+                side="top"
+                className="pointer-events-none text-xs"
+                sideOffset={6}
+              >
+                <p className="font-medium">
+                  {format(parseISO(activity.date), "PPP")}
+                </p>
                 <p className="text-muted-foreground">
                   {activity.value} contribution{activity.value !== 1 ? "s" : ""}
                 </p>
@@ -155,7 +163,14 @@ function WeekPlayground({ props }: { props: WeekProps }) {
       >
         <WeekdayHeatmapBody>
           {({ activity }) => (
-            <HeatmapTooltip content={<WeekTooltipContent activity={activity} use12Hour={props.use12Hour} />}>
+            <HeatmapTooltip
+              content={
+                <WeekTooltipContent
+                  activity={activity}
+                  use12Hour={props.use12Hour}
+                />
+              }
+            >
               <WeekdayHeatmapBlock activity={activity} />
             </HeatmapTooltip>
           )}
@@ -183,7 +198,14 @@ function DatePlayground({ props }: { props: DateProps }) {
       >
         <DateHeatmapBody>
           {({ activity, dateIndex }) => (
-            <HeatmapTooltip content={<DateTooltipContent activity={activity} use12Hour={props.use12Hour} />}>
+            <HeatmapTooltip
+              content={
+                <DateTooltipContent
+                  activity={activity}
+                  use12Hour={props.use12Hour}
+                />
+              }
+            >
               <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
             </HeatmapTooltip>
           )}
@@ -217,7 +239,10 @@ function ControlPanel<T extends Record<string, unknown>>({
       <h3 className="text-sm font-semibold">Props</h3>
       <div className="space-y-3">
         {config.map((item) => (
-          <div key={String(item.key)} className="flex items-center justify-between gap-4">
+          <div
+            key={String(item.key)}
+            className="flex items-center justify-between gap-4"
+          >
             <Label htmlFor={String(item.key)} className="text-sm">
               {item.label}
             </Label>
@@ -324,21 +349,59 @@ export function Playground() {
 
       <TabsContent value="month" className="mt-6">
         <div className="grid gap-6 lg:grid-cols-[1fr,300px]">
-          <div className="overflow-x-auto rounded-lg border bg-card p-6">
+          <div className="bg-card overflow-x-auto rounded-lg border p-6">
             <MonthPlayground props={monthProps} />
           </div>
-          <div className="rounded-lg border bg-card p-6">
+          <div className="bg-card rounded-lg border p-6">
             <ControlPanel
               props={monthProps}
               onPropsChange={updateMonthProps}
               config={[
-                { key: "continuousMonths", label: "Continuous Months", type: "boolean" },
-                { key: "hasEmptyColumn", label: "Empty Column", type: "boolean" },
-                { key: "weekStart", label: "Week Start", type: "number", min: 0, max: 6 } as const,
-                { key: "maxLevel", label: "Max Level", type: "number", min: 1, max: 10 },
-                { key: "blockSize", label: "Block Size", type: "number", min: 8, max: 24 },
-                { key: "blockMargin", label: "Block Margin", type: "number", min: 0, max: 8 },
-                { key: "blockRadius", label: "Block Radius", type: "number", min: 0, max: 8 },
+                {
+                  key: "continuousMonths",
+                  label: "Continuous Months",
+                  type: "boolean",
+                },
+                {
+                  key: "hasEmptyColumn",
+                  label: "Empty Column",
+                  type: "boolean",
+                },
+                {
+                  key: "weekStart",
+                  label: "Week Start",
+                  type: "number",
+                  min: 0,
+                  max: 6,
+                } as const,
+                {
+                  key: "maxLevel",
+                  label: "Max Level",
+                  type: "number",
+                  min: 1,
+                  max: 10,
+                },
+                {
+                  key: "blockSize",
+                  label: "Block Size",
+                  type: "number",
+                  min: 8,
+                  max: 24,
+                },
+                {
+                  key: "blockMargin",
+                  label: "Block Margin",
+                  type: "number",
+                  min: 0,
+                  max: 8,
+                },
+                {
+                  key: "blockRadius",
+                  label: "Block Radius",
+                  type: "number",
+                  min: 0,
+                  max: 8,
+                },
                 { key: "locale", label: "Locale", type: "locale" },
               ]}
             />
@@ -348,20 +411,50 @@ export function Playground() {
 
       <TabsContent value="week" className="mt-6">
         <div className="grid gap-6 lg:grid-cols-[1fr,300px]">
-          <div className="overflow-x-auto rounded-lg border bg-card p-6">
+          <div className="bg-card overflow-x-auto rounded-lg border p-6">
             <WeekPlayground props={weekProps} />
           </div>
-          <div className="rounded-lg border bg-card p-6">
+          <div className="bg-card rounded-lg border p-6">
             <ControlPanel
               props={weekProps}
               onPropsChange={updateWeekProps}
               config={[
                 { key: "use12Hour", label: "12-Hour Format", type: "boolean" },
-                { key: "weekStart", label: "Week Start", type: "number", min: 0, max: 6 } as const,
-                { key: "maxLevel", label: "Max Level", type: "number", min: 1, max: 10 },
-                { key: "blockSize", label: "Block Size", type: "number", min: 8, max: 24 },
-                { key: "blockMargin", label: "Block Margin", type: "number", min: 0, max: 8 },
-                { key: "blockRadius", label: "Block Radius", type: "number", min: 0, max: 8 },
+                {
+                  key: "weekStart",
+                  label: "Week Start",
+                  type: "number",
+                  min: 0,
+                  max: 6,
+                } as const,
+                {
+                  key: "maxLevel",
+                  label: "Max Level",
+                  type: "number",
+                  min: 1,
+                  max: 10,
+                },
+                {
+                  key: "blockSize",
+                  label: "Block Size",
+                  type: "number",
+                  min: 8,
+                  max: 24,
+                },
+                {
+                  key: "blockMargin",
+                  label: "Block Margin",
+                  type: "number",
+                  min: 0,
+                  max: 8,
+                },
+                {
+                  key: "blockRadius",
+                  label: "Block Radius",
+                  type: "number",
+                  min: 0,
+                  max: 8,
+                },
                 { key: "locale", label: "Locale", type: "locale" },
               ]}
             />
@@ -371,19 +464,43 @@ export function Playground() {
 
       <TabsContent value="date" className="mt-6">
         <div className="grid gap-6 lg:grid-cols-[1fr,300px]">
-          <div className="overflow-x-auto rounded-lg border bg-card p-6">
+          <div className="bg-card overflow-x-auto rounded-lg border p-6">
             <DatePlayground props={dateProps} />
           </div>
-          <div className="rounded-lg border bg-card p-6">
+          <div className="bg-card rounded-lg border p-6">
             <ControlPanel
               props={dateProps}
               onPropsChange={updateDateProps}
               config={[
                 { key: "use12Hour", label: "12-Hour Format", type: "boolean" },
-                { key: "maxLevel", label: "Max Level", type: "number", min: 1, max: 10 },
-                { key: "blockSize", label: "Block Size", type: "number", min: 8, max: 24 },
-                { key: "blockMargin", label: "Block Margin", type: "number", min: 0, max: 8 },
-                { key: "blockRadius", label: "Block Radius", type: "number", min: 0, max: 8 },
+                {
+                  key: "maxLevel",
+                  label: "Max Level",
+                  type: "number",
+                  min: 1,
+                  max: 10,
+                },
+                {
+                  key: "blockSize",
+                  label: "Block Size",
+                  type: "number",
+                  min: 8,
+                  max: 24,
+                },
+                {
+                  key: "blockMargin",
+                  label: "Block Margin",
+                  type: "number",
+                  min: 0,
+                  max: 8,
+                },
+                {
+                  key: "blockRadius",
+                  label: "Block Radius",
+                  type: "number",
+                  min: 0,
+                  max: 8,
+                },
                 { key: "locale", label: "Locale", type: "locale" },
               ]}
             />

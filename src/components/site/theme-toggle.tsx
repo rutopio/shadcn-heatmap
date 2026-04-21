@@ -1,5 +1,5 @@
-import { Moon, Sun } from "@phosphor-icons/react";
 import * as React from "react";
+import { MoonIcon, SunIcon } from "@phosphor-icons/react";
 
 import { Button } from "@/components/ui/button";
 
@@ -39,9 +39,9 @@ export function ThemeToggle() {
       variant="ghost"
     >
       {theme === "dark" ? (
-        <Sun weight="bold" className="size-4" />
+        <SunIcon weight="bold" className="size-4" />
       ) : (
-        <Moon weight="bold" className="size-4" />
+        <MoonIcon weight="bold" className="size-4" />
       )}
     </Button>
   );

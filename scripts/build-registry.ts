@@ -126,7 +126,7 @@ const index = {
 
 fs.writeFileSync(
   path.join(outDir, "index.json"),
-  JSON.stringify(index, null, 2) + "\n",
+  JSON.stringify(index, null, 2) + "\n"
 );
 
 console.log(`Registry built: ${indexItems.length} items → ${outDir}`);

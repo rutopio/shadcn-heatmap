@@ -58,7 +58,7 @@ export const statusProps: ComponentPropsSection[] = [
       {
         name: "fontSize",
         type: "number",
-        default: "12",
+        default: "14",
         description: "Base font size for labels.",
       },
       // 5. 國際化
@@ -105,7 +105,8 @@ export const statusProps: ComponentPropsSection[] = [
         name: "labelInterval",
         type: "number",
         default: "30",
-        description: "Show label every N days. Only applies when `showDateLabels` is true.",
+        description:
+          "Show label every N days. Only applies when `showDateLabels` is true.",
       },
       {
         name: "labelTextClass",
@@ -171,7 +172,8 @@ export const statusProps: ComponentPropsSection[] = [
   },
   {
     componentName: "StatusHeatmapLegend",
-    description: "Displays all 4 status states with their colors and labels: No Data, Error, Warning, Normal.",
+    description:
+      "Displays all 4 status states with their colors and labels: No Data, Error, Warning, Normal.",
     props: [
       {
         name: "children",

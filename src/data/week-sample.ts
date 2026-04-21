@@ -1,6 +1,6 @@
-import type { HeatmapActivity } from "@/components/heatmap/weekday-heatmap";
-
 import { createRng, weightedHour } from "./rng";
+
+import type { HeatmapActivity } from "@/components/heatmap/weekday-heatmap";
 
 /**
  * 7 weekdays x 24 hours + "Sum" row and "Sum" column.
