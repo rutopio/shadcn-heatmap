@@ -50,3 +50,4 @@ vite.config.ts.timestamp-*
 /.tanstack
 task/
 TODO.md
+/docs

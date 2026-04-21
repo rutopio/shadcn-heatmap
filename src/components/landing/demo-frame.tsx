@@ -41,7 +41,7 @@ export function DemoFrame({
         <TabsContent value="preview" className="mt-0 px-6 pt-4 pb-6">
           <div
             className={cn(
-              "bg-background flex min-h-[160px] items-center justify-center overflow-auto rounded-lg border p-6",
+              "bg-background flex min-h-[120px] items-center justify-center overflow-x-auto rounded-lg border p-3 sm:min-h-[160px] sm:p-6",
               previewClassName
             )}
           >

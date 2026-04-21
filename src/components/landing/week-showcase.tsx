@@ -25,9 +25,9 @@ import { VariantGrid } from "./variant-grid";
 
 export function WeekShowcase() {
   return (
-    <section className="py-20 sm:py-24" aria-label="WeekdayHeatmap">
+    <section className="py-12 sm:py-20 md:py-24" aria-label="WeekdayHeatmap">
       <div className="container">
-        <div className="mb-10 flex flex-col gap-2">
+        <div className="mb-6 flex flex-col gap-2 sm:mb-10">
           <span className="text-muted-foreground text-xs font-medium uppercase">
             Component
           </span>
@@ -41,7 +41,7 @@ export function WeekShowcase() {
           </p>
         </div>
 
-        <div className="space-y-10">
+        <div className="space-y-6 sm:space-y-10">
           <DemoFrame
             title="Default usage"
             preview={<WeekDefaultDemo />}

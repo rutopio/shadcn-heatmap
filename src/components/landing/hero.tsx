@@ -45,7 +45,7 @@ export function Hero() {
             </Button>
           </div>
         </div>
-        <div className="mx-auto mt-14 flex w-fit flex-col gap-24">
+        <div className="mx-auto mt-8 flex w-fit flex-col gap-12 sm:mt-14 sm:gap-16 md:gap-24">
           {heatmaps.map(({ name, Demo, router }) => (
             <div key={name} className="item-center flex flex-col">
               <div className="flex items-center gap-2">
