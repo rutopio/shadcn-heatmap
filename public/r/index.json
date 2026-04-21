@@ -20,6 +20,12 @@
       "type": "registry:component",
       "title": "DateHeatmap",
       "description": "Date × hour matrix for zooming into a narrow time window with daily Sum column."
+    },
+    {
+      "name": "status-heatmap",
+      "type": "registry:component",
+      "title": "StatusHeatmap",
+      "description": "Timeline status indicator showing daily activity over a period (e.g. 90 days). Similar to Atlassian Statuspage."
     }
   ]
 }

@@ -12,7 +12,7 @@ export const weekProps: ComponentPropsSection[] = [
         type: "HeatmapActivity[]",
         required: true,
         description:
-          "`{ weekday: 0–7, hour: 0–24, count: number }[]`. Use `weekday = 7` for the Sum row and `hour = 24` for the Sum column. Sum cells are coloured against their own max (independent scales).",
+          "`{ weekday: 0–7, hour: 0–24, value: number }[]`. Use `weekday = 7` for the Sum row and `hour = 24` for the Sum column. Sum cells are coloured against their own max (independent scales).",
       },
       // 2. 空狀態處理
       {
@@ -154,7 +154,7 @@ export const weekProps: ComponentPropsSection[] = [
         type: "HeatmapActivityWithLevel",
         required: true,
         description:
-          "The activity record including its computed level. Contains `weekday` (0-7), `hour` (0-24), `count`, and `level`.",
+          "The activity record including its computed level. Contains `weekday` (0-7), `hour` (0-24), `value`, and `level`.",
       },
       {
         name: "className",

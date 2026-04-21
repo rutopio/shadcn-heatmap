@@ -12,7 +12,7 @@ export const monthProps: ComponentPropsSection[] = [
         type: "Activity[]",
         required: true,
         description:
-          "Array of `{ date: 'YYYY-MM-DD', count: number }`. Missing days are auto-filled with count 0.",
+          "Array of `{ date: 'YYYY-MM-DD', value: number }`. Missing days are auto-filled with value 0.",
       },
       // 2. 空狀態處理
       {

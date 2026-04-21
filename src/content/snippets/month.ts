@@ -1,19 +1,19 @@
 import type { VariantSpec } from "../types";
 
-export const monthSampleData = `// type Activity = { date: string; count: number }
+export const monthSampleData = `// type Activity = { date: string; value: number }
 
 const activities: Activity[] = [
-  { date: "2025-01-01", count: 3 },
-  { date: "2025-01-02", count: 7 },
-  { date: "2025-01-03", count: 0 },
-  { date: "2025-01-04", count: 12 },
-  { date: "2025-01-05", count: 1 },
-  { date: "2025-01-06", count: 22 },
-  { date: "2025-01-07", count: 15 },
-  // ... one { date, count } per day
-  // Missing dates are auto-filled with count: 0
-  { date: "2025-12-30", count: 8 },
-  { date: "2025-12-31", count: 5 },
+  { date: "2025-01-01", value: 3 },
+  { date: "2025-01-02", value: 7 },
+  { date: "2025-01-03", value: 0 },
+  { date: "2025-01-04", value: 12 },
+  { date: "2025-01-05", value: 1 },
+  { date: "2025-01-06", value: 22 },
+  { date: "2025-01-07", value: 15 },
+  // ... one { date, value } per day
+  // Missing dates are auto-filled with value: 0
+  { date: "2025-12-30", value: 8 },
+  { date: "2025-12-31", value: 5 },
 ];`;
 
 export const monthBasicCode = `import {
@@ -33,9 +33,9 @@ import {
 import { format, parseISO } from "date-fns";
 
 const activities = [
-  { date: "2025-01-01", count: 3 },
-  { date: "2025-01-02", count: 7 },
-  { date: "2025-01-03", count: 0 },
+  { date: "2025-01-01", value: 3 },
+  { date: "2025-01-02", value: 7 },
+  { date: "2025-01-03", value: 0 },
   // ... one entry per day
 ];
 
@@ -56,7 +56,7 @@ export function YearContributions() {
               <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
                 <p className="font-medium">{format(parseISO(activity.date), "PPP")}</p>
                 <p className="text-muted-foreground">
-                  {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+                  {activity.value} contribution{activity.value !== 1 ? "s" : ""}
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -90,7 +90,7 @@ export const monthVariants: VariantSpec[] = [
         <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
           <p className="font-medium">{format(parseISO(activity.date), "PPP")}</p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -123,7 +123,7 @@ export const monthVariants: VariantSpec[] = [
         <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
           <p className="font-medium">{format(parseISO(activity.date), "PPP")}</p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -159,7 +159,7 @@ export const monthVariants: VariantSpec[] = [
         <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
           <p className="font-medium">{format(parseISO(activity.date), "PPP")}</p>
           <p className="text-muted-foreground">
-            {activity.count > 0 ? "Enabled" : "Disabled"}
+            {activity.value > 0 ? "Enabled" : "Disabled"}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -189,7 +189,7 @@ export const monthVariants: VariantSpec[] = [
         <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
           <p className="font-medium">{format(parseISO(activity.date), "PPP")}</p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -212,7 +212,7 @@ import { format, parseISO } from "date-fns";
   data={activities}
   locale={de}
   labels={{
-    totalCount: "{{count}} Aktivitäten in {{year}}",
+    totalCount: "{{value}} Aktivitäten in {{year}}",
     legend: { less: "Weniger", more: "Mehr" },
   }}
 >
@@ -231,7 +231,7 @@ import { format, parseISO } from "date-fns";
             {format(parseISO(activity.date), "PPP", { locale: de })}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} Aktivität{activity.count !== 1 ? "en" : ""}
+            {activity.value} Aktivität{activity.value !== 1 ? "en" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -265,7 +265,7 @@ import { format, parseISO } from "date-fns";
         <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
           <p className="font-medium">{format(parseISO(activity.date), "PPP")}</p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -307,7 +307,7 @@ import { format, parseISO } from "date-fns";
         <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
           <p className="font-medium">{format(parseISO(activity.date), "PPP")}</p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -333,7 +333,7 @@ import { format, parseISO } from "date-fns";
         <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
           <p className="font-medium">{format(parseISO(activity.date), "PPP")}</p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -363,7 +363,7 @@ import { format, parseISO } from "date-fns";
             {format(parseISO(activity.date), "MMM d, yyyy")}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -396,7 +396,7 @@ import { format, parseISO } from "date-fns";
         <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
           <p className="font-medium">{format(parseISO(activity.date), "PPP")}</p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>

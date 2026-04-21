@@ -27,7 +27,7 @@ import {
 import {
   WeekdayHeatmap,
   WeekdayHeatmapBlock,
-  WeekdayHeatmapCalendar,
+  WeekdayHeatmapBody,
   WeekdayHeatmapFooter,
   WeekdayHeatmapLegend,
   WeekdayHeatmapTotalCount,
@@ -35,7 +35,7 @@ import {
 import {
   DateHeatmap,
   DateHeatmapBlock,
-  DateHeatmapCalendar,
+  DateHeatmapBody,
   DateHeatmapFooter,
   DateHeatmapLegend,
   DateHeatmapTotalCount,
@@ -125,7 +125,7 @@ function MonthPlayground({ props }: { props: MonthProps }) {
               <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
                 <p className="font-medium">{format(parseISO(activity.date), "PPP")}</p>
                 <p className="text-muted-foreground">
-                  {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+                  {activity.value} contribution{activity.value !== 1 ? "s" : ""}
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -153,13 +153,13 @@ function WeekPlayground({ props }: { props: WeekProps }) {
         blockRadius={props.blockRadius}
         locale={LOCALES[props.locale]}
       >
-        <WeekdayHeatmapCalendar>
+        <WeekdayHeatmapBody>
           {({ activity }) => (
-            <HeatmapTooltip content={<WeekTooltipContent activity={activity} />}>
+            <HeatmapTooltip content={<WeekTooltipContent activity={activity} use12Hour={props.use12Hour} />}>
               <WeekdayHeatmapBlock activity={activity} />
             </HeatmapTooltip>
           )}
-        </WeekdayHeatmapCalendar>
+        </WeekdayHeatmapBody>
         <WeekdayHeatmapFooter>
           <WeekdayHeatmapTotalCount />
           <WeekdayHeatmapLegend />
@@ -181,13 +181,13 @@ function DatePlayground({ props }: { props: DateProps }) {
         blockRadius={props.blockRadius}
         locale={LOCALES[props.locale]}
       >
-        <DateHeatmapCalendar>
+        <DateHeatmapBody>
           {({ activity, dateIndex }) => (
-            <HeatmapTooltip content={<DateTooltipContent activity={activity} />}>
+            <HeatmapTooltip content={<DateTooltipContent activity={activity} use12Hour={props.use12Hour} />}>
               <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
             </HeatmapTooltip>
           )}
-        </DateHeatmapCalendar>
+        </DateHeatmapBody>
         <DateHeatmapFooter>
           <DateHeatmapTotalCount />
           <DateHeatmapLegend />

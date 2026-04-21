@@ -1,28 +1,28 @@
 import type { VariantSpec } from "../types";
 
-export const dateSampleData = `// type DateHourlyActivity = { date: string; hour: number; count: number }
+export const dateSampleData = `// type DateHourlyActivity = { date: string; hour: number; value: number }
 //   date: "YYYY-MM-DD", "sum" = hourly Sum row
 //   hour: 0–23,  24 = daily Sum column
-//   count: number (e.g. seconds)
+//   value: number (e.g. seconds)
 
 const data: DateHourlyActivity[] = [
   // Regular cells (one row per date × 24 hours)
-  { date: "2025-12-11", hour: 8,  count: 300 },
-  { date: "2025-12-11", hour: 9,  count: 1200 },
-  { date: "2025-12-11", hour: 10, count: 2400 },
-  { date: "2025-12-11", hour: 14, count: 1800 },
-  { date: "2025-12-12", hour: 9,  count: 600 },
-  { date: "2025-12-12", hour: 10, count: 900 },
+  { date: "2025-12-11", hour: 8,  value: 300 },
+  { date: "2025-12-11", hour: 9,  value: 1200 },
+  { date: "2025-12-11", hour: 10, value: 2400 },
+  { date: "2025-12-11", hour: 14, value: 1800 },
+  { date: "2025-12-12", hour: 9,  value: 600 },
+  { date: "2025-12-12", hour: 10, value: 900 },
   // ...
 
   // Daily Sum column (hour = 24) — total across all hours for that date
-  { date: "2025-12-11", hour: 24, count: 28800 },
-  { date: "2025-12-12", hour: 24, count: 14400 },
+  { date: "2025-12-11", hour: 24, value: 28800 },
+  { date: "2025-12-12", hour: 24, value: 14400 },
   // ...
 
   // Hourly Sum row (date = "sum") — total across all dates for each hour
-  { date: "sum", hour: 8,  count: 4200 },
-  { date: "sum", hour: 9,  count: 8400 },
+  { date: "sum", hour: 8,  value: 4200 },
+  { date: "sum", hour: 9,  value: 8400 },
   // ...
 ];`;
 
@@ -43,10 +43,10 @@ import {
 import { format, parseISO } from "date-fns";
 
 const data = [
-  { date: "2025-12-11", hour: 9,  count: 1200 },
-  { date: "2025-12-11", hour: 10, count: 2400 },
-  { date: "2025-12-11", hour: 24, count: 28800 }, // daily sum
-  { date: "2025-12-12", hour: 8,  count: 600 },
+  { date: "2025-12-11", hour: 9,  value: 1200 },
+  { date: "2025-12-11", hour: 10, value: 2400 },
+  { date: "2025-12-11", hour: 24, value: 28800 }, // daily sum
+  { date: "2025-12-12", hour: 8,  value: 600 },
   // ...
 ];
 
@@ -73,7 +73,7 @@ export function DateHourlyUsage() {
                     : \`\${String(activity.hour).padStart(2, "0")}:00\`}
                 </p>
                 <p className="text-muted-foreground">
-                  {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+                  {activity.value} contribution{activity.value !== 1 ? "s" : ""}
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -109,7 +109,7 @@ export const dateVariants: VariantSpec[] = [
             {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -140,7 +140,7 @@ export const dateVariants: VariantSpec[] = [
             {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -176,7 +176,7 @@ export const dateVariants: VariantSpec[] = [
             {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -204,7 +204,7 @@ export const dateVariants: VariantSpec[] = [
             {\`\${String(activity.hour).padStart(2, "0")}:00\`}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -232,7 +232,7 @@ export const dateVariants: VariantSpec[] = [
             {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -244,7 +244,7 @@ export const dateVariants: VariantSpec[] = [
     title: "Large flat blocks",
     description:
       "Bigger blocks with tighter margin — more visual weight for focused views.",
-    code: `<DateHeatmap data={data} blockSize={18} blockMargin={3}>
+    code: `<DateHeatmap data={data} blockSize={32} blockMargin={3}>
   <DateHeatmapBody>
     {({ activity, dateIndex }) => (
       <Tooltip>
@@ -260,7 +260,7 @@ export const dateVariants: VariantSpec[] = [
             {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -292,7 +292,7 @@ export const dateVariants: VariantSpec[] = [
             {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -307,7 +307,7 @@ export const dateVariants: VariantSpec[] = [
   {
     title: "i18n labels (Spanish)",
     description:
-      "Pass a date-fns locale to auto-generate localised date labels, plus custom sum column label, legend, and total count text. Format tooltip dates accordingly.",
+      "Pass a date-fns locale to auto-generate localised date labels, plus custom sum column label, legend, and total value text. Format tooltip dates accordingly.",
     code: `import { es } from "date-fns/locale";
 import { format, parseISO } from "date-fns";
 
@@ -337,7 +337,7 @@ import { format, parseISO } from "date-fns";
               : \`\${String(activity.hour).padStart(2, "0")}:00\`}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} contribución{activity.count !== 1 ? "es" : ""}
+            {activity.value} contribución{activity.value !== 1 ? "es" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -375,7 +375,7 @@ import { format, parseISO } from "date-fns";
             {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>

@@ -56,6 +56,14 @@ const components: {
       "Date × hour matrix for zooming into a narrow time window with daily Sum column.",
     extraDeps: [],
   },
+  {
+    filename: "status-heatmap.tsx",
+    name: "status-heatmap",
+    title: "StatusHeatmap",
+    description:
+      "Timeline status indicator showing daily activity over a period (e.g. 90 days). Similar to Atlassian Statuspage.",
+    extraDeps: ["date-fns"],
+  },
 ];
 
 const cssVars = {

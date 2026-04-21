@@ -12,7 +12,7 @@ export const dateProps: ComponentPropsSection[] = [
         type: "DateHourlyActivity[]",
         required: true,
         description:
-          "`{ date: 'YYYY-MM-DD', hour: 0–24, count: number }[]`. `hour = 24` is the daily Sum column. Dates are auto-sorted ascending; all hour 0..24 cells are auto-filled with 0 where absent.",
+          "`{ date: 'YYYY-MM-DD', hour: 0–24, value: number }[]`. `hour = 24` is the daily Sum column. Dates are auto-sorted ascending; all hour 0..24 cells are auto-filled with 0 where absent.",
       },
       // 2. 空狀態處理
       {
@@ -158,7 +158,7 @@ export const dateProps: ComponentPropsSection[] = [
         type: "DateHourlyActivityWithLevel",
         required: true,
         description:
-          "The activity record including its computed level. Contains `date`, `hour` (0-24), `count`, and `level`.",
+          "The activity record including its computed level. Contains `date`, `hour` (0-24), `value`, and `level`.",
       },
       {
         name: "dateIndex",

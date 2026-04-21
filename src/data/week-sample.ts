@@ -19,10 +19,10 @@ export function generateWeekSample(seed: number = 17): HeatmapActivity[] {
     for (let hour = 0; hour < 24; hour++) {
       const weekend = weekday === 0 || weekday === 6;
       const weight = weightedHour(rng, hour) * (weekend ? 0.35 : 1);
-      const count = Math.round(weight * 8);
-      regular[`${weekday}-${hour}`] = count;
-      if (count > 0) {
-        matrix.push({ weekday, hour, count });
+      const value = Math.round(weight * 8);
+      regular[`${weekday}-${hour}`] = value;
+      if (value > 0) {
+        matrix.push({ weekday, hour, value });
       }
     }
   }
@@ -33,7 +33,7 @@ export function generateWeekSample(seed: number = 17): HeatmapActivity[] {
     for (let hour = 0; hour < 24; hour++) {
       sum += regular[`${weekday}-${hour}`] ?? 0;
     }
-    matrix.push({ weekday, hour: 24, count: sum });
+    matrix.push({ weekday, hour: 24, value: sum });
   }
 
   // Hourly sum (weekday = 7) per hour of day.
@@ -42,7 +42,7 @@ export function generateWeekSample(seed: number = 17): HeatmapActivity[] {
     for (let weekday = 0; weekday < 7; weekday++) {
       sum += regular[`${weekday}-${hour}`] ?? 0;
     }
-    matrix.push({ weekday: 7, hour, count: sum });
+    matrix.push({ weekday: 7, hour, value: sum });
   }
 
   return matrix;

@@ -41,3 +41,12 @@ export {
     DateSpanishDemo,
     DateTenLevelsDemo,
 } from "./date";
+
+// Status demos
+export {
+    StatusCustomColorDemo,
+    StatusCustomSizeDemo,
+    StatusDefaultDemo,
+    StatusUptimeDemo,
+    StatusWithLabelsDemo,
+} from "./status";

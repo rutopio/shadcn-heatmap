@@ -199,7 +199,7 @@ export function WeekMiniDemo() {
 export function WeekLargeBlocksDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <WeekdayHeatmap data={weekData} blockSize={18} blockMargin={3}>
+            <WeekdayHeatmap data={weekData} blockSize={32} blockMargin={3}>
                 <WeekdayHeatmapBody>
                     {({ activity }) => (
                         <HeatmapTooltip
@@ -221,7 +221,7 @@ export function Week12HourDemo() {
                 <WeekdayHeatmapBody>
                     {({ activity }) => (
                         <HeatmapTooltip
-                            content={<WeekTooltipContent activity={activity} />}
+                            content={<WeekTooltipContent activity={activity} use12Hour />}
                         >
                             <WeekdayHeatmapBlock activity={activity} />
                         </HeatmapTooltip>

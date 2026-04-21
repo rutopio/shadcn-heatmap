@@ -29,13 +29,13 @@ export function MonthShowcase() {
     <section className="py-20 sm:py-24" aria-label="CalendarHeatmap">
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mb-10 flex flex-col gap-2">
-          <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <span className="text-xs font-medium uppercase text-muted-foreground">
             Component
           </span>
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h2 className="text-3xl font-semibold text-balance sm:text-4xl">
             CalendarHeatmap
           </h2>
-          <p className="max-w-2xl text-muted-foreground">
+          <p className="max-w-2xl text-muted-foreground text-pretty">
             GitHub-style, 7-row × N-week grid. Handles multiple years by
             splitting into per-year rows and supports ISO week starts.
           </p>
@@ -54,7 +54,7 @@ export function MonthShowcase() {
             <h3 className="text-lg font-semibold">Sample data</h3>
             <p className="text-sm text-muted-foreground">
               Each entry is one day. Missing dates are auto-filled with{" "}
-              <code className="text-xs">count: 0</code>.
+              <code className="text-xs">value: 0</code>.
             </p>
             <CodeBlock
               code={monthSampleData}

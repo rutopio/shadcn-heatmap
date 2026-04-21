@@ -35,22 +35,22 @@ export function generateDateSample(
     const rowRaw: number[] = [];
     for (let hour = 0; hour < 24; hour++) {
       const weight = weightedHour(rng, hour) * (isWeekend ? 0.4 : 1);
-      const count = Math.round(weight * 8);
-      rowRaw.push(count);
-      hourlySums[hour] += count;
-      if (count > 0) {
-        result.push({ date: dateStr, hour, count });
+      const value = Math.round(weight * 8);
+      rowRaw.push(value);
+      hourlySums[hour] += value;
+      if (value > 0) {
+        result.push({ date: dateStr, hour, value });
       }
     }
 
     const sum = rowRaw.reduce((a, b) => a + b, 0);
-    result.push({ date: dateStr, hour: 24, count: sum });
+    result.push({ date: dateStr, hour: 24, value: sum });
   }
 
   // Add hourly sum row
   for (let hour = 0; hour < 24; hour++) {
     if (hourlySums[hour] > 0) {
-      result.push({ date: "sum", hour, count: hourlySums[hour] });
+      result.push({ date: "sum", hour, value: hourlySums[hour] });
     }
   }
 

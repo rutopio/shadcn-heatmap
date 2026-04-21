@@ -27,16 +27,16 @@ export function generateMonthSample(
     const isWeekend = weekday === 0 || weekday === 6;
 
     const baseRoll = rng();
-    let count = 0;
+    let value = 0;
     if (baseRoll < 0.12) {
-      count = 0; // cold day
+      value = 0; // cold day
     } else if (isWeekend) {
-      count = Math.round(rng() * 6);
+      value = Math.round(rng() * 6);
     } else {
-      count = Math.round(4 + rng() * 26);
+      value = Math.round(4 + rng() * 26);
     }
 
-    activities.push({ date: formatDate(new Date(d)), count });
+    activities.push({ date: formatDate(new Date(d)), value });
   }
 
   return activities;

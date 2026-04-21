@@ -18,13 +18,13 @@ export function QuickStart() {
     >
       <div className="mx-auto max-w-7xl px-4 sm:px-6">
         <div className="mb-10 flex flex-col gap-2">
-          <span className="inline-flex items-center gap-1.5 text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <span className="inline-flex items-center gap-1.5 text-xs font-medium uppercase text-muted-foreground">
             <Terminal aria-hidden="true" weight="bold" className="size-3.5" /> Quick start
           </span>
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h2 className="text-3xl font-semibold text-balance sm:text-4xl">
             Install in under a minute
           </h2>
-          <p className="max-w-2xl text-muted-foreground">
+          <p className="max-w-2xl text-muted-foreground text-pretty">
             Use the shadcn CLI to drop a file into your project, or copy the
             source manually. Either way, you own the code afterwards.
           </p>

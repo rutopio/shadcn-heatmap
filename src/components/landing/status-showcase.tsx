@@ -1,0 +1,95 @@
+import { CodeBlock } from "@/components/ui/code-block";
+import { statusProps } from "@/content/props/status";
+import {
+  statusBasicCode,
+  statusSampleData,
+  statusVariants,
+} from "@/content/snippets/status";
+
+import { DemoFrame } from "./demo-frame";
+import {
+  StatusDefaultDemo,
+  StatusWithLabelsDemo,
+  StatusCustomColorDemo,
+  StatusCustomSizeDemo,
+  StatusUptimeDemo,
+} from "./demos/status";
+import { PropsTable } from "./props-table";
+import { VariantGrid } from "./variant-grid";
+
+export function StatusShowcase() {
+  return (
+    <section className="py-20 sm:py-24" aria-label="StatusHeatmap">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6">
+        <div className="mb-10 flex flex-col gap-2">
+          <span className="text-xs font-medium uppercase text-muted-foreground">
+            Component
+          </span>
+          <h2 className="text-3xl font-semibold text-balance sm:text-4xl">
+            StatusHeatmap
+          </h2>
+          <p className="max-w-2xl text-muted-foreground text-pretty">
+            Timeline status indicator showing daily activity over a period (e.g., 90 days).
+            Similar to Atlassian Statuspage – each day is represented by a vertical bar.
+          </p>
+        </div>
+
+        <div className="space-y-10">
+          <DemoFrame
+            title="Default usage"
+            description="90 days of status data with narrow vertical bars, total count and legend."
+            preview={<StatusDefaultDemo />}
+            code={statusBasicCode}
+            filename="status-timeline.tsx"
+          />
+
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Sample data</h3>
+            <p className="text-sm text-muted-foreground">
+              Each entry represents one day with a status value. Missing dates are auto-filled with{" "}
+              <code className="text-xs">value: 0</code>.
+            </p>
+            <CodeBlock
+              code={statusSampleData}
+              lang="tsx"
+              filename="sample-data.ts"
+              maxHeight="18rem"
+            />
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Props reference</h3>
+            <PropsTable sections={statusProps} />
+          </div>
+
+          <div className="space-y-4">
+            <h3 className="text-lg font-semibold">Variants</h3>
+            <p className="text-sm text-muted-foreground">
+              Drop in different props and see how the layout reacts.
+            </p>
+            <VariantGrid
+              variants={[
+                {
+                  ...statusVariants[0],
+                  preview: <StatusWithLabelsDemo />,
+                },
+                {
+                  ...statusVariants[1],
+                  preview: <StatusCustomColorDemo />,
+                },
+                {
+                  ...statusVariants[2],
+                  preview: <StatusCustomSizeDemo />,
+                },
+                {
+                  ...statusVariants[3],
+                  preview: <StatusUptimeDemo />,
+                },
+              ]}
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}

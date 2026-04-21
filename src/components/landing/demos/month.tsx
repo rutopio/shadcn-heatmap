@@ -19,12 +19,12 @@ import {
 
 const monthData = generateMonthSample(42, 2025);
 
-function MonthTooltip({ activity }: { activity: { date: string; count: number } }) {
+function MonthTooltip({ activity }: { activity: { date: string; value: number } }) {
     return (
         <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
             <p className="font-medium">{format(parseISO(activity.date), "PPP")}</p>
             <p className="text-muted-foreground">
-                {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+                {activity.value} contribution{activity.value !== 1 ? "s" : ""}
             </p>
         </TooltipContent>
     );
@@ -132,7 +132,7 @@ export function MonthBinaryDemo() {
                             <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
                                 <p className="font-medium">{format(parseISO(activity.date), "PPP")}</p>
                                 <p className="text-muted-foreground">
-                                    {activity.count > 0 ? "Enabled" : "Disabled"}
+                                    {activity.value > 0 ? "Enabled" : "Disabled"}
                                 </p>
                             </TooltipContent>
                         </Tooltip>
@@ -200,7 +200,7 @@ export function MonthGermanDemo() {
                                     {format(parseISO(activity.date), "PPP", { locale: de })}
                                 </p>
                                 <p className="text-muted-foreground">
-                                    {activity.count} Aktivität{activity.count !== 1 ? "en" : ""}
+                                    {activity.value} Aktivität{activity.value !== 1 ? "en" : ""}
                                 </p>
                             </TooltipContent>
                         </Tooltip>
@@ -326,7 +326,7 @@ export function MonthCustomDateFormatDemo() {
                                     {format(parseISO(activity.date), "MMM d, yyyy")}
                                 </p>
                                 <p className="text-muted-foreground">
-                                    {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+                                    {activity.value} contribution{activity.value !== 1 ? "s" : ""}
                                 </p>
                             </TooltipContent>
                         </Tooltip>

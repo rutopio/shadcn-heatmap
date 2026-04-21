@@ -11,7 +11,7 @@ import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
 export type HeatmapActivity = {
     weekday: number; // 0-6 = Sun-Sat, 7 = hourly sum row
     hour: number; // 0-23 = hour of day, 24 = daily sum column
-    count: number;
+    value: number;
 };
 
 type HeatmapActivityWithLevel = HeatmapActivity & {
@@ -106,6 +106,7 @@ const generateWeekdayLabels = (locale: Locale): string[] =>
 
 const EMPTY_STYLE: CSSProperties = {};
 const LABEL_MARGIN = 8;
+const PADDING = 20;
 
 const WeekdayHeatmapContext =
     createContext<WeekdayHeatmapContextType | null>(null);
@@ -180,10 +181,10 @@ export const WeekdayHeatmap = ({
     maxLevel: maxLevelProp = 4,
     colors,
     locale,
-    labels: labelsProp = undefined,
+    labels: labelsProp,
     fontSize = 14,
     emptyState,
-    totalCount: totalCountProp = undefined,
+    totalCount: totalCountProp,
     style = EMPTY_STYLE,
     className,
     children,
@@ -198,9 +199,9 @@ export const WeekdayHeatmap = ({
         const sumColumn = data.filter((a) => a.weekday < 7 && a.hour === 24);
         const sumRow = data.filter((a) => a.weekday === 7 && a.hour < 24);
 
-        const maxRegular = Math.max(...regularCells.map((d) => d.count), 1);
-        const maxSumColumn = Math.max(...sumColumn.map((d) => d.count), 1);
-        const maxSumRow = Math.max(...sumRow.map((d) => d.count), 1);
+        const maxRegular = Math.max(...regularCells.map((d) => d.value), 1);
+        const maxSumColumn = Math.max(...sumColumn.map((d) => d.value), 1);
+        const maxSumRow = Math.max(...sumRow.map((d) => d.value), 1);
 
         return data.map((activity) => {
             let maxCount: number;
@@ -214,7 +215,7 @@ export const WeekdayHeatmap = ({
 
             return {
                 ...activity,
-                level: calculateLevel(activity.count, maxCount, maxLevel),
+                level: calculateLevel(activity.value, maxCount, maxLevel),
             };
         });
     }, [data, maxLevel]);
@@ -227,7 +228,7 @@ export const WeekdayHeatmap = ({
         hours: use12Hour ? TWELVE_HOUR_LABELS : DEFAULT_HOUR_LABELS,
         endHour: use12Hour ? "12" : "00",
         weekdays: weekdayLabels,
-        sum: "Sum",
+        sum: "Total",
         legend: { less: "Less", more: "More" },
         ...labelsProp,
     };
@@ -239,7 +240,7 @@ export const WeekdayHeatmap = ({
             ? totalCountProp
             : dataWithLevels
                 .filter((a) => a.weekday < 7 && a.hour < 24)
-                .reduce((sum, a) => sum + a.count, 0);
+                .reduce((sum, a) => sum + a.value, 0);
 
     const blockWidth = blockSize * blockSizeRatio;
     const labelHeight = fontSize + LABEL_MARGIN;
@@ -333,8 +334,8 @@ export const WeekdayHeatmapBlock = forwardRef<
     return (
         <rect
             ref={ref}
-            className={cn(className)}
-            data-count={activity.count}
+            className={cn("transition-all hover:stroke-foreground hover:stroke-1", className)}
+            data-value={activity.value}
             data-weekday={activity.weekday}
             data-hour={activity.hour}
             data-level={activity.level}
@@ -389,8 +390,6 @@ export const WeekdayHeatmapBody = ({
         weekStart,
     } = useWeekdayHeatmap();
 
-    const PADDING = 20;
-
     const activityMap = useMemo(() => {
         const map = new Map<string, HeatmapActivityWithLevel>();
         data.forEach((activity) => {
@@ -403,23 +402,21 @@ export const WeekdayHeatmapBody = ({
         const activities: HeatmapActivityWithLevel[] = [];
         const maxHour = hideSumColumn ? 23 : 24;
 
-        // Regular weekdays in display order (respecting weekStart)
         for (let di = 0; di < 7; di++) {
             const weekday = (weekStart + di) % 7;
             for (let hour = 0; hour <= maxHour; hour++) {
                 const key = `${weekday}-${hour}`;
                 activities.push(
-                    activityMap.get(key) ?? { weekday, hour, count: 0, level: 0 },
+                    activityMap.get(key) ?? { weekday, hour, value: 0, level: 0 },
                 );
             }
         }
 
-        // Sum row (hours 0-23 only, no corner cell)
         if (!hideSumRow) {
             for (let hour = 0; hour < 24; hour++) {
                 const key = `7-${hour}`;
                 activities.push(
-                    activityMap.get(key) ?? { weekday: 7, hour, count: 0, level: 0 },
+                    activityMap.get(key) ?? { weekday: 7, hour, value: 0, level: 0 },
                 );
             }
         }
@@ -556,12 +553,6 @@ export const WeekdayHeatmapBody = ({
         </div>
     );
 };
-
-/**
- * @deprecated Use WeekdayHeatmapBody instead
- */
-export const WeekdayHeatmapCalendar = WeekdayHeatmapBody;
-export type WeekdayHeatmapCalendarProps = WeekdayHeatmapBodyProps;
 
 export type WeekdayHeatmapFooterProps =
     HTMLAttributes<HTMLDivElement>;

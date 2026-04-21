@@ -1,25 +1,25 @@
 import type { VariantSpec } from "../types";
 
-export const weekSampleData = `// type HeatmapActivity = { weekday: number; hour: number; count: number }
+export const weekSampleData = `// type HeatmapActivity = { weekday: number; hour: number; value: number }
 //   weekday: 0–6 (Sun–Sat), 7 = hourly Sum row
 //   hour:    0–23,           24 = daily Sum column
 
 const data: HeatmapActivity[] = [
   // Regular cells (7 weekdays × 24 hours)
-  { weekday: 0, hour: 9,  count: 600 },   // Sun 09:00
-  { weekday: 1, hour: 9,  count: 1200 },  // Mon 09:00
-  { weekday: 1, hour: 10, count: 2400 },  // Mon 10:00
-  { weekday: 5, hour: 14, count: 1800 },  // Fri 14:00
+  { weekday: 0, hour: 9,  value: 600 },   // Sun 09:00
+  { weekday: 1, hour: 9,  value: 1200 },  // Mon 09:00
+  { weekday: 1, hour: 10, value: 2400 },  // Mon 10:00
+  { weekday: 5, hour: 14, value: 1800 },  // Fri 14:00
   // ...
 
   // Daily Sum column (hour = 24) — total across all hours for each weekday
-  { weekday: 0, hour: 24, count: 3600 },
-  { weekday: 1, hour: 24, count: 28800 },
+  { weekday: 0, hour: 24, value: 3600 },
+  { weekday: 1, hour: 24, value: 28800 },
   // ...
 
   // Hourly Sum row (weekday = 7) — total across all weekdays for each hour
-  { weekday: 7, hour: 9,  count: 8400 },
-  { weekday: 7, hour: 10, count: 9600 },
+  { weekday: 7, hour: 9,  value: 8400 },
+  { weekday: 7, hour: 10, value: 9600 },
   // ...
 ];`;
 
@@ -42,12 +42,12 @@ const WEEKDAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sum"];
 
 const data = [
   // Regular cells — weekday 0..6, hour 0..23
-  { weekday: 1, hour: 9,  count: 1200 },
-  { weekday: 1, hour: 10, count: 2400 },
+  { weekday: 1, hour: 9,  value: 1200 },
+  { weekday: 1, hour: 10, value: 2400 },
   // Daily Sum column — hour = 24
-  { weekday: 1, hour: 24, count: 28800 },
+  { weekday: 1, hour: 24, value: 28800 },
   // Hourly Sum row — weekday = 7
-  { weekday: 7, hour: 10, count: 8400 },
+  { weekday: 7, hour: 10, value: 8400 },
   // ...
 ];
 
@@ -69,7 +69,7 @@ export function WeeklyRhythm() {
                     : \`\${String(activity.hour).padStart(2, "0")}:00\`}
                 </p>
                 <p className="text-muted-foreground">
-                  {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+                  {activity.value} contribution{activity.value !== 1 ? "s" : ""}
                 </p>
               </TooltipContent>
             </Tooltip>
@@ -102,7 +102,7 @@ export const weekVariants: VariantSpec[] = [
             {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -135,7 +135,7 @@ export const weekVariants: VariantSpec[] = [
             {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -160,7 +160,7 @@ export const weekVariants: VariantSpec[] = [
             {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -188,7 +188,7 @@ export const weekVariants: VariantSpec[] = [
             {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -202,7 +202,7 @@ export const weekVariants: VariantSpec[] = [
   {
     title: "i18n labels (Japanese)",
     description:
-      "Pass a date-fns locale to auto-generate localised weekday labels, plus custom sum column/row label, legend, and total count text.",
+      "Pass a date-fns locale to auto-generate localised weekday labels, plus custom sum column/row label, legend, and total value text.",
     code: `import { ja } from "date-fns/locale";
 
 <WeekdayHeatmap
@@ -225,7 +225,7 @@ export const weekVariants: VariantSpec[] = [
             {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -260,7 +260,7 @@ export const weekVariants: VariantSpec[] = [
             {\`\${String(activity.hour).padStart(2, "0")}:00\`}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -288,7 +288,7 @@ export const weekVariants: VariantSpec[] = [
             {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -300,7 +300,7 @@ export const weekVariants: VariantSpec[] = [
     title: "Large flat blocks",
     description:
       "Bigger blocks with tighter margin — more visual weight, ideal for focused dashboards.",
-    code: `<WeekdayHeatmap data={data} blockSize={18} blockMargin={3}>
+    code: `<WeekdayHeatmap data={data} blockSize={32} blockMargin={3}>
   <WeekdayHeatmapBody>
     {({ activity }) => (
       <Tooltip>
@@ -313,7 +313,7 @@ export const weekVariants: VariantSpec[] = [
             {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -338,7 +338,7 @@ export const weekVariants: VariantSpec[] = [
             {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>
@@ -366,7 +366,7 @@ export const weekVariants: VariantSpec[] = [
             {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
           </p>
           <p className="text-muted-foreground">
-            {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+            {activity.value} contribution{activity.value !== 1 ? "s" : ""}
           </p>
         </TooltipContent>
       </Tooltip>

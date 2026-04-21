@@ -21,12 +21,12 @@ export function Hero() {
             </span>
             Three composable heatmaps, one drop-in file each
           </Badge>
-          <h1 className="max-w-3xl text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl md:text-6xl">
+          <h1 className="max-w-3xl text-4xl font-semibold leading-[1.05] text-balance sm:text-5xl md:text-6xl">
             Contribution heatmaps for React,
             <br />
             styled like <span className="text-muted-foreground">shadcn/ui</span>
           </h1>
-          <p className="max-w-2xl text-base text-muted-foreground sm:text-lg">
+          <p className="max-w-2xl text-base text-muted-foreground text-pretty sm:text-lg">
             Month, Week, and Date heatmaps built with SVG, Tailwind v4 theme
             tokens, and React 19 context. Own the code — copy, tweak, ship.
             Ready for Cloudflare Pages, Vercel, anywhere static.

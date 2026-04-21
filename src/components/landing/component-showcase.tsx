@@ -38,13 +38,13 @@ export function ComponentShowcase() {
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="mb-10 flex flex-col gap-2">
-          <span className="text-xs font-medium uppercase tracking-wider text-muted-foreground">
+          <span className="text-xs font-medium uppercase text-muted-foreground">
             Components
           </span>
-          <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h2 className="text-3xl font-semibold text-balance sm:text-4xl">
             Three heatmaps for three time scales
           </h2>
-          <p className="max-w-2xl text-muted-foreground">
+          <p className="max-w-2xl text-muted-foreground text-pretty">
             Every component is a compound component: a root provider, a
             calendar/SVG grid with a render-prop, and optional footer + legend +
             total parts you can swap out.

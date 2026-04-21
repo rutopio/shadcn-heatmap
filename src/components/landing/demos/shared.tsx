@@ -8,6 +8,7 @@ import {
     TooltipProvider,
     TooltipTrigger,
 } from "@/components/ui/tooltip";
+import { formatHourRange } from "@/lib/time";
 
 export { TooltipProvider };
 
@@ -41,7 +42,7 @@ export function MonthTooltipContent({
     activity,
     locale,
 }: {
-    activity: { date: string; count: number };
+    activity: { date: string; value: number };
     locale?: any;
 }) {
     return (
@@ -50,7 +51,7 @@ export function MonthTooltipContent({
                 {format(parseISO(activity.date), "PPP", locale ? { locale } : undefined)}
             </p>
             <p className="text-muted-foreground">
-                {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+                {activity.value} contribution{activity.value !== 1 ? "s" : ""}
             </p>
         </>
     );
@@ -61,7 +62,7 @@ export function MonthBinaryTooltipContent({
     locale,
     dateFormat = "PPP",
 }: {
-    activity: { date: string; count: number };
+    activity: { date: string; value: number };
     locale?: Locale;
     dateFormat?: string;
 }) {
@@ -71,7 +72,7 @@ export function MonthBinaryTooltipContent({
                 {format(parseISO(activity.date), dateFormat, locale ? { locale } : undefined)}
             </p>
             <p className="text-muted-foreground">
-                {activity.count > 0 ? "1" : "0"}
+                {activity.value > 0 ? "1" : "0"}
             </p>
         </>
     );
@@ -79,21 +80,23 @@ export function MonthBinaryTooltipContent({
 
 export function WeekTooltipContent({
     activity,
+    use12Hour = false,
 }: {
-    activity: { weekday: number; hour: number; count: number };
+    activity: { weekday: number; hour: number; value: number };
+    use12Hour?: boolean;
 }) {
     const day = WEEKDAY_NAMES[activity.weekday];
     const hour =
         activity.hour === 24
             ? "Total"
-            : `${String(activity.hour).padStart(2, "0")}:00`;
+            : formatHourRange(activity.hour, use12Hour);
     return (
         <>
             <p className="font-medium">
-                {day} {hour}
+                {day}, {hour}
             </p>
             <p className="text-muted-foreground">
-                {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+                {activity.value} contribution{activity.value !== 1 ? "s" : ""}
             </p>
         </>
     );
@@ -103,15 +106,17 @@ export function DateTooltipContent({
     activity,
     locale,
     dateFormat = "PPP",
+    use12Hour = false,
 }: {
-    activity: { date: string; hour: number; count: number };
+    activity: { date: string; hour: number; value: number };
     locale?: any;
     dateFormat?: string;
+    use12Hour?: boolean;
 }) {
     const hour =
         activity.hour === 24
             ? "Total"
-            : `${String(activity.hour).padStart(2, "0")}:00`;
+            : formatHourRange(activity.hour, use12Hour);
 
     const dateLabel = activity.date === "sum"
         ? "Total"
@@ -120,10 +125,10 @@ export function DateTooltipContent({
     return (
         <>
             <p className="font-medium">
-                {dateLabel} {hour}
+                {dateLabel}, {hour}
             </p>
             <p className="text-muted-foreground">
-                {activity.count} contribution{activity.count !== 1 ? "s" : ""}
+                {activity.value} contribution{activity.value !== 1 ? "s" : ""}
             </p>
         </>
     );

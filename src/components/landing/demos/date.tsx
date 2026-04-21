@@ -159,7 +159,7 @@ export function DateNoLabelsDemo() {
 export function DateLargeBlocksDemo() {
     return (
         <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-            <DateHeatmap data={dateData} blockSize={18} blockMargin={3}>
+            <DateHeatmap data={dateData} blockSize={32} blockMargin={3}>
                 <DateHeatmapBody>
                     {({ activity, dateIndex }) => (
                         <HeatmapTooltip
@@ -188,7 +188,7 @@ export function Date12HourDemo() {
                 <DateHeatmapBody>
                     {({ activity, dateIndex }) => (
                         <HeatmapTooltip
-                            content={<DateTooltipContent activity={activity} />}
+                            content={<DateTooltipContent activity={activity} use12Hour />}
                         >
                             <DateHeatmapBlock
                                 activity={activity}
@@ -232,7 +232,7 @@ export function DateSpanishDemo() {
                                             : `${String(activity.hour).padStart(2, "0")}:00`}
                                     </p>
                                     <p className="text-muted-foreground">
-                                        {activity.count} contribución{activity.count !== 1 ? "es" : ""}
+                                        {activity.value} contribución{activity.value !== 1 ? "es" : ""}
                                     </p>
                                 </>
                             }

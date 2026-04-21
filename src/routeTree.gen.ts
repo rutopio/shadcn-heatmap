@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as WeekdayRouteImport } from './routes/weekday'
+import { Route as StatusRouteImport } from './routes/status'
 import { Route as DateRouteImport } from './routes/date'
 import { Route as CalendarRouteImport } from './routes/calendar'
 import { Route as IndexRouteImport } from './routes/index'
@@ -17,6 +18,11 @@ import { Route as IndexRouteImport } from './routes/index'
 const WeekdayRoute = WeekdayRouteImport.update({
   id: '/weekday',
   path: '/weekday',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StatusRoute = StatusRouteImport.update({
+  id: '/status',
+  path: '/status',
   getParentRoute: () => rootRouteImport,
 } as any)
 const DateRoute = DateRouteImport.update({
@@ -39,12 +45,14 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/calendar': typeof CalendarRoute
   '/date': typeof DateRoute
+  '/status': typeof StatusRoute
   '/weekday': typeof WeekdayRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/calendar': typeof CalendarRoute
   '/date': typeof DateRoute
+  '/status': typeof StatusRoute
   '/weekday': typeof WeekdayRoute
 }
 export interface FileRoutesById {
@@ -52,20 +60,22 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/calendar': typeof CalendarRoute
   '/date': typeof DateRoute
+  '/status': typeof StatusRoute
   '/weekday': typeof WeekdayRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/calendar' | '/date' | '/weekday'
+  fullPaths: '/' | '/calendar' | '/date' | '/status' | '/weekday'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/calendar' | '/date' | '/weekday'
-  id: '__root__' | '/' | '/calendar' | '/date' | '/weekday'
+  to: '/' | '/calendar' | '/date' | '/status' | '/weekday'
+  id: '__root__' | '/' | '/calendar' | '/date' | '/status' | '/weekday'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   CalendarRoute: typeof CalendarRoute
   DateRoute: typeof DateRoute
+  StatusRoute: typeof StatusRoute
   WeekdayRoute: typeof WeekdayRoute
 }
 
@@ -76,6 +86,13 @@ declare module '@tanstack/react-router' {
       path: '/weekday'
       fullPath: '/weekday'
       preLoaderRoute: typeof WeekdayRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/status': {
+      id: '/status'
+      path: '/status'
+      fullPath: '/status'
+      preLoaderRoute: typeof StatusRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/date': {
@@ -106,6 +123,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   CalendarRoute: CalendarRoute,
   DateRoute: DateRoute,
+  StatusRoute: StatusRoute,
   WeekdayRoute: WeekdayRoute,
 }
 export const routeTree = rootRouteImport
