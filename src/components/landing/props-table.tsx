@@ -87,7 +87,7 @@ export function PropsTable({ sections }: PropsTableProps) {
                                                 </code>
                                                 {prop.required && (
                                                     <Badge
-                                                        variant="outline"
+                                                        variant="secondary"
                                                         className="text-xs font-normal"
                                                     >
                                                         required

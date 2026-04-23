@@ -1,13 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { DemoFrame } from "@/components/landing/demo-frame";
-import {
-  StatusCustomColorDemo,
-  StatusCustomSizeDemo,
-  StatusDefaultDemo,
-  StatusUptimeDemo,
-  StatusWithLabelsDemo,
-} from "@/components/demos/status";
+import { StatusDefaultDemo } from "@/components/demos";
+import { statusVariantItems } from "@/components/demos/variants/status";
 import { PropsTable } from "@/components/landing/props-table";
 import { ShowcaseSection } from "@/components/landing/showcase-section";
 import { VariantGrid } from "@/components/landing/variant-grid";
@@ -16,7 +11,6 @@ import { statusProps } from "@/content/props/status";
 import {
   statusBasicCode,
   statusSampleData,
-  statusVariants,
 } from "@/content/snippets/status";
 import { pageHead } from "@/lib/seo";
 
@@ -72,14 +66,7 @@ function StatusPage() {
           <p className="text-muted-foreground text-sm">
             Drop in different props and see how the layout reacts.
           </p>
-          <VariantGrid
-            variants={[
-              { ...statusVariants[0], preview: <StatusWithLabelsDemo /> },
-              { ...statusVariants[1], preview: <StatusCustomColorDemo /> },
-              { ...statusVariants[2], preview: <StatusCustomSizeDemo /> },
-              { ...statusVariants[3], preview: <StatusUptimeDemo /> },
-            ]}
-          />
+          <VariantGrid variants={statusVariantItems} />
         </div>
       </div>
     </ShowcaseSection>

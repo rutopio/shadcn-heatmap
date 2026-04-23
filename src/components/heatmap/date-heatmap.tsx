@@ -310,7 +310,7 @@ export const DateHeatmap = ({
     const width =
         24 * (blockWidth + blockMargin) +
         (hasExtraColumn
-            ? blockSize / 2 + (blockWidth + blockMargin)
+            ? blockSize / 2 + (blockWidth + blockMargin) + blockWidth
             : 0) -
         blockMargin +
         labelWidth;
@@ -506,11 +506,9 @@ export type DateHeatmapBodyProps = Omit<
     hideHourLabels?: boolean;
     className?: string;
     labelClassName?: string;
-    children: (props: {
-        activity: DateHourlyActivityWithLevel;
-        dateIndex: number;
-        extra?: "row" | "column";
-    }) => ReactNode;
+    children: (props: { activity: DateHourlyActivityWithLevel; dateIndex: number }) => ReactNode;
+    renderExtraRow?: (props: { activity: DateHourlyActivityWithLevel; dateIndex: number }) => ReactNode;
+    renderExtraColumn?: (props: { activity: DateHourlyActivityWithLevel; dateIndex: number }) => ReactNode;
 };
 
 export const DateHeatmapBody = ({
@@ -519,6 +517,8 @@ export const DateHeatmapBody = ({
     className,
     labelClassName,
     children,
+    renderExtraRow,
+    renderExtraColumn,
     ...props
 }: DateHeatmapBodyProps) => {
     const {
@@ -563,56 +563,36 @@ export const DateHeatmapBody = ({
         return map;
     }, [extraColumn]);
 
-    const allActivities = useMemo(() => {
-        const activities: {
-            activity: DateHourlyActivityWithLevel;
-            dateIndex: number;
-            extra?: "row" | "column";
-        }[] = [];
-
+    const regularActivities = useMemo(() => {
+        const activities: { activity: DateHourlyActivityWithLevel; dateIndex: number }[] = [];
         dates.forEach((date, dateIndex) => {
             for (let hour = 0; hour < 24; hour++) {
-                const key = `${date}-${hour}`;
-                const existing = activityMap.get(key);
                 activities.push({
-                    activity: existing || { date, hour, value: 0, level: 0 },
+                    activity: activityMap.get(`${date}-${hour}`) ?? { date, hour, value: 0, level: 0 },
                     dateIndex,
                 });
             }
-            if (extraColumnMap) {
-                const entry = extraColumnMap.get(date);
-                if (entry) {
-                    activities.push({
-                        activity: {
-                            date,
-                            hour: 0,
-                            value: entry.value,
-                            level: entry.level,
-                        },
-                        dateIndex,
-                        extra: "column",
-                    });
-                }
-            }
         });
-
-        if (extraRow) {
-            extraRow.values.forEach(({ hour, value, level }) => {
-                activities.push({
-                    activity: {
-                        date: dates[0] ?? "",
-                        hour,
-                        value,
-                        level,
-                    },
-                    dateIndex: dates.length,
-                    extra: "row",
-                });
-            });
-        }
-
         return activities;
-    }, [dates, activityMap, extraColumnMap, extraRow]);
+    }, [dates, activityMap]);
+
+    const extraColumnActivities = useMemo(() => {
+        if (!extraColumnMap) return [];
+        return dates.map((date, dateIndex) => {
+            const entry = extraColumnMap.get(date);
+            return entry
+                ? { activity: { date, hour: 0, value: entry.value, level: entry.level }, dateIndex }
+                : null;
+        }).filter((a): a is { activity: DateHourlyActivityWithLevel; dateIndex: number } => a !== null);
+    }, [dates, extraColumnMap]);
+
+    const extraRowActivities = useMemo(() => {
+        if (!extraRow) return [];
+        return extraRow.values.map(({ hour, value, level }) => ({
+            activity: { date: dates[0] ?? "", hour, value, level },
+            dateIndex: dates.length,
+        }));
+    }, [extraRow, dates]);
 
     return (
         <div
@@ -723,18 +703,21 @@ export const DateHeatmapBody = ({
                     </g>
                 )}
 
-                {allActivities.map(({ activity, dateIndex, extra }) => {
-                    const key = extra === "row"
-                        ? `extra-row-${activity.hour}`
-                        : extra === "column"
-                            ? `extra-col-${activity.date}`
-                            : `${activity.date}-${activity.hour}`;
-                    return (
-                        <Fragment key={key}>
-                            {children({ activity, dateIndex, extra })}
-                        </Fragment>
-                    );
-                })}
+                {regularActivities.map(({ activity, dateIndex }) => (
+                    <Fragment key={`${activity.date}-${activity.hour}`}>
+                        {children({ activity, dateIndex })}
+                    </Fragment>
+                ))}
+                {extraColumnActivities.map(({ activity, dateIndex }) => (
+                    <Fragment key={`extra-col-${activity.date}`}>
+                        {(renderExtraColumn ?? children)({ activity, dateIndex })}
+                    </Fragment>
+                ))}
+                {extraRowActivities.map(({ activity, dateIndex }) => (
+                    <Fragment key={`extra-row-${activity.hour}`}>
+                        {(renderExtraRow ?? children)({ activity, dateIndex })}
+                    </Fragment>
+                ))}
             </svg>
         </div>
     );
@@ -828,10 +811,10 @@ export const DateHeatmapLegend = ({
         <div
             role="group"
             aria-label="Activity intensity legend"
-            className={cn("ml-auto flex items-center gap-1", className)}
+            className={cn("text-muted-foreground ml-auto flex items-center gap-1", className)}
             {...props}
         >
-            <span className="text-muted-foreground mr-1 text-xs font-medium">
+            <span className="mr-1 text-xs font-medium">
                 {lessLabel}
             </span>
             {legendLevels.map((level) =>
@@ -858,7 +841,7 @@ export const DateHeatmapLegend = ({
                     </svg>
                 )
             )}
-            <span className="text-muted-foreground ml-1 text-xs font-medium">
+            <span className="ml-1 text-xs font-medium">
                 {moreLabel}
             </span>
         </div>

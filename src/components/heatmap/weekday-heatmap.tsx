@@ -518,10 +518,9 @@ export type WeekdayHeatmapBodyProps = Omit<
     hideWeekdayLabels?: boolean;
     className?: string;
     labelClassName?: string;
-    children: (props: {
-        activity: WeekdayHourlyActivityWithLevel;
-        extra?: "row" | "column";
-    }) => ReactNode;
+    children: (props: { activity: WeekdayHourlyActivityWithLevel; weekdayIndex: number }) => ReactNode;
+    renderExtraRow?: (props: { activity: WeekdayHourlyActivityWithLevel; weekdayIndex: number }) => ReactNode;
+    renderExtraColumn?: (props: { activity: WeekdayHourlyActivityWithLevel; weekdayIndex: number }) => ReactNode;
 };
 
 export const WeekdayHeatmapBody = ({
@@ -530,6 +529,8 @@ export const WeekdayHeatmapBody = ({
     className,
     labelClassName,
     children,
+    renderExtraRow,
+    renderExtraColumn,
     ...props
 }: WeekdayHeatmapBodyProps) => {
     const {
@@ -565,51 +566,37 @@ export const WeekdayHeatmapBody = ({
     }, [extraColumn]);
 
     const regularActivities = useMemo(() => {
-        const activities: {
-            activity: WeekdayHourlyActivityWithLevel;
-            extra?: "row" | "column";
-        }[] = [];
-
+        const activities: { activity: WeekdayHourlyActivityWithLevel; weekdayIndex: number }[] = [];
         for (let di = 0; di < 7; di++) {
             const weekday = (weekStart + di) % 7;
             for (let hour = 0; hour < 24; hour++) {
-                const key = `${weekday}-${hour}`;
                 activities.push({
-                    activity: activityMap.get(key) ?? {
-                        weekday,
-                        hour,
-                        value: 0,
-                        level: 0,
-                    },
+                    activity: activityMap.get(`${weekday}-${hour}`) ?? { weekday, hour, value: 0, level: 0 },
+                    weekdayIndex: di,
                 });
             }
-            if (extraColumnMap) {
-                const entry = extraColumnMap.get(weekday);
-                if (entry) {
-                    activities.push({
-                        activity: {
-                            weekday,
-                            hour: 0,
-                            value: entry.value,
-                            level: entry.level,
-                        },
-                        extra: "column",
-                    });
-                }
-            }
         }
-
-        if (extraRow) {
-            extraRow.values.forEach(({ hour, value, level }) => {
-                activities.push({
-                    activity: { weekday: 0, hour, value, level },
-                    extra: "row",
-                });
-            });
-        }
-
         return activities;
-    }, [activityMap, extraColumnMap, extraRow, weekStart]);
+    }, [activityMap, weekStart]);
+
+    const extraColumnActivities = useMemo(() => {
+        if (!extraColumnMap) return [];
+        return Array.from({ length: 7 }, (_, di) => {
+            const weekday = (weekStart + di) % 7;
+            const entry = extraColumnMap.get(weekday);
+            return entry
+                ? { activity: { weekday, hour: 0, value: entry.value, level: entry.level }, weekdayIndex: di }
+                : null;
+        }).filter((a): a is { activity: WeekdayHourlyActivityWithLevel; weekdayIndex: number } => a !== null);
+    }, [extraColumnMap, weekStart]);
+
+    const extraRowActivities = useMemo(() => {
+        if (!extraRow) return [];
+        return extraRow.values.map(({ hour, value, level }) => ({
+            activity: { weekday: 0, hour, value, level },
+            weekdayIndex: 7,
+        }));
+    }, [extraRow]);
 
     const rowCount = hasExtraRow ? 8 : 7;
     const extraRowGap = hasExtraRow ? blockSize + blockMargin : 0;
@@ -736,16 +723,21 @@ export const WeekdayHeatmapBody = ({
                     </g>
                 )}
 
-                {regularActivities.map(({ activity, extra }) => {
-                    const key = extra
-                        ? `extra-${extra}-${extra === "row" ? activity.hour : activity.weekday}`
-                        : `${activity.weekday}-${activity.hour}`;
-                    return (
-                        <Fragment key={key}>
-                            {children({ activity, extra })}
-                        </Fragment>
-                    );
-                })}
+                {regularActivities.map(({ activity, weekdayIndex }) => (
+                    <Fragment key={`${activity.weekday}-${activity.hour}`}>
+                        {children({ activity, weekdayIndex })}
+                    </Fragment>
+                ))}
+                {extraColumnActivities.map(({ activity, weekdayIndex }) => (
+                    <Fragment key={`extra-column-${activity.weekday}`}>
+                        {(renderExtraColumn ?? children)({ activity, weekdayIndex })}
+                    </Fragment>
+                ))}
+                {extraRowActivities.map(({ activity, weekdayIndex }) => (
+                    <Fragment key={`extra-row-${activity.hour}`}>
+                        {(renderExtraRow ?? children)({ activity, weekdayIndex })}
+                    </Fragment>
+                ))}
             </svg>
         </div>
     );
@@ -839,10 +831,10 @@ export const WeekdayHeatmapLegend = ({
         <div
             role="group"
             aria-label="Activity intensity legend"
-            className={cn("ml-auto flex items-center gap-1", className)}
+            className={cn("text-muted-foreground ml-auto flex items-center gap-1", className)}
             {...props}
         >
-            <span className="text-muted-foreground mr-1 text-xs font-medium">
+            <span className="mr-1 text-xs font-medium">
                 {lessLabel}
             </span>
             {legendLevels.map((level) =>
@@ -869,7 +861,7 @@ export const WeekdayHeatmapLegend = ({
                     </svg>
                 )
             )}
-            <span className="text-muted-foreground ml-1 text-xs font-medium">
+            <span className="ml-1 text-xs font-medium">
                 {moreLabel}
             </span>
         </div>

@@ -1,18 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { DemoFrame } from "@/components/landing/demo-frame";
-import {
-  MonthChunkyDemo,
-  MonthCustomDateFormatDemo,
-  MonthCustomStylingDemo,
-  MonthDefaultDemo,
-  MonthGermanDemo,
-  MonthLargeBlocksDemo,
-  MonthMondayStartDemo,
-  MonthMultiYearDemo,
-  MonthNoFooterDemo,
-  MonthTenLevelsDemo,
-} from "@/components/demos";
+import { CalendarDefaultDemo } from "@/components/demos";
+import { calendarVariantItems } from "@/components/demos/variants/calendar";
 import { PropsTable } from "@/components/landing/props-table";
 import { ShowcaseSection } from "@/components/landing/showcase-section";
 import { VariantGrid } from "@/components/landing/variant-grid";
@@ -21,7 +11,6 @@ import { calendarProps } from "@/content/props/calendar";
 import {
   calendarBasicCode,
   calendarSampleData,
-  calendarVariants,
 } from "@/content/snippets/calendar";
 import { pageHead } from "@/lib/seo";
 
@@ -45,7 +34,7 @@ function CalendarPage() {
         <DemoFrame
           title="Default usage"
           description="One year of deterministic sample data with weekday labels, month headers, total and legend."
-          preview={<MonthDefaultDemo />}
+          preview={<CalendarDefaultDemo />}
           code={calendarBasicCode}
           filename="year-contributions.tsx"
         />
@@ -76,22 +65,7 @@ function CalendarPage() {
           <p className="text-muted-foreground text-sm">
             Drop in different props and see how the layout reacts.
           </p>
-          <VariantGrid
-            variants={[
-              { ...calendarVariants[0], preview: <MonthMondayStartDemo /> },
-              { ...calendarVariants[1], preview: <MonthChunkyDemo /> },
-              { ...calendarVariants[2], preview: <MonthTenLevelsDemo /> },
-              { ...calendarVariants[3], preview: <MonthGermanDemo /> },
-              { ...calendarVariants[4], preview: <MonthLargeBlocksDemo /> },
-              { ...calendarVariants[5], preview: <MonthMultiYearDemo /> },
-              { ...calendarVariants[6], preview: <MonthNoFooterDemo /> },
-              {
-                ...calendarVariants[7],
-                preview: <MonthCustomDateFormatDemo />,
-              },
-              { ...calendarVariants[8], preview: <MonthCustomStylingDemo /> },
-            ]}
-          />
+          <VariantGrid variants={calendarVariantItems} />
         </div>
       </div>
     </ShowcaseSection>

@@ -1,9 +1,11 @@
 import { CodeBlock } from "@/components/ui/code-block";
 
-import type { VariantSpec } from "@/content/types";
 import type { ReactNode } from "react";
 
-type Variant = VariantSpec & {
+type Variant = {
+  title: string;
+  description: string;
+  code: string;
   preview: ReactNode;
 };
 

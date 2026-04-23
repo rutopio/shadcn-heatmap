@@ -10,6 +10,11 @@ import {
 } from "@/components/heatmap/date-heatmap";
 import dateData from "@/data/date-sample.json";
 
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { DateTooltipContent, HeatmapTooltip, TooltipProvider } from "./shared";
 
 import type { DateHourlyActivity } from "@/components/heatmap/date-heatmap";
@@ -33,6 +38,44 @@ const sumByDate = (data: DateHourlyActivity[], dates: string[]) => {
   return dates.map((d) => map.get(d) ?? 0);
 };
 
+const medianByHour = (data: DateHourlyActivity[]) => {
+  const byHour = Array.from({ length: 24 }, () => [] as number[]);
+  data.forEach((a) => byHour[a.hour].push(a.value));
+  return byHour.map((arr) => {
+    const s = [...arr].sort((x, y) => x - y);
+    return s.length ? s[Math.floor(s.length / 2)] : 0;
+  });
+};
+
+const medianByDate = (data: DateHourlyActivity[], dates: string[]) => {
+  const byDate = new Map<string, number[]>();
+  data.forEach((a) => {
+    if (!byDate.has(a.date)) byDate.set(a.date, []);
+    byDate.get(a.date)!.push(a.value);
+  });
+  return dates.map((date) => {
+    const arr = [...(byDate.get(date) ?? [])].sort((x, y) => x - y);
+    return arr.length ? arr[Math.floor(arr.length / 2)] : 0;
+  });
+};
+
+const p95ByDate = (data: DateHourlyActivity[], dates: string[]) => {
+  const byDate = new Map<string, number[]>();
+  data.forEach((a) => {
+    if (!byDate.has(a.date)) byDate.set(a.date, []);
+    byDate.get(a.date)!.push(a.value);
+  });
+  return dates.map((date) => {
+    const arr = [...(byDate.get(date) ?? [])].sort((x, y) => x - y);
+    return arr.length ? arr[Math.floor(arr.length * 0.95)] : 0;
+  });
+};
+
+const dateMedianMm = (() => {
+  const sorted = [...dateData].sort((a, b) => a.value - b.value);
+  return Math.round(sorted[Math.floor(sorted.length / 2)].value * 10) / 10;
+})();
+
 export function DateDefaultDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
@@ -43,17 +86,43 @@ export function DateDefaultDemo() {
         extraRow={{ label: "Total", compute: sumByHour }}
         extraColumn={{ label: "Total", compute: sumByDate }}
       >
-        <DateHeatmapBody>
-          {({ activity, dateIndex, extra }) => (
+        <DateHeatmapBody
+          renderExtraRow={({ activity, dateIndex }) => (
             <HeatmapTooltip
               content={
-                <DateTooltipContent activity={activity} extra={extra} />
+                <DateTooltipContent activity={activity} extra="row" />
               }
             >
               <DateHeatmapBlock
                 activity={activity}
                 dateIndex={dateIndex}
-                extra={extra}
+                extra="row"
+              />
+            </HeatmapTooltip>
+          )}
+          renderExtraColumn={({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={
+                <DateTooltipContent activity={activity} extra="column" />
+              }
+            >
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra="column"
+              />
+            </HeatmapTooltip>
+          )}
+        >
+          {({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={
+                <DateTooltipContent activity={activity} />
+              }
+            >
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
               />
             </HeatmapTooltip>
           )}
@@ -62,7 +131,7 @@ export function DateDefaultDemo() {
           <DateHeatmapStat>
             {() => (
               <div className="text-muted-foreground tabular-nums">
-                {dateTotalMm.toFixed(1)} mm total
+                Total Rainfall: {dateTotalMm.toFixed(1)} mm
               </div>
             )}
           </DateHeatmapStat>
@@ -80,23 +149,58 @@ export function DateTenLevelsDemo() {
         data={dateData}
         levels={10}
         colors={{ scale: "var(--color-chart-3)" }}
+        extraRow={{ label: "Total", compute: sumByHour }}
+        extraColumn={{ label: "Total", compute: sumByDate }}
       >
-        <DateHeatmapBody>
-          {({ activity, dateIndex, extra }) => (
+        <DateHeatmapBody
+          renderExtraRow={({ activity, dateIndex }) => (
             <HeatmapTooltip
               content={
-                <DateTooltipContent activity={activity} extra={extra} />
+                <DateTooltipContent activity={activity} extra="row" />
               }
             >
               <DateHeatmapBlock
                 activity={activity}
                 dateIndex={dateIndex}
-                extra={extra}
+                extra="row"
+              />
+            </HeatmapTooltip>
+          )}
+          renderExtraColumn={({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={
+                <DateTooltipContent activity={activity} extra="column" />
+              }
+            >
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra="column"
+              />
+            </HeatmapTooltip>
+          )}
+        >
+          {({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={
+                <DateTooltipContent activity={activity} />
+              }
+            >
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
               />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
         <DateHeatmapFooter>
+          <DateHeatmapStat>
+            {() => (
+              <div className="text-muted-foreground tabular-nums">
+                Total Rainfall: {dateTotalMm.toFixed(1)} mm
+              </div>
+            )}
+          </DateHeatmapStat>
           <DateHeatmapLegend />
         </DateHeatmapFooter>
       </DateHeatmap>
@@ -104,29 +208,94 @@ export function DateTenLevelsDemo() {
   );
 }
 
-export function DateIsoDemo() {
+export function DateCustomTooltipDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
       <DateHeatmap
         data={dateData}
-        dateFormat="yyyy-MM-dd"
         colors={{ scale: "var(--color-chart-3)" }}
+        extraRow={{ label: "Total", compute: sumByHour }}
+        extraColumn={{ label: "Total", compute: sumByDate }}
       >
-        <DateHeatmapBody>
-          {({ activity, dateIndex, extra }) => (
-            <HeatmapTooltip
-              content={
-                <DateTooltipContent activity={activity} extra={extra} />
-              }
-            >
-              <DateHeatmapBlock
-                activity={activity}
-                dateIndex={dateIndex}
-                extra={extra}
-              />
-            </HeatmapTooltip>
+        <DateHeatmapBody
+          renderExtraRow={({ activity, dateIndex }) => (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DateHeatmapBlock activity={activity} dateIndex={dateIndex} extra="row" />
+              </TooltipTrigger>
+              <TooltipContent side="top" className="pointer-events-none" sideOffset={6}>
+                <div className="flex flex-col gap-1">
+                  <p className="text-xs font-semibold">
+                    Total, {String(activity.hour).padStart(2, "0")}:00
+                  </p>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-base leading-none">
+                      {activity.value === 0 ? "☀️" : activity.value < 1 ? "🌦️" : activity.value < 5 ? "🌧️" : "⛈️"}
+                    </span>
+                    <span className="text-muted-foreground text-xs">
+                      {activity.value.toFixed(1)} mm total
+                    </span>
+                  </div>
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          )}
+          renderExtraColumn={({ activity, dateIndex }) => (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DateHeatmapBlock activity={activity} dateIndex={dateIndex} extra="column" />
+              </TooltipTrigger>
+              <TooltipContent side="top" className="pointer-events-none" sideOffset={6}>
+                <div className="flex flex-col gap-1">
+                  <p className="text-xs font-semibold">
+                    {activity.date}, Total
+                  </p>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-base leading-none">
+                      {activity.value === 0 ? "☀️" : activity.value < 1 ? "🌦️" : activity.value < 5 ? "🌧️" : "⛈️"}
+                    </span>
+                    <span className="text-muted-foreground text-xs">
+                      {activity.value.toFixed(1)} mm total
+                    </span>
+                  </div>
+                </div>
+              </TooltipContent>
+            </Tooltip>
+          )}
+        >
+          {({ activity, dateIndex }) => (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
+              </TooltipTrigger>
+              <TooltipContent side="top" className="pointer-events-none" sideOffset={6}>
+                <div className="flex flex-col gap-1">
+                  <p className="text-xs font-semibold">
+                    {activity.date}, {String(activity.hour).padStart(2, "0")}:00
+                  </p>
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-base leading-none">
+                      {activity.value === 0 ? "☀️" : activity.value < 1 ? "🌦️" : activity.value < 5 ? "🌧️" : "⛈️"}
+                    </span>
+                    <span className="text-muted-foreground text-xs">
+                      {activity.value.toFixed(1)} mm
+                    </span>
+                  </div>
+                </div>
+              </TooltipContent>
+            </Tooltip>
           )}
         </DateHeatmapBody>
+        <DateHeatmapFooter>
+          <DateHeatmapStat>
+            {() => (
+              <div className="text-muted-foreground tabular-nums">
+                Total Rainfall: {dateTotalMm.toFixed(1)} mm
+              </div>
+            )}
+          </DateHeatmapStat>
+          <DateHeatmapLegend />
+        </DateHeatmapFooter>
       </DateHeatmap>
     </TooltipProvider>
   );
@@ -144,46 +313,93 @@ export function DateSparseTicksDemo() {
           ),
           endHour: null,
         }}
+        extraRow={{ label: "Total", compute: sumByHour }}
+        extraColumn={{ label: "Total", compute: sumByDate }}
       >
-        <DateHeatmapBody>
-          {({ activity, dateIndex, extra }) => (
+        <DateHeatmapBody
+          renderExtraRow={({ activity, dateIndex }) => (
             <HeatmapTooltip
               content={
-                <DateTooltipContent activity={activity} extra={extra} />
+                <DateTooltipContent activity={activity} extra="row" />
               }
             >
               <DateHeatmapBlock
                 activity={activity}
                 dateIndex={dateIndex}
-                extra={extra}
+                extra="row"
+              />
+            </HeatmapTooltip>
+          )}
+          renderExtraColumn={({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={
+                <DateTooltipContent activity={activity} extra="column" />
+              }
+            >
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra="column"
+              />
+            </HeatmapTooltip>
+          )}
+        >
+          {({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={
+                <DateTooltipContent activity={activity} />
+              }
+            >
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
               />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
+        <DateHeatmapFooter>
+          <DateHeatmapStat>
+            {() => (
+              <div className="text-muted-foreground tabular-nums">
+                Total Rainfall: {dateTotalMm.toFixed(1)} mm
+              </div>
+            )}
+          </DateHeatmapStat>
+          <DateHeatmapLegend />
+        </DateHeatmapFooter>
       </DateHeatmap>
     </TooltipProvider>
   );
 }
 
-export function DateHideSumColumnDemo() {
+export function DatePlainGridDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
       <DateHeatmap data={dateData} colors={{ scale: "var(--color-chart-3)" }}>
         <DateHeatmapBody>
-          {({ activity, dateIndex, extra }) => (
+          {({ activity, dateIndex }) => (
             <HeatmapTooltip
               content={
-                <DateTooltipContent activity={activity} extra={extra} />
+                <DateTooltipContent activity={activity} />
               }
             >
               <DateHeatmapBlock
                 activity={activity}
                 dateIndex={dateIndex}
-                extra={extra}
               />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
+        <DateHeatmapFooter>
+          <DateHeatmapStat>
+            {() => (
+              <div className="text-muted-foreground tabular-nums">
+                Total Rainfall: {dateTotalMm.toFixed(1)} mm
+              </div>
+            )}
+          </DateHeatmapStat>
+          <DateHeatmapLegend />
+        </DateHeatmapFooter>
       </DateHeatmap>
     </TooltipProvider>
   );
@@ -194,60 +410,19 @@ export function DateNoLabelsDemo() {
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
       <DateHeatmap data={dateData} colors={{ scale: "var(--color-chart-3)" }}>
         <DateHeatmapBody hideDateLabels hideHourLabels>
-          {({ activity, dateIndex, extra }) => (
+          {({ activity, dateIndex }) => (
             <HeatmapTooltip
               content={
-                <DateTooltipContent activity={activity} extra={extra} />
+                <DateTooltipContent activity={activity} />
               }
             >
               <DateHeatmapBlock
                 activity={activity}
                 dateIndex={dateIndex}
-                extra={extra}
               />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
-      </DateHeatmap>
-    </TooltipProvider>
-  );
-}
-
-export function DateLargeBlocksDemo() {
-  return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <DateHeatmap
-        data={dateData}
-        totalCount={dateTotalMm}
-        blockSize={32}
-        blockMargin={3}
-        colors={{ scale: "var(--color-chart-3)" }}
-      >
-        <DateHeatmapBody>
-          {({ activity, dateIndex, extra }) => (
-            <HeatmapTooltip
-              content={
-                <DateTooltipContent activity={activity} extra={extra} />
-              }
-            >
-              <DateHeatmapBlock
-                activity={activity}
-                dateIndex={dateIndex}
-                extra={extra}
-              />
-            </HeatmapTooltip>
-          )}
-        </DateHeatmapBody>
-        <DateHeatmapFooter>
-          <DateHeatmapStat>
-            {() => (
-              <div className="text-muted-foreground tabular-nums">
-                {dateTotalMm.toFixed(1)} mm total
-              </div>
-            )}
-          </DateHeatmapStat>
-          <DateHeatmapLegend />
-        </DateHeatmapFooter>
       </DateHeatmap>
     </TooltipProvider>
   );
@@ -261,14 +436,16 @@ export function Date12HourDemo() {
         totalCount={dateTotalMm}
         use12Hour
         colors={{ scale: "var(--color-chart-3)" }}
+        extraRow={{ label: "Total", compute: sumByHour }}
+        extraColumn={{ label: "Total", compute: sumByDate }}
       >
-        <DateHeatmapBody>
-          {({ activity, dateIndex, extra }) => (
+        <DateHeatmapBody
+          renderExtraRow={({ activity, dateIndex }) => (
             <HeatmapTooltip
               content={
                 <DateTooltipContent
                   activity={activity}
-                  extra={extra}
+                  extra="row"
                   use12Hour
                 />
               }
@@ -276,7 +453,40 @@ export function Date12HourDemo() {
               <DateHeatmapBlock
                 activity={activity}
                 dateIndex={dateIndex}
-                extra={extra}
+                extra="row"
+              />
+            </HeatmapTooltip>
+          )}
+          renderExtraColumn={({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={
+                <DateTooltipContent
+                  activity={activity}
+                  extra="column"
+                  use12Hour
+                />
+              }
+            >
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra="column"
+              />
+            </HeatmapTooltip>
+          )}
+        >
+          {({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={
+                <DateTooltipContent
+                  activity={activity}
+                  use12Hour
+                />
+              }
+            >
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
               />
             </HeatmapTooltip>
           )}
@@ -285,7 +495,7 @@ export function Date12HourDemo() {
           <DateHeatmapStat>
             {() => (
               <div className="text-muted-foreground tabular-nums">
-                {dateTotalMm.toFixed(1)} mm total
+                Total Rainfall: {dateTotalMm.toFixed(1)} mm
               </div>
             )}
           </DateHeatmapStat>
@@ -307,13 +517,13 @@ export function DateSpanishDemo() {
         extraRow={{ label: "Total", compute: sumByHour }}
         extraColumn={{ label: "Total", compute: sumByDate }}
       >
-        <DateHeatmapBody>
-          {({ activity, dateIndex, extra }) => (
+        <DateHeatmapBody
+          renderExtraRow={({ activity, dateIndex }) => (
             <HeatmapTooltip
               content={
                 <DateTooltipContent
                   activity={activity}
-                  extra={extra}
+                  extra="row"
                   locale={es}
                 />
               }
@@ -321,7 +531,40 @@ export function DateSpanishDemo() {
               <DateHeatmapBlock
                 activity={activity}
                 dateIndex={dateIndex}
-                extra={extra}
+                extra="row"
+              />
+            </HeatmapTooltip>
+          )}
+          renderExtraColumn={({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={
+                <DateTooltipContent
+                  activity={activity}
+                  extra="column"
+                  locale={es}
+                />
+              }
+            >
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra="column"
+              />
+            </HeatmapTooltip>
+          )}
+        >
+          {({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={
+                <DateTooltipContent
+                  activity={activity}
+                  locale={es}
+                />
+              }
+            >
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
               />
             </HeatmapTooltip>
           )}
@@ -330,12 +573,197 @@ export function DateSpanishDemo() {
           <DateHeatmapStat>
             {({ value }) => (
               <div className="text-muted-foreground tabular-nums">
-                {Number(value).toFixed(1)} mm total
+                Total Rainfall: {Number(value).toFixed(1)} mm
               </div>
             )}
           </DateHeatmapStat>
           <DateHeatmapLegend labels={{ less: "Menos", more: "Más" }} />
         </DateHeatmapFooter>
+      </DateHeatmap>
+    </TooltipProvider>
+  );
+}
+
+export function DateP95Demo() {
+  return (
+    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+      <DateHeatmap
+        data={dateData}
+        colors={{ scale: "var(--color-chart-3)" }}
+        extraRow={{ label: "Total", compute: sumByHour }}
+        extraColumn={{ label: <strong>P95</strong>, compute: p95ByDate }}
+      >
+        <DateHeatmapBody
+          renderExtraRow={({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={
+                <DateTooltipContent activity={activity} extra="row" />
+              }
+            >
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra="row"
+              />
+            </HeatmapTooltip>
+          )}
+          renderExtraColumn={({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={
+                <DateTooltipContent activity={activity} extra="column" />
+              }
+            >
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra="column"
+              />
+            </HeatmapTooltip>
+          )}
+        >
+          {({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={
+                <DateTooltipContent activity={activity} />
+              }
+            >
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+              />
+            </HeatmapTooltip>
+          )}
+        </DateHeatmapBody>
+        <DateHeatmapFooter>
+          <DateHeatmapStat>
+            {() => (
+              <div className="text-muted-foreground tabular-nums">
+                Total Rainfall: {dateTotalMm.toFixed(1)} mm
+              </div>
+            )}
+          </DateHeatmapStat>
+          <DateHeatmapLegend />
+        </DateHeatmapFooter>
+      </DateHeatmap>
+    </TooltipProvider>
+  );
+}
+
+export function DateMedianDemo() {
+  return (
+    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+      <DateHeatmap
+        data={dateData}
+        colors={{ scale: "var(--color-chart-3)" }}
+        extraRow={{ label: "Median", compute: medianByHour }}
+        extraColumn={{ label: "Median", compute: medianByDate }}
+      >
+        <DateHeatmapBody
+          renderExtraRow={({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={
+                <DateTooltipContent activity={activity} extra="row" />
+              }
+            >
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra="row"
+              />
+            </HeatmapTooltip>
+          )}
+          renderExtraColumn={({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={
+                <DateTooltipContent activity={activity} extra="column" />
+              }
+            >
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra="column"
+              />
+            </HeatmapTooltip>
+          )}
+        >
+          {({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={
+                <DateTooltipContent activity={activity} />
+              }
+            >
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+              />
+            </HeatmapTooltip>
+          )}
+        </DateHeatmapBody>
+        <DateHeatmapFooter>
+          <DateHeatmapStat>
+            {() => (
+              <div className="text-muted-foreground tabular-nums">
+                Median Rainfall: {dateMedianMm.toFixed(1)} mm
+              </div>
+            )}
+          </DateHeatmapStat>
+          <DateHeatmapLegend />
+        </DateHeatmapFooter>
+      </DateHeatmap>
+    </TooltipProvider>
+  );
+}
+
+export function DateNoFooterDemo() {
+  return (
+    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+      <DateHeatmap
+        data={dateData}
+        colors={{ scale: "var(--color-chart-3)" }}
+        extraRow={{ label: "Total", compute: sumByHour }}
+        extraColumn={{ label: "Total", compute: sumByDate }}
+      >
+        <DateHeatmapBody
+          renderExtraRow={({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={
+                <DateTooltipContent activity={activity} extra="row" />
+              }
+            >
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra="row"
+              />
+            </HeatmapTooltip>
+          )}
+          renderExtraColumn={({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={
+                <DateTooltipContent activity={activity} extra="column" />
+              }
+            >
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra="column"
+              />
+            </HeatmapTooltip>
+          )}
+        >
+          {({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={
+                <DateTooltipContent activity={activity} />
+              }
+            >
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+              />
+            </HeatmapTooltip>
+          )}
+        </DateHeatmapBody>
       </DateHeatmap>
     </TooltipProvider>
   );
@@ -347,19 +775,38 @@ export function DateCustomStylingDemo() {
       <DateHeatmap
         data={dateData}
         totalCount={dateTotalMm}
+        blockSize={32}
+        blockMargin={3}
         colors={{ scale: "var(--color-destructive)" }}
+        extraRow={{ label: "Total", compute: sumByHour }}
+        extraColumn={{ label: "Total", compute: sumByDate }}
       >
-        <DateHeatmapBody labelClassName="text-destructive font-bold">
-          {({ activity, dateIndex, extra }) => (
+        <DateHeatmapBody
+          labelClassName="text-destructive font-bold"
+          renderExtraRow={({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={<DateTooltipContent activity={activity} extra="row" />}
+            >
+              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} extra="row" />
+            </HeatmapTooltip>
+          )}
+          renderExtraColumn={({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={<DateTooltipContent activity={activity} extra="column" />}
+            >
+              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} extra="column" />
+            </HeatmapTooltip>
+          )}
+        >
+          {({ activity, dateIndex }) => (
             <HeatmapTooltip
               content={
-                <DateTooltipContent activity={activity} extra={extra} />
+                <DateTooltipContent activity={activity} />
               }
             >
               <DateHeatmapBlock
                 activity={activity}
                 dateIndex={dateIndex}
-                extra={extra}
               />
             </HeatmapTooltip>
           )}
@@ -368,7 +815,7 @@ export function DateCustomStylingDemo() {
           <DateHeatmapStat className="text-destructive">
             {() => (
               <div className="text-destructive tabular-nums">
-                {dateTotalMm.toFixed(1)} mm total
+                Total Rainfall: {dateTotalMm.toFixed(1)} mm
               </div>
             )}
           </DateHeatmapStat>

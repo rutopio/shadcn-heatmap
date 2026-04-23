@@ -37,16 +37,12 @@ export function HeatmapTooltip({
   );
 }
 
-export const WEEKDAY_NAMES = [
-  "Sun",
-  "Mon",
-  "Tue",
-  "Wed",
-  "Thu",
-  "Fri",
-  "Sat",
-  "Avg",
-];
+export const generateWeekdayNames = (locale?: Locale): string[] =>
+  Array.from({ length: 7 }, (_, i) =>
+    format(new Date(2000, 0, 2 + i), "EEEE", locale ? { locale } : undefined)
+  );
+
+export const WEEKDAY_NAMES = generateWeekdayNames();
 
 export function MonthTooltipContent({
   activity,
@@ -98,14 +94,21 @@ export function WeekTooltipContent({
   activity,
   extra,
   use12Hour = false,
+  locale,
+  avgLabel = "Avg",
+  avgPrefix = "avg. ",
 }: {
   activity: { weekday: number; hour: number; value: number };
   extra?: "row" | "column";
   use12Hour?: boolean;
+  locale?: Locale;
+  avgLabel?: string;
+  avgPrefix?: string;
 }) {
-  const day = extra === "row" ? "Avg" : WEEKDAY_NAMES[activity.weekday];
+  const names = generateWeekdayNames(locale);
+  const day = extra === "row" ? avgLabel : names[activity.weekday];
   const hour =
-    extra === "column" ? "Avg" : formatHourRange(activity.hour, use12Hour);
+    extra === "column" ? avgLabel : formatHourRange(activity.hour, use12Hour);
   const isAvg = extra !== undefined;
   return (
     <>
@@ -113,7 +116,7 @@ export function WeekTooltipContent({
         {day}, {hour}
       </p>
       <p className="text-muted-foreground">
-        {isAvg ? "avg. " : ""}
+        {isAvg ? avgPrefix : ""}
         {activity.value.toFixed(1)} °C
       </p>
     </>

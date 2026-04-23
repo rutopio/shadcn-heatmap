@@ -413,7 +413,8 @@ export const StatusHeatmapBody = ({
         });
     }, [dates, activityMap]);
 
-    const labelHeight = hideDateLabels ? 0 : fontSize * 2;
+    const labelFontSize = fontSize * 0.75;
+    const labelHeight = hideDateLabels ? 0 : labelFontSize * 2;
 
     return (
         <div
@@ -429,21 +430,28 @@ export const StatusHeatmapBody = ({
                 width={width + PADDING * 2}
             >
                 {!hideDateLabels && (
-                    <g className={cn("fill-current font-mono text-xs", labelClassName)}>
+                    <g className={cn("fill-current font-mono", labelClassName)}>
                         {dates.map((date, dayIndex) => {
-                            if (dayIndex % labelInterval !== 0) return null;
+                            const isFirst = dayIndex === 0;
+                            const isLast = dayIndex === dates.length - 1;
+                            if (dayIndex % labelInterval !== 0 && !isLast) return null;
 
-                            const xPosition =
-                                (blockWidth + blockMargin) * dayIndex + blockWidth / 2;
+                            const blockLeft = (blockWidth + blockMargin) * dayIndex;
+                            const xPosition = isFirst
+                                ? blockLeft
+                                : isLast
+                                  ? blockLeft + blockWidth
+                                  : blockLeft + blockWidth / 2;
+                            const anchor = isFirst ? "start" : isLast ? "end" : "middle";
 
                             return (
                                 <text
                                     key={`date-${date}`}
                                     x={xPosition}
-                                    y={height + fontSize}
+                                    y={height + labelFontSize}
                                     dominantBaseline="hanging"
-                                    textAnchor="middle"
-                                    style={{ fontSize: `${fontSize}px` }}
+                                    textAnchor={anchor}
+                                    style={{ fontSize: `${labelFontSize}px` }}
                                 >
                                     {format(new Date(date), dateFormat, { locale })}
                                 </text>

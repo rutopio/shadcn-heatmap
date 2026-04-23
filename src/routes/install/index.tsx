@@ -70,9 +70,9 @@ function InstallPage() {
                   filename="# Month / GitHub-style"
                 />
                 <CodeBlock
-                  code={cliInstallCommands.week}
+                  code={cliInstallCommands.weekday}
                   lang="bash"
-                  filename="# Week (weekday x hour)"
+                  filename="# Weekday (weekday x hour)"
                 />
                 <CodeBlock
                   code={cliInstallCommands.date}

@@ -12,8 +12,3 @@ export type ComponentPropsSection = {
   props: PropSpec[];
 };
 
-export type VariantSpec = {
-  title: string;
-  description: string;
-  code: string;
-};

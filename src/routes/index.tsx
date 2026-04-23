@@ -2,10 +2,10 @@ import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRightIcon, CodeIcon } from "@phosphor-icons/react";
 
 import {
+  CalendarDefaultDemo,
   DateDefaultDemo,
-  MonthDefaultDemo,
   StatusDefaultDemo,
-  WeekDefaultDemo,
+  WeekdayDefaultDemo,
 } from "@/components/demos";
 import { Button } from "@/components/ui/button";
 import { pageHead } from "@/lib/seo";
@@ -14,13 +14,13 @@ const heatmaps = [
   {
     name: "CalendarHeatmap",
     description: "Example of Github Contribution",
-    Demo: MonthDefaultDemo,
+    Demo: CalendarDefaultDemo,
     router: "calendar",
   },
   {
     name: "WeekdayHeatmap",
     description: "Average weekly temperature in the Atacama Desert",
-    Demo: WeekDefaultDemo,
+    Demo: WeekdayDefaultDemo,
     router: "weekday",
   },
   {

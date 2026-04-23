@@ -1,18 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { DemoFrame } from "@/components/landing/demo-frame";
-import {
-  Date12HourDemo,
-  DateCustomStylingDemo,
-  DateDefaultDemo,
-  DateHideSumColumnDemo,
-  DateIsoDemo,
-  DateLargeBlocksDemo,
-  DateNoLabelsDemo,
-  DateSpanishDemo,
-  DateSparseTicksDemo,
-  DateTenLevelsDemo,
-} from "@/components/demos";
+import { DateDefaultDemo } from "@/components/demos";
+import { dateVariantItems } from "@/components/demos/variants/date";
 import { PropsTable } from "@/components/landing/props-table";
 import { ShowcaseSection } from "@/components/landing/showcase-section";
 import { VariantGrid } from "@/components/landing/variant-grid";
@@ -21,7 +11,6 @@ import { dateProps } from "@/content/props/date";
 import {
   dateBasicCode,
   dateSampleData,
-  dateVariants,
 } from "@/content/snippets/date";
 import { pageHead } from "@/lib/seo";
 
@@ -76,19 +65,7 @@ function DatePage() {
           <p className="text-muted-foreground text-sm">
             Drop in different props and see how the layout reacts.
           </p>
-          <VariantGrid
-            variants={[
-              { ...dateVariants[0], preview: <DateTenLevelsDemo /> },
-              { ...dateVariants[1], preview: <DateIsoDemo /> },
-              { ...dateVariants[2], preview: <DateSparseTicksDemo /> },
-              { ...dateVariants[3], preview: <DateHideSumColumnDemo /> },
-              { ...dateVariants[4], preview: <DateNoLabelsDemo /> },
-              { ...dateVariants[5], preview: <DateLargeBlocksDemo /> },
-              { ...dateVariants[6], preview: <Date12HourDemo /> },
-              { ...dateVariants[7], preview: <DateSpanishDemo /> },
-              { ...dateVariants[8], preview: <DateCustomStylingDemo /> },
-            ]}
-          />
+          <VariantGrid variants={dateVariantItems} />
         </div>
       </div>
     </ShowcaseSection>

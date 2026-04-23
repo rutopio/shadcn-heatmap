@@ -586,7 +586,7 @@ export const CalendarHeatmap = ({
     return (
         <CalendarHeatmapContext value={contextValue}>
             <div
-                className={cn("flex w-max max-w-full flex-col gap-2", className)}
+                className={cn("flex w-max max-w-full flex-col gap-2 px-4", className)}
                 style={{ fontSize, ...style }}
                 {...props}
             >
@@ -691,6 +691,7 @@ export type CalendarHeatmapBodyProps = Omit<
 > & {
     hideMonthLabels?: boolean;
     hideWeekdayLabels?: boolean;
+    hideYearLabels?: boolean;
     className?: string;
     labelClassName?: string;
     yearClassName?: string;
@@ -705,6 +706,7 @@ export type CalendarHeatmapBodyProps = Omit<
 export const CalendarHeatmapBody = ({
     hideMonthLabels = false,
     hideWeekdayLabels = false,
+    hideYearLabels = false,
     className,
     labelClassName,
     yearClassName,
@@ -761,16 +763,18 @@ export const CalendarHeatmapBody = ({
     return (
         <div
             className={cn(
-                "flex max-w-full flex-col gap-6 overflow-x-auto overflow-y-hidden p-4",
+                "flex max-w-full flex-col gap-6 overflow-x-auto overflow-y-hidden py-4",
                 className
             )}
             {...props}
         >
             {rowData.map(({ yearRow, height, monthLabels, yearTotalCount }) => (
                 <div key={`year-row-${yearRow.year}`}>
-                    <div className={cn("text-muted-foreground mb-2", yearClassName)}>
-                        {yearRow.year}
-                    </div>
+                    {!hideYearLabels && (
+                        <div className={cn("text-muted-foreground mb-2", yearClassName)}>
+                            {yearRow.year}
+                        </div>
+                    )}
                     <svg
                         role="img"
                         aria-label={`Contribution heatmap for ${yearRow.year}`}
@@ -945,10 +949,10 @@ export const CalendarHeatmapLegend = ({
         <div
             role="group"
             aria-label="Activity intensity legend"
-            className={cn("ml-auto flex items-center gap-1", className)}
+            className={cn("text-muted-foreground ml-auto flex items-center gap-1", className)}
             {...props}
         >
-            <span className="text-muted-foreground mr-1 text-xs font-medium">
+            <span className="mr-1 text-xs font-medium">
                 {lessLabel}
             </span>
             {legendLevels.map((level) =>
@@ -963,7 +967,6 @@ export const CalendarHeatmapLegend = ({
                         height={blockSize}
                         key={`legend-level-${level}`}
                         width={blockWidth}
-                        style={{ borderRadius: blockRadius }}
                     >
                         <rect
                             data-level={level}
@@ -972,14 +975,13 @@ export const CalendarHeatmapLegend = ({
                             ry={blockRadius}
                             width={blockWidth}
                             style={{
-                                borderRadius: blockRadius,
                                 fill: getLevelFill(level, levels, isNormalized, false, colors),
                             }}
                         />
                     </svg>
                 )
             )}
-            <span className="text-muted-foreground ml-1 text-xs font-medium">
+            <span className="ml-1 text-xs font-medium">
                 {moreLabel}
             </span>
         </div>

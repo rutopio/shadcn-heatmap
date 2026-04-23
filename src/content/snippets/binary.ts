@@ -56,7 +56,8 @@ export function HabitTracker() {
   );
 }`;
 
-export const binaryWeekdayCode = `import {
+export const binaryWeekdayCode = `import { format } from "date-fns";
+import {
   WeekdayHeatmap,
   WeekdayHeatmapBlock,
   WeekdayHeatmapBody,
@@ -70,7 +71,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 
-const WEEKDAY_NAMES = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+const WEEKDAY_NAMES = Array.from({ length: 7 }, (_, i) =>
+  format(new Date(2000, 0, 2 + i), "EEEE")
+);
 
 // Binary data: value is strictly 0 (free) or 1 (has meeting)
 const data = [

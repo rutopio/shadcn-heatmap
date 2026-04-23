@@ -1,18 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
 import { DemoFrame } from "@/components/landing/demo-frame";
-import {
-  Week12HourDemo,
-  WeekCustomStylingDemo,
-  WeekDefaultDemo,
-  WeekHideAvgDemo,
-  WeekJapaneseDemo,
-  WeekLargeBlocksDemo,
-  WeekMiniDemo,
-  WeekMinimalTicksDemo,
-  WeekMondayStartDemo,
-  WeekThreeBucketsDemo,
-} from "@/components/demos";
+import { WeekdayDefaultDemo } from "@/components/demos";
+import { weekdayVariantItems } from "@/components/demos/variants/weekday";
 import { PropsTable } from "@/components/landing/props-table";
 import { ShowcaseSection } from "@/components/landing/showcase-section";
 import { VariantGrid } from "@/components/landing/variant-grid";
@@ -21,7 +11,6 @@ import { weekdayProps } from "@/content/props/weekday";
 import {
   weekdayBasicCode,
   weekdaySampleData,
-  weekdayVariants,
 } from "@/content/snippets/weekday";
 import { pageHead } from "@/lib/seo";
 
@@ -45,7 +34,7 @@ function WeekdayPage() {
       <div className="space-y-6 sm:space-y-10">
         <DemoFrame
           title="Default usage"
-          preview={<WeekDefaultDemo />}
+          preview={<WeekdayDefaultDemo />}
           code={weekdayBasicCode}
           filename="weekly-rhythm.tsx"
         />
@@ -77,19 +66,7 @@ function WeekdayPage() {
           <p className="text-muted-foreground text-sm">
             Drop in different props and see how the layout reacts.
           </p>
-          <VariantGrid
-            variants={[
-              { ...weekdayVariants[0], preview: <WeekMondayStartDemo /> },
-              { ...weekdayVariants[1], preview: <WeekMinimalTicksDemo /> },
-              { ...weekdayVariants[2], preview: <WeekThreeBucketsDemo /> },
-              { ...weekdayVariants[3], preview: <WeekJapaneseDemo /> },
-              { ...weekdayVariants[4], preview: <WeekHideAvgDemo /> },
-              { ...weekdayVariants[5], preview: <WeekMiniDemo /> },
-              { ...weekdayVariants[6], preview: <WeekLargeBlocksDemo /> },
-              { ...weekdayVariants[7], preview: <Week12HourDemo /> },
-              { ...weekdayVariants[8], preview: <WeekCustomStylingDemo /> },
-            ]}
-          />
+          <VariantGrid variants={weekdayVariantItems} />
         </div>
       </div>
     </ShowcaseSection>

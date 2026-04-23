@@ -5,43 +5,45 @@ export {
   WeekdayBinaryDemo,
 } from "./binary";
 
-// Month demos
+// Calendar demos
 export {
-  MonthChunkyDemo,
-  MonthCustomDateFormatDemo,
-  MonthCustomStylingDemo,
-  MonthDefaultDemo,
-  MonthGermanDemo,
-  MonthLargeBlocksDemo,
-  MonthMondayStartDemo,
-  MonthMultiYearDemo,
-  MonthNoFooterDemo,
-  MonthTenLevelsDemo,
-} from "./month";
+  CalendarChunkyDemo,
+  CalendarCustomTooltipDemo,
+  CalendarCustomStylingDemo,
+  CalendarDefaultDemo,
+  CalendarGermanDemo,
+  CalendarMiniDemo,
+  CalendarMondayStartDemo,
+  CalendarMultiYearDemo,
+  CalendarNoFooterDemo,
+  CalendarTenLevelsDemo,
+} from "./calendar";
 
-// Week demos
+// Weekday demos
 export {
-  Week12HourDemo,
-  WeekCustomStylingDemo,
-  WeekDefaultDemo,
-  WeekHideAvgDemo,
-  WeekJapaneseDemo,
-  WeekLargeBlocksDemo,
-  WeekMinimalTicksDemo,
-  WeekMiniDemo,
-  WeekMondayStartDemo,
-  WeekThreeBucketsDemo,
-} from "./week";
+  Weekday12HourDemo,
+  WeekdayCustomStylingDemo,
+  WeekdayDefaultDemo,
+  WeekdayJapaneseDemo,
+  WeekdayMedianDemo,
+  WeekdayMinimalTicksDemo,
+  WeekdayMiniDemo,
+  WeekdayMondayStartDemo,
+  WeekdayNoFooterDemo,
+  WeekdayPlainGridDemo,
+  WeekdayTenLevelsDemo,
+} from "./weekday";
 
 // Date demos
 export {
   Date12HourDemo,
   DateCustomStylingDemo,
+  DateCustomTooltipDemo,
   DateDefaultDemo,
-  DateHideSumColumnDemo,
-  DateIsoDemo,
-  DateLargeBlocksDemo,
+  DateMedianDemo,
+  DateNoFooterDemo,
   DateNoLabelsDemo,
+  DatePlainGridDemo,
   DateSparseTicksDemo,
   DateSpanishDemo,
   DateTenLevelsDemo,
@@ -51,7 +53,12 @@ export {
 export {
   StatusCustomColorDemo,
   StatusCustomSizeDemo,
+  StatusCustomStylingDemo,
+  StatusCustomTooltipDemo,
   StatusDefaultDemo,
+  StatusI18nDemo,
+  StatusNoFooterDemo,
+  StatusNoLabelsDemo,
   StatusUptimeDemo,
   StatusWithLabelsDemo,
 } from "./status";
