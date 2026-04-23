@@ -12,7 +12,7 @@ export const statusProps: ComponentPropsSection[] = [
         type: "StatusActivity[]",
         required: true,
         description:
-          "`{ date: 'YYYY-MM-DD', value: 0 | 1 | 2 | 3 }[]`. Status values: 0=no-data (secondary), 1=critical (red), 2=degraded (orange), 3=healthy (green). Missing days are auto-filled with value 0.",
+          "`{ date: 'YYYY-MM-DD', value: number }[]`. `0` is reserved for no-data. Defaults: `1`=critical (red), `2`=degraded (amber), `3`=healthy (green). You can extend with any numeric value — supply a matching entry in `colors` and `labels.statuses`, and list the value in `statusValues` to appear in the legend.",
       },
       // 2. 空狀態處理
       {
@@ -26,7 +26,7 @@ export const statusProps: ComponentPropsSection[] = [
         name: "colors",
         type: "ColorConfig",
         description:
-          "Customize colors: `{ critical?: string, degraded?: string, healthy?: string }`. Defaults: critical=red-600, degraded=amber-400, healthy=green-500. No-data always uses secondary color.",
+          "Customize colors per status. Accepts semantic keys (`noData`, `critical`, `degraded`, `healthy`) **and** numeric keys for custom statuses (`{ 4: 'var(--color-chart-4)' }`). Numeric key takes precedence over its semantic alias. Defaults: `noData = 'var(--color-secondary)'`, critical/degraded/healthy use semantic red/amber/green.",
       },
       // 4. 尺寸配置
       {
@@ -79,7 +79,21 @@ export const statusProps: ComponentPropsSection[] = [
         name: "labels",
         type: "StatusHeatmapLabels",
         description:
-          "Override status labels (`statuses.noData`, `statuses.critical`, `statuses.degraded`, `statuses.healthy`) and `healthyDays` template string. Useful for internationalization.",
+          "Override `statuses` (semantic keys `noData`/`critical`/`degraded`/`healthy` and/or numeric keys for custom values) — these are shared by the Block aria-label and the Legend. `cellLabel` is the aria-label template (placeholders: `{{date}}`, `{{status}}`). Stat text goes on `<StatusHeatmapStat label={…}>` (or `labels.stat`). The Legend can also override `statuses` locally via `<StatusHeatmapLegend labels={…}>`.",
+      },
+      {
+        name: "statusValues",
+        type: "number[]",
+        default: "[0, 1, 2, 3]",
+        description:
+          "Which status values are rendered in the legend, in order. Extend for custom statuses (e.g. `[0, 1, 2, 3, 4]`).",
+      },
+      {
+        name: "healthyValue",
+        type: "number",
+        default: "3",
+        description:
+          "The status value counted by the default `StatusHeatmapStat` compute. Set this if your 'healthy' status uses a different numeric value.",
       },
     ],
   },
@@ -96,20 +110,20 @@ export const statusProps: ComponentPropsSection[] = [
           "Render function receiving `{ activity, dayIndex }`. Typically returns `<StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />`.",
       },
       {
-        name: "showDateLabels",
+        name: "hideDateLabels",
         type: "boolean",
         default: "false",
-        description: "Show date labels below the timeline.",
+        description: "Hide date labels below the timeline.",
       },
       {
         name: "labelInterval",
         type: "number",
         default: "30",
         description:
-          "Show label every N days. Only applies when `showDateLabels` is true.",
+          "Show label every N days. Only applies when `hideDateLabels` is `false`.",
       },
       {
-        name: "labelTextClass",
+        name: "labelClassName",
         type: "string",
         description:
           "Additional CSS classes for date labels. Example: 'text-destructive font-bold'.",
@@ -135,6 +149,25 @@ export const statusProps: ComponentPropsSection[] = [
         description: "Day index in the timeline (0-based).",
       },
       {
+        name: "highlighted",
+        type: "boolean",
+        default: "false",
+        description:
+          "Dim this block to 60% opacity of its colour (useful for selected / focus states). Also emits a `data-highlighted` attribute for CSS targeting.",
+      },
+      {
+        name: "onCellClick",
+        type: "(activity: StatusActivity) => void",
+        description:
+          "Semantic click handler receiving the cell's activity. Fires alongside any `onClick` passed through.",
+      },
+      {
+        name: "onCellHover",
+        type: "(activity: StatusActivity | null) => void",
+        description:
+          "Semantic hover handler. Receives the activity on enter, and `null` on leave. Fires alongside `onMouseEnter`/`onMouseLeave`.",
+      },
+      {
         name: "className",
         type: "string",
         description: "Additional CSS classes for the block element.",
@@ -153,33 +186,51 @@ export const statusProps: ComponentPropsSection[] = [
     ],
   },
   {
-    componentName: "StatusHeatmapHealthyDays",
+    componentName: "StatusHeatmapStat",
     description:
-      "Displays the count of days with healthy status (value=3). Supports custom render function.",
+      "Displays a summary stat in the footer. Defaults to the count of days matching `healthyValue`. Customize the computation with `compute` and the output text with `label` (or `labels.stat`).",
     props: [
+      {
+        name: "compute",
+        type: "(data: StatusActivity[]) => number | string",
+        description:
+          "Function to compute the stat from all activities. Defaults to counting days where `value === healthyValue`. Example: `(data) => data.filter(d => d.value === 1).length` for critical-day count.",
+      },
+      {
+        name: "label",
+        type: "string",
+        description:
+          "Template string overriding `labels.stat`. Placeholder: `{{value}}`. Example: `\"{{value}} critical days\"`.",
+      },
       {
         name: "children",
         type: "(args) => ReactNode",
         description:
-          "Render function receiving `{ healthyDays }`. If omitted, displays default format.",
+          "Render function receiving `{ value, data }`. Fully takes over rendering.",
       },
       {
         name: "className",
         type: "string",
-        description: "Additional CSS classes for the element.",
+        description: "Additional CSS classes for the stat element.",
       },
     ],
   },
   {
     componentName: "StatusHeatmapLegend",
     description:
-      "Displays all 4 status states with their colors and labels: No Data, Critical, Degraded, Healthy.",
+      "Displays the status legend. By default renders one entry per value in `statusValues` (default: No Data, Critical, Degraded, Healthy).",
     props: [
+      {
+        name: "labels",
+        type: "Record<number, string> & { noData?, critical?, degraded?, healthy? }",
+        description:
+          "Override the status text labels **for this legend only**. Falls back to root `labels.statuses`, then built-in defaults. Use this when the Legend text should differ from the Block aria-label text (otherwise prefer root `labels.statuses` so both share the same source).",
+      },
       {
         name: "children",
         type: "(args) => ReactNode",
         description:
-          "Custom render function receiving `{ value, label }` for each status (0=no-data, 1=critical, 2=degraded, 3=healthy).",
+          "Custom render function receiving `{ value, label }` for each status in `statusValues`.",
       },
       {
         name: "className",

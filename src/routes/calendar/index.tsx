@@ -12,7 +12,7 @@ import {
   MonthMultiYearDemo,
   MonthNoFooterDemo,
   MonthTenLevelsDemo,
-} from "@/components/landing/demos";
+} from "@/components/demos";
 import { PropsTable } from "@/components/landing/props-table";
 import { ShowcaseSection } from "@/components/landing/showcase-section";
 import { VariantGrid } from "@/components/landing/variant-grid";

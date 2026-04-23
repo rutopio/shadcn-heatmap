@@ -4,7 +4,7 @@ export const binaryCalendarCode = `import {
   CalendarHeatmapBody,
   CalendarHeatmapFooter,
   CalendarHeatmapLegend,
-  CalendarHeatmapTotalCount,
+  CalendarHeatmapStat,
 } from "@/components/heatmap/calendar-heatmap";
 import {
   Tooltip,
@@ -25,11 +25,7 @@ const activities = [
 export function HabitTracker() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <CalendarHeatmap
-        data={activities}
-        maxLevel={1}
-        labels={{ legend: { less: "Missed", more: "Done" } }}
-      >
+      <CalendarHeatmap data={activities} levels={2}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
             <Tooltip>
@@ -52,8 +48,8 @@ export function HabitTracker() {
           )}
         </CalendarHeatmapBody>
         <CalendarHeatmapFooter>
-          <CalendarHeatmapTotalCount />
-          <CalendarHeatmapLegend />
+          <CalendarHeatmapStat />
+          <CalendarHeatmapLegend labels={{ less: "Missed", more: "Done" }} />
         </CalendarHeatmapFooter>
       </CalendarHeatmap>
     </TooltipProvider>
@@ -90,11 +86,10 @@ export function MeetingSchedule() {
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
       <WeekdayHeatmap
         data={data}
-        maxLevel={1}
+        levels={2}
         colors={{ scale: "var(--color-chart-2)" }}
-        labels={{ legend: { less: "Free", more: "Meeting" } }}
       >
-        <WeekdayHeatmapBody hideAvgRow hideAvgColumn>
+        <WeekdayHeatmapBody>
           {({ activity }) => (
             <Tooltip>
               <TooltipTrigger asChild>
@@ -113,7 +108,7 @@ export function MeetingSchedule() {
           )}
         </WeekdayHeatmapBody>
         <WeekdayHeatmapFooter>
-          <WeekdayHeatmapLegend />
+          <WeekdayHeatmapLegend labels={{ less: "Free", more: "Meeting" }} />
         </WeekdayHeatmapFooter>
       </WeekdayHeatmap>
     </TooltipProvider>
@@ -149,43 +144,29 @@ export function ServiceUptime() {
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
       <DateHeatmap
         data={data}
-        maxLevel={1}
+        levels={2}
         colors={{ scale: "var(--color-chart-3)" }}
-        labels={{ legend: { less: "Down", more: "Up" } }}
       >
-        <DateHeatmapBody hideSumColumn>
+        <DateHeatmapBody>
           {({ activity, dateIndex }) => (
             <Tooltip>
               <TooltipTrigger asChild>
                 <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
               </TooltipTrigger>
               <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
-                {activity.date === "sum" ? (
-                  <>
-                    <p className="font-medium">
-                      {\`\${String(activity.hour).padStart(2, "0")}:00\`} total
-                    </p>
-                    <p className="text-muted-foreground">
-                      {activity.value} days up
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <p className="font-medium">
-                      {format(parseISO(activity.date), "MMM d")},{" "}
-                      {\`\${String(activity.hour).padStart(2, "0")}:00\`}
-                    </p>
-                    <p className="text-muted-foreground">
-                      {activity.value === 1 ? "Up" : "Down"}
-                    </p>
-                  </>
-                )}
+                <p className="font-medium">
+                  {format(parseISO(activity.date), "MMM d")},{" "}
+                  {\`\${String(activity.hour).padStart(2, "0")}:00\`}
+                </p>
+                <p className="text-muted-foreground">
+                  {activity.value === 1 ? "Up" : "Down"}
+                </p>
               </TooltipContent>
             </Tooltip>
           )}
         </DateHeatmapBody>
         <DateHeatmapFooter>
-          <DateHeatmapLegend />
+          <DateHeatmapLegend labels={{ less: "Down", more: "Up" }} />
         </DateHeatmapFooter>
       </DateHeatmap>
     </TooltipProvider>

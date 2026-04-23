@@ -23,18 +23,18 @@ export const calendarProps: ComponentPropsSection[] = [
       },
       // 3. 視覺配置
       {
-        name: "maxLevel",
+        name: "levels",
         type: "number",
-        default: "4",
+        default: "5",
         description:
-          "Number of intensity buckets. Level 0 is empty; 1…maxLevel map onto `chart-1` opacity steps.",
+          "Total number of cells shown in the legend. Non-normalized (default): 1 empty cell + (levels − 1) coloured steps from 20%→100% opacity. Normalized: `levels` coloured steps from 20%→100% opacity (no empty cell).",
       },
       {
         name: "isNormalized",
         type: "boolean",
         default: "false",
         description:
-          "When `true`, levels are assigned via min–max normalization: the minimum value maps to level 1 and the maximum to `maxLevel`. Suitable for datasets with negative values. When `false` (default), values ≤ 0 are treated as empty (level 0) and the scale runs from 0 to max.",
+          "When `true`, uses min–max normalization across the dataset: min maps to level 1 and max to `levels`. Suitable for datasets with negative values (e.g. temperature). When `false` (default), values ≤ 0 are treated as empty (level 0) and the scale runs from 0 to max.",
       },
       {
         name: "colors",
@@ -47,13 +47,21 @@ export const calendarProps: ComponentPropsSection[] = [
         name: "blockSize",
         type: "number",
         default: "12",
-        description: "Side length of each square block in pixels.",
+        description:
+          "Block **height** in pixels. Width is `blockSize × blockSizeRatio`.",
+      },
+      {
+        name: "blockSizeRatio",
+        type: "number",
+        default: "1",
+        description:
+          "Width-to-height ratio for each block. `2` = landscape, `1` = square (default), `0.5` = portrait.",
       },
       {
         name: "blockMargin",
         type: "number",
         default: "4",
-        description: "Gap between blocks in pixels.",
+        description: "Gap between blocks.",
       },
       {
         name: "blockRadius",
@@ -62,24 +70,17 @@ export const calendarProps: ComponentPropsSection[] = [
         description: "Corner radius of each block.",
       },
       {
-        name: "blockSizeRatio",
-        type: "number",
-        default: "1",
-        description:
-          "Width-to-height ratio for each block. `1` = square, `1.5` = landscape, `0.5` = portrait.",
-      },
-      {
         name: "fontSize",
         type: "number",
         default: "14",
-        description: "Base font size for labels (weekday / month).",
+        description: "Base font size for labels.",
       },
       {
         name: "weekStart",
-        type: "0 | 1 | 2 | 3 | 4 | 5 | 6",
+        type: "WeekDay",
         default: "0",
         description:
-          "Which weekday labels/rows start with. 0 = Sunday (GitHub-style), 1 = Monday (ISO).",
+          "First day of week: `0` = Sunday, `1` = Monday, ..., `6` = Saturday. `WeekDay` is date-fns's `Day` type.",
       },
       {
         name: "hasEmptyColumn",
@@ -103,17 +104,10 @@ export const calendarProps: ComponentPropsSection[] = [
           "A date-fns locale object (e.g. `import { de } from 'date-fns/locale'`). Auto-generates `months` and `weekdays` in the given language. Overridden by explicit `labels.months` / `labels.weekdays` arrays.",
       },
       {
-        name: "dateFormat",
-        type: "string",
-        default: '"PPP"',
-        description:
-          "Date format string for date-fns `format()`. Used when formatting dates in tooltips or custom rendering. Examples: 'PPP' (localized long), 'MMM d, yyyy', 'yyyy-MM-dd'. Works with `locale` for localized formatting.",
-      },
-      {
         name: "labels",
         type: "Labels",
         description:
-          'Override default month names, weekday names, legend text, or `totalCount` template `"{{count}} contributions in {{year}}"`.',
+          "Override `months` (12 strings), `weekdays` (7 strings), and `cellLabel` aria-label template (placeholders: `{{date}}`, `{{value}}`). Legend text goes on `<CalendarHeatmapLegend labels={…}>`; stat text goes on `<CalendarHeatmapStat label={…}>` — or set `labels.stat` here if you prefer i18n all in one place.",
       },
       // 6. 其他
       {
@@ -142,13 +136,13 @@ export const calendarProps: ComponentPropsSection[] = [
         description: "Hide the `Sun Mon…` labels on the left.",
       },
       {
-        name: "labelTextClass",
+        name: "labelClassName",
         type: "string",
         description:
           "Additional CSS classes for month and weekday label text. Example: 'text-destructive font-bold'.",
       },
       {
-        name: "yearTextClass",
+        name: "yearClassName",
         type: "string",
         description:
           "Additional CSS classes for year label text when displaying multi-year data.",
@@ -178,7 +172,7 @@ export const calendarProps: ComponentPropsSection[] = [
         type: "ActivityWithLevel",
         required: true,
         description:
-          "The activity record including its computed level (0–maxLevel). Received directly from the `CalendarHeatmapBody` render-prop.",
+          "The activity record including its computed level (0–levels). Received directly from the `CalendarHeatmapBody` render-prop.",
       },
       {
         name: "dayIndex",
@@ -193,15 +187,28 @@ export const calendarProps: ComponentPropsSection[] = [
         description: "Column index within the current year row.",
       },
       {
+        name: "highlighted",
+        type: "boolean",
+        default: "false",
+        description:
+          "Dim this block to 60% opacity of its colour (useful for selected / focus states). Also emits a `data-highlighted` attribute for CSS targeting.",
+      },
+      {
+        name: "onCellClick",
+        type: "(activity: ActivityWithLevel) => void",
+        description:
+          "Semantic click handler receiving the cell's activity. Fires alongside any `onClick` passed through.",
+      },
+      {
+        name: "onCellHover",
+        type: "(activity: ActivityWithLevel | null) => void",
+        description:
+          "Semantic hover handler. Receives the activity on enter, and `null` on leave. Fires alongside `onMouseEnter`/`onMouseLeave`.",
+      },
+      {
         name: "className",
         type: "string",
         description: "Additional CSS classes for the SVG rect element.",
-      },
-      {
-        name: 'data-highlighted="true"',
-        type: "attribute",
-        description:
-          "Opt in to the `chart-2` palette for this block (useful for selected states).",
       },
     ],
   },
@@ -218,20 +225,32 @@ export const calendarProps: ComponentPropsSection[] = [
     ],
   },
   {
-    componentName: "CalendarHeatmapTotalCount",
+    componentName: "CalendarHeatmapStat",
     description:
-      "Displays total contributions count and year. Supports custom render function.",
+      "Displays a summary stat in the footer. Defaults to total contributions for the year. Customize the computation with `compute` and the output text with `label` (or `labels.stat`).",
     props: [
+      {
+        name: "compute",
+        type: "(data: ActivityWithLevel[]) => number | string",
+        description:
+          "Function to compute the stat from all activities. Defaults to summing `value`. Example: `(data) => Math.max(...data.map(d => d.value))`.",
+      },
+      {
+        name: "label",
+        type: "string",
+        description:
+          "Template string overriding `labels.stat`. Placeholders: `{{value}}`, `{{year}}`. Example: `\"Peak: {{value}}\"`.",
+      },
       {
         name: "children",
         type: "(args) => ReactNode",
         description:
-          "Render function receiving `{ totalCount, year }`. If omitted, displays default format using `labels.totalCount` template.",
+          "Render function receiving `{ value, data, year }`. Fully takes over rendering. Use this for rich content (multi-line, icons, etc.).",
       },
       {
         name: "className",
         type: "string",
-        description: "Additional CSS classes for the total count element.",
+        description: "Additional CSS classes for the stat element.",
       },
     ],
   },
@@ -241,10 +260,16 @@ export const calendarProps: ComponentPropsSection[] = [
       "Displays intensity level legend (Less → More) with color-coded blocks.",
     props: [
       {
+        name: "labels",
+        type: "{ less?: string; more?: string }",
+        description:
+          "Text labels shown at either end of the scale. Defaults to `Less` / `More`.",
+      },
+      {
         name: "children",
         type: "(args) => ReactNode",
         description:
-          "Custom render function receiving `{ level }` for each intensity level (0 to maxLevel).",
+          "Custom render function receiving `{ level }` for each intensity level (0 to levels).",
       },
       {
         name: "className",

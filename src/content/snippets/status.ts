@@ -21,7 +21,7 @@ export const statusBasicCode = `import {
   StatusHeatmapBlock,
   StatusHeatmapBody,
   StatusHeatmapFooter,
-  StatusHeatmapHealthyDays,
+  StatusHeatmapStat,
   StatusHeatmapLegend,
   type StatusValue,
 } from "@/components/heatmap/status-heatmap";
@@ -66,7 +66,7 @@ export function StatusTimeline() {
           )}
         </StatusHeatmapBody>
         <StatusHeatmapFooter>
-          <StatusHeatmapHealthyDays />
+          <StatusHeatmapStat />
           <StatusHeatmapLegend />
         </StatusHeatmapFooter>
       </StatusHeatmap>
@@ -76,10 +76,11 @@ export function StatusTimeline() {
 
 export const statusVariants: VariantSpec[] = [
   {
-    title: "With date labels",
-    description: "Show date labels below the timeline every N days.",
+    title: "Custom date label interval",
+    description:
+      "Date labels are shown by default. Use `labelInterval` to control how often they appear.",
     code: `<StatusHeatmap data={data}>
-  <StatusHeatmapBody showDateLabels labelInterval={30}>
+  <StatusHeatmapBody labelInterval={30}>
     {({ activity, dayIndex }) => (
       <Tooltip>
         <TooltipTrigger asChild>
@@ -93,7 +94,7 @@ export const statusVariants: VariantSpec[] = [
     )}
   </StatusHeatmapBody>
   <StatusHeatmapFooter>
-    <StatusHeatmapHealthyDays />
+    <StatusHeatmapStat />
     <StatusHeatmapLegend />
   </StatusHeatmapFooter>
 </StatusHeatmap>`,
@@ -123,7 +124,7 @@ export const statusVariants: VariantSpec[] = [
     )}
   </StatusHeatmapBody>
   <StatusHeatmapFooter>
-    <StatusHeatmapHealthyDays />
+    <StatusHeatmapStat />
     <StatusHeatmapLegend />
   </StatusHeatmapFooter>
 </StatusHeatmap>`,
@@ -151,7 +152,7 @@ export const statusVariants: VariantSpec[] = [
     )}
   </StatusHeatmapBody>
   <StatusHeatmapFooter>
-    <StatusHeatmapHealthyDays />
+    <StatusHeatmapStat />
     <StatusHeatmapLegend />
   </StatusHeatmapFooter>
 </StatusHeatmap>`,
@@ -179,7 +180,7 @@ export const statusVariants: VariantSpec[] = [
     )}
   </StatusHeatmapBody>
   <StatusHeatmapFooter>
-    <StatusHeatmapHealthyDays />
+    <StatusHeatmapStat />
     <StatusHeatmapLegend />
   </StatusHeatmapFooter>
 </StatusHeatmap>`,

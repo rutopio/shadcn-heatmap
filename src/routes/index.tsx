@@ -6,7 +6,7 @@ import {
   MonthDefaultDemo,
   StatusDefaultDemo,
   WeekDefaultDemo,
-} from "@/components/landing/demos";
+} from "@/components/demos";
 import { Button } from "@/components/ui/button";
 import { pageHead } from "@/lib/seo";
 

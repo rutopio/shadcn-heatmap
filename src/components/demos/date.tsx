@@ -1,4 +1,3 @@
-import { format, parseISO } from "date-fns";
 import { es } from "date-fns/locale";
 
 import {
@@ -7,18 +6,32 @@ import {
   DateHeatmapBody,
   DateHeatmapFooter,
   DateHeatmapLegend,
-  DateHeatmapTotalCount,
+  DateHeatmapStat,
 } from "@/components/heatmap/date-heatmap";
 import dateData from "@/data/date-sample.json";
 
 import { DateTooltipContent, HeatmapTooltip, TooltipProvider } from "./shared";
 
+import type { DateHourlyActivity } from "@/components/heatmap/date-heatmap";
+
 const dateTotalMm =
-  Math.round(
-    dateData
-      .filter((a) => a.date !== "sum" && a.hour < 24)
-      .reduce((s, a) => s + a.value, 0) * 10
-  ) / 10;
+  Math.round(dateData.reduce((s, a) => s + a.value, 0) * 10) / 10;
+
+const sumByHour = (data: DateHourlyActivity[]) => {
+  const sums = new Array(24).fill(0);
+  data.forEach((a) => {
+    sums[a.hour] += a.value;
+  });
+  return sums;
+};
+
+const sumByDate = (data: DateHourlyActivity[], dates: string[]) => {
+  const map = new Map<string, number>();
+  data.forEach((a) => {
+    map.set(a.date, (map.get(a.date) ?? 0) + a.value);
+  });
+  return dates.map((d) => map.get(d) ?? 0);
+};
 
 export function DateDefaultDemo() {
   return (
@@ -27,24 +40,32 @@ export function DateDefaultDemo() {
         data={dateData}
         totalCount={dateTotalMm}
         colors={{ scale: "var(--color-chart-3)" }}
+        extraRow={{ label: "Total", compute: sumByHour }}
+        extraColumn={{ label: "Total", compute: sumByDate }}
       >
         <DateHeatmapBody>
-          {({ activity, dateIndex }) => (
+          {({ activity, dateIndex, extra }) => (
             <HeatmapTooltip
-              content={<DateTooltipContent activity={activity} />}
+              content={
+                <DateTooltipContent activity={activity} extra={extra} />
+              }
             >
-              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra={extra}
+              />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
         <DateHeatmapFooter>
-          <DateHeatmapTotalCount>
+          <DateHeatmapStat>
             {() => (
               <div className="text-muted-foreground tabular-nums">
                 {dateTotalMm.toFixed(1)} mm total
               </div>
             )}
-          </DateHeatmapTotalCount>
+          </DateHeatmapStat>
           <DateHeatmapLegend />
         </DateHeatmapFooter>
       </DateHeatmap>
@@ -57,15 +78,21 @@ export function DateTenLevelsDemo() {
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
       <DateHeatmap
         data={dateData}
-        maxLevel={10}
+        levels={10}
         colors={{ scale: "var(--color-chart-3)" }}
       >
         <DateHeatmapBody>
-          {({ activity, dateIndex }) => (
+          {({ activity, dateIndex, extra }) => (
             <HeatmapTooltip
-              content={<DateTooltipContent activity={activity} />}
+              content={
+                <DateTooltipContent activity={activity} extra={extra} />
+              }
             >
-              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra={extra}
+              />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
@@ -86,11 +113,17 @@ export function DateIsoDemo() {
         colors={{ scale: "var(--color-chart-3)" }}
       >
         <DateHeatmapBody>
-          {({ activity, dateIndex }) => (
+          {({ activity, dateIndex, extra }) => (
             <HeatmapTooltip
-              content={<DateTooltipContent activity={activity} />}
+              content={
+                <DateTooltipContent activity={activity} extra={extra} />
+              }
             >
-              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra={extra}
+              />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
@@ -113,11 +146,17 @@ export function DateSparseTicksDemo() {
         }}
       >
         <DateHeatmapBody>
-          {({ activity, dateIndex }) => (
+          {({ activity, dateIndex, extra }) => (
             <HeatmapTooltip
-              content={<DateTooltipContent activity={activity} />}
+              content={
+                <DateTooltipContent activity={activity} extra={extra} />
+              }
             >
-              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra={extra}
+              />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
@@ -130,12 +169,18 @@ export function DateHideSumColumnDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
       <DateHeatmap data={dateData} colors={{ scale: "var(--color-chart-3)" }}>
-        <DateHeatmapBody hideSumColumn>
-          {({ activity, dateIndex }) => (
+        <DateHeatmapBody>
+          {({ activity, dateIndex, extra }) => (
             <HeatmapTooltip
-              content={<DateTooltipContent activity={activity} />}
+              content={
+                <DateTooltipContent activity={activity} extra={extra} />
+              }
             >
-              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra={extra}
+              />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
@@ -149,11 +194,17 @@ export function DateNoLabelsDemo() {
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
       <DateHeatmap data={dateData} colors={{ scale: "var(--color-chart-3)" }}>
         <DateHeatmapBody hideDateLabels hideHourLabels>
-          {({ activity, dateIndex }) => (
+          {({ activity, dateIndex, extra }) => (
             <HeatmapTooltip
-              content={<DateTooltipContent activity={activity} />}
+              content={
+                <DateTooltipContent activity={activity} extra={extra} />
+              }
             >
-              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra={extra}
+              />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
@@ -173,22 +224,28 @@ export function DateLargeBlocksDemo() {
         colors={{ scale: "var(--color-chart-3)" }}
       >
         <DateHeatmapBody>
-          {({ activity, dateIndex }) => (
+          {({ activity, dateIndex, extra }) => (
             <HeatmapTooltip
-              content={<DateTooltipContent activity={activity} />}
+              content={
+                <DateTooltipContent activity={activity} extra={extra} />
+              }
             >
-              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra={extra}
+              />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
         <DateHeatmapFooter>
-          <DateHeatmapTotalCount>
+          <DateHeatmapStat>
             {() => (
               <div className="text-muted-foreground tabular-nums">
                 {dateTotalMm.toFixed(1)} mm total
               </div>
             )}
-          </DateHeatmapTotalCount>
+          </DateHeatmapStat>
           <DateHeatmapLegend />
         </DateHeatmapFooter>
       </DateHeatmap>
@@ -206,22 +263,32 @@ export function Date12HourDemo() {
         colors={{ scale: "var(--color-chart-3)" }}
       >
         <DateHeatmapBody>
-          {({ activity, dateIndex }) => (
+          {({ activity, dateIndex, extra }) => (
             <HeatmapTooltip
-              content={<DateTooltipContent activity={activity} use12Hour />}
+              content={
+                <DateTooltipContent
+                  activity={activity}
+                  extra={extra}
+                  use12Hour
+                />
+              }
             >
-              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra={extra}
+              />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
         <DateHeatmapFooter>
-          <DateHeatmapTotalCount>
+          <DateHeatmapStat>
             {() => (
               <div className="text-muted-foreground tabular-nums">
                 {dateTotalMm.toFixed(1)} mm total
               </div>
             )}
-          </DateHeatmapTotalCount>
+          </DateHeatmapStat>
           <DateHeatmapLegend />
         </DateHeatmapFooter>
       </DateHeatmap>
@@ -237,45 +304,37 @@ export function DateSpanishDemo() {
         totalCount={dateTotalMm}
         locale={es}
         colors={{ scale: "var(--color-chart-3)" }}
-        labels={{
-          sum: "Total",
-          legend: { less: "Menos", more: "Más" },
-        }}
+        extraRow={{ label: "Total", compute: sumByHour }}
+        extraColumn={{ label: "Total", compute: sumByDate }}
       >
         <DateHeatmapBody>
-          {({ activity, dateIndex }) => (
+          {({ activity, dateIndex, extra }) => (
             <HeatmapTooltip
               content={
-                <>
-                  <p className="font-medium">
-                    {activity.date === "sum"
-                      ? "Total"
-                      : format(parseISO(activity.date), "PPP", {
-                          locale: es,
-                        })}{" "}
-                    {activity.hour === 24
-                      ? "Total"
-                      : `${String(activity.hour).padStart(2, "0")}:00`}
-                  </p>
-                  <p className="text-muted-foreground tabular-nums">
-                    {activity.value.toFixed(1)} mm
-                  </p>
-                </>
+                <DateTooltipContent
+                  activity={activity}
+                  extra={extra}
+                  locale={es}
+                />
               }
             >
-              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra={extra}
+              />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
         <DateHeatmapFooter>
-          <DateHeatmapTotalCount>
-            {({ totalCount }) => (
+          <DateHeatmapStat>
+            {({ value }) => (
               <div className="text-muted-foreground tabular-nums">
-                {totalCount.toFixed(1)} mm total
+                {Number(value).toFixed(1)} mm total
               </div>
             )}
-          </DateHeatmapTotalCount>
-          <DateHeatmapLegend />
+          </DateHeatmapStat>
+          <DateHeatmapLegend labels={{ less: "Menos", more: "Más" }} />
         </DateHeatmapFooter>
       </DateHeatmap>
     </TooltipProvider>
@@ -290,23 +349,29 @@ export function DateCustomStylingDemo() {
         totalCount={dateTotalMm}
         colors={{ scale: "var(--color-destructive)" }}
       >
-        <DateHeatmapBody labelTextClass="text-destructive font-bold">
-          {({ activity, dateIndex }) => (
+        <DateHeatmapBody labelClassName="text-destructive font-bold">
+          {({ activity, dateIndex, extra }) => (
             <HeatmapTooltip
-              content={<DateTooltipContent activity={activity} />}
+              content={
+                <DateTooltipContent activity={activity} extra={extra} />
+              }
             >
-              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra={extra}
+              />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
         <DateHeatmapFooter>
-          <DateHeatmapTotalCount className="text-destructive">
+          <DateHeatmapStat className="text-destructive">
             {() => (
               <div className="text-destructive tabular-nums">
                 {dateTotalMm.toFixed(1)} mm total
               </div>
             )}
-          </DateHeatmapTotalCount>
+          </DateHeatmapStat>
           <DateHeatmapLegend className="text-destructive" />
         </DateHeatmapFooter>
       </DateHeatmap>

@@ -5,7 +5,7 @@ import {
   StatusHeatmapBlock,
   StatusHeatmapBody,
   StatusHeatmapFooter,
-  StatusHeatmapHealthyDays,
+  StatusHeatmapStat,
   StatusHeatmapLegend,
 } from "@/components/heatmap/status-heatmap";
 import {
@@ -64,7 +64,7 @@ export function StatusDefaultDemo() {
           )}
         </StatusHeatmapBody>
         <StatusHeatmapFooter>
-          <StatusHeatmapHealthyDays />
+          <StatusHeatmapStat />
           <StatusHeatmapLegend />
         </StatusHeatmapFooter>
       </StatusHeatmap>
@@ -76,7 +76,7 @@ export function StatusWithLabelsDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
       <StatusHeatmap data={statusData}>
-        <StatusHeatmapBody showDateLabels labelInterval={30}>
+        <StatusHeatmapBody labelInterval={30}>
           {({ activity, dayIndex }) => (
             <Tooltip>
               <TooltipTrigger asChild>
@@ -87,7 +87,7 @@ export function StatusWithLabelsDemo() {
           )}
         </StatusHeatmapBody>
         <StatusHeatmapFooter>
-          <StatusHeatmapHealthyDays />
+          <StatusHeatmapStat />
           <StatusHeatmapLegend />
         </StatusHeatmapFooter>
       </StatusHeatmap>
@@ -117,7 +117,7 @@ export function StatusCustomColorDemo() {
           )}
         </StatusHeatmapBody>
         <StatusHeatmapFooter>
-          <StatusHeatmapHealthyDays />
+          <StatusHeatmapStat />
           <StatusHeatmapLegend />
         </StatusHeatmapFooter>
       </StatusHeatmap>
@@ -145,7 +145,7 @@ export function StatusCustomSizeDemo() {
           )}
         </StatusHeatmapBody>
         <StatusHeatmapFooter>
-          <StatusHeatmapHealthyDays />
+          <StatusHeatmapStat />
           <StatusHeatmapLegend />
         </StatusHeatmapFooter>
       </StatusHeatmap>
@@ -175,7 +175,7 @@ export function StatusUptimeDemo() {
           )}
         </StatusHeatmapBody>
         <StatusHeatmapFooter>
-          <StatusHeatmapHealthyDays />
+          <StatusHeatmapStat />
           <StatusHeatmapLegend />
         </StatusHeatmapFooter>
       </StatusHeatmap>

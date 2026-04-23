@@ -4,15 +4,27 @@ export const weekdayProps: ComponentPropsSection[] = [
   {
     componentName: "WeekdayHeatmap",
     description:
-      "Root provider for the weekday × hour matrix. The grid includes a right-hand daily Avg column and a bottom hourly Avg row.",
+      "Root provider for the weekday × hour matrix. Pass `extraRow` / `extraColumn` to append an aggregate row / column with your own compute function (avg, median, p95, sum — anything).",
     props: [
       // 1. 數據 (required)
       {
         name: "data",
-        type: "HeatmapActivity[]",
+        type: "WeekdayHourlyActivity[]",
         required: true,
         description:
-          "`{ weekday: 0–7, hour: 0–24, value: number }[]`. Use `weekday = 7` for the Avg row and `hour = 24` for the Avg column. Avg cells use an independent min–max colour scale.",
+          "`{ weekday: number, hour: number, value: number }[]`. `weekday` is `0..6` (Sun–Sat); `hour` is `0..23`.",
+      },
+      {
+        name: "extraRow",
+        type: "{ label: ReactNode; compute: (data) => number[] }",
+        description:
+          "Append an aggregate row below the grid. `compute(data)` must return 24 numbers (one per hour). `label` appears in the left gutter. Extra row cells have an independent min–max colour scale.",
+      },
+      {
+        name: "extraColumn",
+        type: "{ label: ReactNode; compute: (data) => number[] }",
+        description:
+          "Append an aggregate column to the right of the grid. `compute(data)` must return 7 numbers indexed by weekday (0–6). `label` appears in the top gutter. Extra column cells have an independent min–max colour scale.",
       },
       // 2. 空狀態處理
       {
@@ -23,17 +35,18 @@ export const weekdayProps: ComponentPropsSection[] = [
       },
       // 3. 視覺配置
       {
-        name: "maxLevel",
+        name: "levels",
         type: "number",
-        default: "4",
-        description: "Number of intensity buckets (0 to maxLevel).",
+        default: "5",
+        description:
+          "Total number of cells shown in the legend. Non-normalized (default): 1 empty cell + (levels − 1) coloured steps from 20%→100% opacity. Normalized: `levels` coloured steps from 20%→100% opacity (no empty cell).",
       },
       {
         name: "isNormalized",
         type: "boolean",
         default: "false",
         description:
-          "When `true`, levels are assigned via min–max normalization: the minimum value maps to level 1 and the maximum to `maxLevel`. Suitable for datasets with negative values (e.g. temperature). When `false` (default), values ≤ 0 are treated as empty (level 0) and the scale runs from 0 to max.",
+          "When `true`, uses min–max normalization across the dataset: min maps to level 1 and max to `levels`. Suitable for datasets with negative values (e.g. temperature). When `false` (default), values ≤ 0 are treated as empty (level 0) and the scale runs from 0 to max.",
       },
       {
         name: "colors",
@@ -60,13 +73,13 @@ export const weekdayProps: ComponentPropsSection[] = [
         name: "blockMargin",
         type: "number",
         default: "4",
-        description: "Gap between cells.",
+        description: "Gap between blocks.",
       },
       {
         name: "blockRadius",
         type: "number",
         default: "2",
-        description: "Corner radius of each cell.",
+        description: "Corner radius of each block.",
       },
       {
         name: "fontSize",
@@ -99,7 +112,7 @@ export const weekdayProps: ComponentPropsSection[] = [
         name: "labels",
         type: "WeekdayHeatmapLabels",
         description:
-          "Override `weekdays` (length 7), `hours` (length 24), `endHour`, `avg` (for avg row/column labels), and `legend.less`/`legend.more` strings. Set `endHour: null` to suppress the trailing hour label. Useful for internationalization.",
+          "Override `weekdays` (7 strings), `hours` (24 strings), `endHour` (set to `null` to hide), and `cellLabel` aria-label template (placeholders: `{{weekday}}`, `{{hour}}`, `{{value}}`). Legend text goes on `<WeekdayHeatmapLegend labels={…}>`; stat text goes on `<WeekdayHeatmapStat label={…}>` — or set `labels.stat` here if you prefer i18n all in one place. Extra row/column labels come from `extraRow.label` / `extraColumn.label`.",
       },
       // 6. 其他
       {
@@ -120,19 +133,7 @@ export const weekdayProps: ComponentPropsSection[] = [
         type: "(args) => ReactNode",
         required: true,
         description:
-          "Render function receiving `{ activity }`. Typically returns `<WeekdayHeatmapBlock activity={activity} />`.",
-      },
-      {
-        name: "hideAvgRow",
-        type: "boolean",
-        default: "false",
-        description: "Hide the hourly Avg row (weekday = 7) and its label.",
-      },
-      {
-        name: "hideAvgColumn",
-        type: "boolean",
-        default: "false",
-        description: "Hide the daily Avg column (hour = 24) and its label.",
+          "Render function receiving `{ activity, extra }`. `extra` is `'row'` | `'column'` for extra cells, otherwise `undefined`. Typically returns `<WeekdayHeatmapBlock activity={activity} extra={extra} />`.",
       },
       {
         name: "hideWeekdayLabels",
@@ -147,7 +148,7 @@ export const weekdayProps: ComponentPropsSection[] = [
         description: "Hide hour labels on the top.",
       },
       {
-        name: "labelTextClass",
+        name: "labelClassName",
         type: "string",
         description: "Additional CSS classes for label text elements.",
       },
@@ -160,21 +161,40 @@ export const weekdayProps: ComponentPropsSection[] = [
     props: [
       {
         name: "activity",
-        type: "HeatmapActivityWithLevel",
+        type: "WeekdayHourlyActivityWithLevel",
         required: true,
         description:
-          "The activity record including its computed level. Contains `weekday` (0-7), `hour` (0-24), `value`, and `level`.",
+          "The activity record including its computed level. Contains `weekday` (0-6), `hour` (0-23), `value`, and `level`.",
+      },
+      {
+        name: "extra",
+        type: "'row' | 'column' | undefined",
+        description:
+          "Marks this block as belonging to the extra aggregate row or column. Forward the value from the Body render-prop as-is.",
+      },
+      {
+        name: "highlighted",
+        type: "boolean",
+        default: "false",
+        description:
+          "Dim this block to 60% opacity of its colour (useful for selected / focus states). Also emits a `data-highlighted` attribute for CSS targeting.",
+      },
+      {
+        name: "onCellClick",
+        type: "(activity: WeekdayHourlyActivityWithLevel) => void",
+        description:
+          "Semantic click handler receiving the cell's activity. Fires alongside any `onClick` passed through.",
+      },
+      {
+        name: "onCellHover",
+        type: "(activity: WeekdayHourlyActivityWithLevel | null) => void",
+        description:
+          "Semantic hover handler. Receives the activity on enter, and `null` on leave. Fires alongside `onMouseEnter`/`onMouseLeave`.",
       },
       {
         name: "className",
         type: "string",
         description: "Additional CSS classes for the block element.",
-      },
-      {
-        name: 'data-highlighted="true"',
-        type: "attribute",
-        description:
-          "Opt in to the `chart-2` palette for this block (useful for selected states).",
       },
     ],
   },
@@ -190,20 +210,32 @@ export const weekdayProps: ComponentPropsSection[] = [
     ],
   },
   {
-    componentName: "WeekdayHeatmapTotalCount",
+    componentName: "WeekdayHeatmapStat",
     description:
-      "Displays total contributions count. Supports custom render function.",
+      "Displays a summary stat in the footer. Defaults to total contributions. Customize the computation with `compute` and the output text with `label` (or `labels.stat`).",
     props: [
+      {
+        name: "compute",
+        type: "(data: WeekdayHourlyActivityWithLevel[]) => number | string",
+        description:
+          "Function to compute the stat from all activities. Defaults to the total sum. Example: `(data) => data.reduce((s, d) => s + d.value, 0) / data.length` for an average.",
+      },
+      {
+        name: "label",
+        type: "string",
+        description:
+          "Template string overriding `labels.stat`. Placeholder: `{{value}}`.",
+      },
       {
         name: "children",
         type: "(args) => ReactNode",
         description:
-          "Render function receiving `{ totalCount }`. If omitted, displays default format.",
+          "Render function receiving `{ value, data }`. Fully takes over rendering.",
       },
       {
         name: "className",
         type: "string",
-        description: "Additional CSS classes for the total count element.",
+        description: "Additional CSS classes for the stat element.",
       },
     ],
   },
@@ -211,6 +243,12 @@ export const weekdayProps: ComponentPropsSection[] = [
     componentName: "WeekdayHeatmapLegend",
     description: "Displays intensity level legend (Less → More).",
     props: [
+      {
+        name: "labels",
+        type: "{ less?: string; more?: string }",
+        description:
+          "Text labels shown at either end of the scale. Defaults to `Less` / `More`.",
+      },
       {
         name: "children",
         type: "(args) => ReactNode",

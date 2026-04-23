@@ -1,26 +1,15 @@
 import type { VariantSpec } from "../types";
 
 export const dateSampleData = `// type DateHourlyActivity = { date: string; hour: number; value: number }
-//   date: "YYYY-MM-DD", "sum" = hourly total row
-//   hour: 0–23,  24 = daily total column
+//   date:  "YYYY-MM-DD"
+//   hour:  0–23
 //   value: rainfall in mm
 
 const data: DateHourlyActivity[] = [
-  // Regular cells (one row per date × 24 hours)
   { date: "2025-12-11", hour: 13, value:  8.4 },
   { date: "2025-12-11", hour: 14, value: 22.7 },
   { date: "2025-12-11", hour: 15, value: 15.3 },
   { date: "2025-12-12", hour: 14, value:  5.1 },
-  // ...
-
-  // Daily total column (hour = 24) — total mm across all hours for that date
-  { date: "2025-12-11", hour: 24, value: 48.2 },
-  { date: "2025-12-12", hour: 24, value: 12.6 },
-  // ...
-
-  // Hourly total row (date = "sum") — total mm across all dates for each hour
-  { date: "sum", hour: 14, value: 156.3 },
-  { date: "sum", hour: 15, value:  98.7 },
   // ...
 ];`;
 
@@ -30,7 +19,7 @@ export const dateBasicCode = `import {
   DateHeatmapBody,
   DateHeatmapFooter,
   DateHeatmapLegend,
-  DateHeatmapTotalCount,
+  DateHeatmapStat,
 } from "@/components/heatmap/date-heatmap";
 import {
   Tooltip,
@@ -43,30 +32,47 @@ import { format, parseISO } from "date-fns";
 const data = [
   { date: "2025-12-11", hour: 13, value:  8.4 },
   { date: "2025-12-11", hour: 14, value: 22.7 },
-  { date: "2025-12-11", hour: 24, value: 48.2 }, // daily total
   { date: "2025-12-12", hour: 14, value:  5.1 },
   // ...
 ];
 
+// Provide your own extra row / column aggregation (any stat you want).
+const sumByHour = (d) => {
+  const out = Array(24).fill(0);
+  d.forEach((a) => { out[a.hour] += a.value; });
+  return out;
+};
+const sumByDate = (d, dates) => {
+  const map = new Map();
+  d.forEach((a) => map.set(a.date, (map.get(a.date) ?? 0) + a.value));
+  return dates.map((date) => map.get(date) ?? 0);
+};
+
 export function DateHourlyUsage() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <DateHeatmap data={data} colors={{ scale: "var(--color-chart-3)" }}>
+      <DateHeatmap
+        data={data}
+        colors={{ scale: "var(--color-chart-3)" }}
+        extraRow={{ label: "Total", compute: sumByHour }}
+        extraColumn={{ label: "Total", compute: sumByDate }}
+      >
         <DateHeatmapBody>
-          {({ activity, dateIndex }) => (
+          {({ activity, dateIndex, extra }) => (
             <Tooltip>
               <TooltipTrigger asChild>
                 <DateHeatmapBlock
                   activity={activity}
                   dateIndex={dateIndex}
+                  extra={extra}
                 />
               </TooltipTrigger>
               <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
                 <p className="font-medium">
-                  {activity.date === "sum"
+                  {extra === "row"
                     ? "Total"
                     : format(parseISO(activity.date), "PPP")}{" "}
-                  {activity.hour === 24
+                  {extra === "column"
                     ? "Total"
                     : \`\${String(activity.hour).padStart(2, "0")}:00\`}
                 </p>
@@ -78,11 +84,11 @@ export function DateHourlyUsage() {
           )}
         </DateHeatmapBody>
         <DateHeatmapFooter>
-          <DateHeatmapTotalCount>
-            {({ totalCount }) => (
-              <div className="text-muted-foreground">{totalCount.toFixed(1)} mm total</div>
+          <DateHeatmapStat>
+            {({ value }) => (
+              <div className="text-muted-foreground">{Number(value).toFixed(1)} mm total</div>
             )}
-          </DateHeatmapTotalCount>
+          </DateHeatmapStat>
           <DateHeatmapLegend />
         </DateHeatmapFooter>
       </DateHeatmap>
@@ -95,26 +101,10 @@ export const dateVariants: VariantSpec[] = [
     title: "Ten levels",
     description:
       "Expand the intensity scale to 10 levels for fine-grained differentiation of high-frequency data.",
-    code: `<DateHeatmap data={data} maxLevel={10} colors={{ scale: "var(--color-chart-3)" }}>
+    code: `<DateHeatmap data={data} levels={10} colors={{ scale: "var(--color-chart-3)" }}>
   <DateHeatmapBody>
-    {({ activity, dateIndex }) => (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <DateHeatmapBlock
-            activity={activity}
-            dateIndex={dateIndex}
-          />
-        </TooltipTrigger>
-        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
-          <p className="font-medium">
-            {activity.date === "sum" ? "Total" : format(parseISO(activity.date), "PPP")}{" "}
-            {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
-          </p>
-          <p className="text-muted-foreground">
-            {activity.value.toFixed(1)} mm
-          </p>
-        </TooltipContent>
-      </Tooltip>
+    {({ activity, dateIndex, extra }) => (
+      <DateHeatmapBlock activity={activity} dateIndex={dateIndex} extra={extra} />
     )}
   </DateHeatmapBody>
   <DateHeatmapFooter>
@@ -128,24 +118,8 @@ export const dateVariants: VariantSpec[] = [
       "Switch the left-axis labels to ISO format for non-US audiences.",
     code: `<DateHeatmap data={data} dateFormat="yyyy-MM-dd" colors={{ scale: "var(--color-chart-3)" }}>
   <DateHeatmapBody>
-    {({ activity, dateIndex }) => (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <DateHeatmapBlock
-            activity={activity}
-            dateIndex={dateIndex}
-          />
-        </TooltipTrigger>
-        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
-          <p className="font-medium">
-            {activity.date === "sum" ? "Total" : format(parseISO(activity.date), "yyyy-MM-dd")}{" "}
-            {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
-          </p>
-          <p className="text-muted-foreground">
-            {activity.value.toFixed(1)} mm
-          </p>
-        </TooltipContent>
-      </Tooltip>
+    {({ activity, dateIndex, extra }) => (
+      <DateHeatmapBlock activity={activity} dateIndex={dateIndex} extra={extra} />
     )}
   </DateHeatmapBody>
 </DateHeatmap>`,
@@ -165,52 +139,48 @@ export const dateVariants: VariantSpec[] = [
   }}
 >
   <DateHeatmapBody>
-    {({ activity, dateIndex }) => (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <DateHeatmapBlock
-            activity={activity}
-            dateIndex={dateIndex}
-          />
-        </TooltipTrigger>
-        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
-          <p className="font-medium">
-            {activity.date === "sum" ? "Total" : format(parseISO(activity.date), "PPP")}{" "}
-            {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
-          </p>
-          <p className="text-muted-foreground">
-            {activity.value.toFixed(1)} mm
-          </p>
-        </TooltipContent>
-      </Tooltip>
+    {({ activity, dateIndex, extra }) => (
+      <DateHeatmapBlock activity={activity} dateIndex={dateIndex} extra={extra} />
     )}
   </DateHeatmapBody>
 </DateHeatmap>`,
   },
   {
-    title: "Hide Sum column",
+    title: "Plain grid (no aggregate)",
     description:
-      "Remove the daily total column for a pure 24-hour grid without the aggregate.",
+      "Omit extraRow/extraColumn for a pure 24-hour grid without the aggregate.",
     code: `<DateHeatmap data={data} colors={{ scale: "var(--color-chart-3)" }}>
-  <DateHeatmapBody hideSumColumn>
-    {({ activity, dateIndex }) => (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <DateHeatmapBlock
-            activity={activity}
-            dateIndex={dateIndex}
-          />
-        </TooltipTrigger>
-        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
-          <p className="font-medium">
-            {activity.date === "sum" ? "Total" : format(parseISO(activity.date), "PPP")}{" "}
-            {\`\${String(activity.hour).padStart(2, "0")}:00\`}
-          </p>
-          <p className="text-muted-foreground">
-            {activity.value.toFixed(1)} mm
-          </p>
-        </TooltipContent>
-      </Tooltip>
+  <DateHeatmapBody>
+    {({ activity, dateIndex, extra }) => (
+      <DateHeatmapBlock activity={activity} dateIndex={dateIndex} extra={extra} />
+    )}
+  </DateHeatmapBody>
+</DateHeatmap>`,
+  },
+  {
+    title: "Custom extra column (p95)",
+    description:
+      "extraRow/extraColumn accept any compute function — pick sum, average, median, p95, whatever fits.",
+    code: `const p95ByDate = (d, dates) => {
+  const byDate = new Map();
+  d.forEach((a) => {
+    if (!byDate.has(a.date)) byDate.set(a.date, []);
+    byDate.get(a.date).push(a.value);
+  });
+  return dates.map((date) => {
+    const arr = (byDate.get(date) ?? []).sort((x, y) => x - y);
+    return arr.length ? arr[Math.floor(arr.length * 0.95)] : 0;
+  });
+};
+
+<DateHeatmap
+  data={data}
+  colors={{ scale: "var(--color-chart-3)" }}
+  extraColumn={{ label: <strong>P95</strong>, compute: p95ByDate }}
+>
+  <DateHeatmapBody>
+    {({ activity, dateIndex, extra }) => (
+      <DateHeatmapBlock activity={activity} dateIndex={dateIndex} extra={extra} />
     )}
   </DateHeatmapBody>
 </DateHeatmap>`,
@@ -221,24 +191,8 @@ export const dateVariants: VariantSpec[] = [
       "Strip all labels for tight embeds like tooltips or card thumbnails.",
     code: `<DateHeatmap data={data} colors={{ scale: "var(--color-chart-3)" }}>
   <DateHeatmapBody hideDateLabels hideHourLabels>
-    {({ activity, dateIndex }) => (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <DateHeatmapBlock
-            activity={activity}
-            dateIndex={dateIndex}
-          />
-        </TooltipTrigger>
-        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
-          <p className="font-medium">
-            {activity.date === "sum" ? "Total" : format(parseISO(activity.date), "PPP")}{" "}
-            {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
-          </p>
-          <p className="text-muted-foreground">
-            {activity.value.toFixed(1)} mm
-          </p>
-        </TooltipContent>
-      </Tooltip>
+    {({ activity, dateIndex, extra }) => (
+      <DateHeatmapBlock activity={activity} dateIndex={dateIndex} extra={extra} />
     )}
   </DateHeatmapBody>
 </DateHeatmap>`,
@@ -249,32 +203,16 @@ export const dateVariants: VariantSpec[] = [
       "Bigger blocks with tighter margin — more visual weight for focused views.",
     code: `<DateHeatmap data={data} totalCount={totalMm} blockSize={32} blockMargin={3} colors={{ scale: "var(--color-chart-3)" }}>
   <DateHeatmapBody>
-    {({ activity, dateIndex }) => (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <DateHeatmapBlock
-            activity={activity}
-            dateIndex={dateIndex}
-          />
-        </TooltipTrigger>
-        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
-          <p className="font-medium">
-            {activity.date === "sum" ? "Total" : format(parseISO(activity.date), "PPP")}{" "}
-            {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
-          </p>
-          <p className="text-muted-foreground">
-            {activity.value.toFixed(1)} mm
-          </p>
-        </TooltipContent>
-      </Tooltip>
+    {({ activity, dateIndex, extra }) => (
+      <DateHeatmapBlock activity={activity} dateIndex={dateIndex} extra={extra} />
     )}
   </DateHeatmapBody>
   <DateHeatmapFooter>
-    <DateHeatmapTotalCount>
-      {({ totalCount }) => (
-        <div className="text-muted-foreground">{totalCount.toFixed(1)} mm total</div>
+    <DateHeatmapStat>
+      {({ value }) => (
+        <div className="text-muted-foreground">{Number(value).toFixed(1)} mm total</div>
       )}
-    </DateHeatmapTotalCount>
+    </DateHeatmapStat>
     <DateHeatmapLegend />
   </DateHeatmapFooter>
 </DateHeatmap>`,
@@ -285,40 +223,16 @@ export const dateVariants: VariantSpec[] = [
       "Switch the hour axis to 12-hour AM/PM format with a single prop.",
     code: `<DateHeatmap data={data} totalCount={totalMm} use12Hour colors={{ scale: "var(--color-chart-3)" }}>
   <DateHeatmapBody>
-    {({ activity, dateIndex }) => (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <DateHeatmapBlock
-            activity={activity}
-            dateIndex={dateIndex}
-          />
-        </TooltipTrigger>
-        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
-          <p className="font-medium">
-            {activity.date === "sum" ? "Total" : format(parseISO(activity.date), "PPP")}{" "}
-            {activity.hour === 24
-              ? "Total"
-              : (() => {
-                  const fmt = (h: number) => {
-                    const h12 = h === 0 ? 12 : h > 12 ? h - 12 : h;
-                    return \`\${h12}:00 \${h < 12 ? "AM" : "PM"}\`;
-                  };
-                  return \`\${fmt(activity.hour)}-\${fmt((activity.hour + 1) % 24)}\`;
-                })()}
-          </p>
-          <p className="text-muted-foreground">
-            {activity.value.toFixed(1)} mm
-          </p>
-        </TooltipContent>
-      </Tooltip>
+    {({ activity, dateIndex, extra }) => (
+      <DateHeatmapBlock activity={activity} dateIndex={dateIndex} extra={extra} />
     )}
   </DateHeatmapBody>
   <DateHeatmapFooter>
-    <DateHeatmapTotalCount>
-      {({ totalCount }) => (
-        <div className="text-muted-foreground">{totalCount.toFixed(1)} mm total</div>
+    <DateHeatmapStat>
+      {({ value }) => (
+        <div className="text-muted-foreground">{Number(value).toFixed(1)} mm total</div>
       )}
-    </DateHeatmapTotalCount>
+    </DateHeatmapStat>
     <DateHeatmapLegend />
   </DateHeatmapFooter>
 </DateHeatmap>`,
@@ -326,7 +240,7 @@ export const dateVariants: VariantSpec[] = [
   {
     title: "i18n labels (Spanish)",
     description:
-      "Pass a date-fns locale to auto-generate localised date labels, plus custom sum column label, legend, and total value text. Format tooltip dates accordingly.",
+      "Pass a date-fns locale to auto-generate localised date labels, plus custom extra column label, legend, and total value text.",
     code: `import { es } from "date-fns/locale";
 import { format, parseISO } from "date-fns";
 
@@ -334,78 +248,40 @@ import { format, parseISO } from "date-fns";
   data={data}
   locale={es}
   colors={{ scale: "var(--color-chart-3)" }}
-  labels={{
-    sum: "Total",
-    legend: { less: "Menos", more: "Más" },
-  }}
+  extraRow={{ label: "Total", compute: sumByHour }}
+  extraColumn={{ label: "Total", compute: sumByDate }}
 >
   <DateHeatmapBody>
-    {({ activity, dateIndex }) => (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <DateHeatmapBlock
-            activity={activity}
-            dateIndex={dateIndex}
-          />
-        </TooltipTrigger>
-        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
-          <p className="font-medium">
-            {activity.date === "sum"
-              ? "Total"
-              : format(parseISO(activity.date), "PPP", { locale: es })}{" "}
-            {activity.hour === 24
-              ? "Total"
-              : \`\${String(activity.hour).padStart(2, "0")}:00\`}
-          </p>
-          <p className="text-muted-foreground">
-            {activity.value.toFixed(1)} mm
-          </p>
-        </TooltipContent>
-      </Tooltip>
+    {({ activity, dateIndex, extra }) => (
+      <DateHeatmapBlock activity={activity} dateIndex={dateIndex} extra={extra} />
     )}
   </DateHeatmapBody>
   <DateHeatmapFooter>
-    <DateHeatmapTotalCount>
-      {({ totalCount }) => (
+    <DateHeatmapStat>
+      {({ value }) => (
         <div className="text-muted-foreground">
-          {totalCount.toFixed(1)} mm total
+          {Number(value).toFixed(1)} mm total
         </div>
       )}
-    </DateHeatmapTotalCount>
-    <DateHeatmapLegend />
+    </DateHeatmapStat>
+    <DateHeatmapLegend labels={{ less: "Menos", more: "Más" }} />
   </DateHeatmapFooter>
 </DateHeatmap>`,
   },
   {
     title: "Custom styling",
     description:
-      "Use colors to theme the blocks, labelTextClass to style axis labels, and className on TotalCount and Legend to style the footer.",
+      "Use colors to theme the blocks, labelClassName to style axis labels, and className on Stat and Legend to style the footer.",
     code: `<DateHeatmap data={data} colors={{ scale: "var(--color-destructive)" }}>
-  <DateHeatmapBody labelTextClass="text-destructive font-bold">
-    {({ activity, dateIndex }) => (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <DateHeatmapBlock
-            activity={activity}
-            dateIndex={dateIndex}
-          />
-        </TooltipTrigger>
-        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
-          <p className="font-medium">
-            {activity.date === "sum" ? "Total" : format(parseISO(activity.date), "PPP")}{" "}
-            {activity.hour === 24 ? "Total" : \`\${String(activity.hour).padStart(2, "0")}:00\`}
-          </p>
-          <p className="text-muted-foreground">
-            {activity.value.toFixed(1)} mm
-          </p>
-        </TooltipContent>
-      </Tooltip>
+  <DateHeatmapBody labelClassName="text-destructive font-bold">
+    {({ activity, dateIndex, extra }) => (
+      <DateHeatmapBlock activity={activity} dateIndex={dateIndex} extra={extra} />
     )}
   </DateHeatmapBody>
   <DateHeatmapFooter>
-    <DateHeatmapTotalCount className="text-destructive">
-      {({ totalCount }) => <div className="text-destructive">{totalCount.toFixed(1)} mm total</div>}
-    </DateHeatmapTotalCount>
+    <DateHeatmapStat className="text-destructive">
+      {({ value }) => <div className="text-destructive">{Number(value).toFixed(1)} mm total</div>}
+    </DateHeatmapStat>
     <DateHeatmapLegend className="text-destructive" />
   </DateHeatmapFooter>
 </DateHeatmap>`,

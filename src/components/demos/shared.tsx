@@ -96,15 +96,17 @@ export function MonthBinaryTooltipContent({
 
 export function WeekTooltipContent({
   activity,
+  extra,
   use12Hour = false,
 }: {
   activity: { weekday: number; hour: number; value: number };
+  extra?: "row" | "column";
   use12Hour?: boolean;
 }) {
-  const day = WEEKDAY_NAMES[activity.weekday];
+  const day = extra === "row" ? "Avg" : WEEKDAY_NAMES[activity.weekday];
   const hour =
-    activity.hour === 24 ? "Avg" : formatHourRange(activity.hour, use12Hour);
-  const isAvg = activity.weekday === 7 || activity.hour === 24;
+    extra === "column" ? "Avg" : formatHourRange(activity.hour, use12Hour);
+  const isAvg = extra !== undefined;
   return (
     <>
       <p className="font-medium">
@@ -120,20 +122,22 @@ export function WeekTooltipContent({
 
 export function DateTooltipContent({
   activity,
+  extra,
   locale,
   dateFormat = "PPP",
   use12Hour = false,
 }: {
   activity: { date: string; hour: number; value: number };
+  extra?: "row" | "column";
   locale?: Locale;
   dateFormat?: string;
   use12Hour?: boolean;
 }) {
   const hour =
-    activity.hour === 24 ? "Total" : formatHourRange(activity.hour, use12Hour);
+    extra === "column" ? "Total" : formatHourRange(activity.hour, use12Hour);
 
   const dateLabel =
-    activity.date === "sum"
+    extra === "row"
       ? "Total"
       : format(
           parseISO(activity.date),

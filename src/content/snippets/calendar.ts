@@ -22,7 +22,7 @@ export const calendarBasicCode = `import {
   CalendarHeatmapBody,
   CalendarHeatmapFooter,
   CalendarHeatmapLegend,
-  CalendarHeatmapTotalCount,
+  CalendarHeatmapStat,
 } from "@/components/heatmap/calendar-heatmap";
 import {
   Tooltip,
@@ -63,7 +63,7 @@ export function YearContributions() {
           )}
         </CalendarHeatmapBody>
         <CalendarHeatmapFooter>
-          <CalendarHeatmapTotalCount />
+          <CalendarHeatmapStat />
           <CalendarHeatmapLegend />
         </CalendarHeatmapFooter>
       </CalendarHeatmap>
@@ -97,7 +97,7 @@ export const calendarVariants: VariantSpec[] = [
     )}
   </CalendarHeatmapBody>
   <CalendarHeatmapFooter>
-    <CalendarHeatmapTotalCount />
+    <CalendarHeatmapStat />
     <CalendarHeatmapLegend />
   </CalendarHeatmapFooter>
 </CalendarHeatmap>`,
@@ -130,7 +130,7 @@ export const calendarVariants: VariantSpec[] = [
     )}
   </CalendarHeatmapBody>
   <CalendarHeatmapFooter>
-    <CalendarHeatmapTotalCount />
+    <CalendarHeatmapStat />
     <CalendarHeatmapLegend />
   </CalendarHeatmapFooter>
 </CalendarHeatmap>`,
@@ -139,7 +139,7 @@ export const calendarVariants: VariantSpec[] = [
     title: "10 level intensity",
     description:
       "Expand the intensity scale to 10 levels for a more granular, detailed gradient.",
-    code: `<CalendarHeatmap data={activities} maxLevel={10}>
+    code: `<CalendarHeatmap data={activities} levels={10}>
   <CalendarHeatmapBody>
     {({ activity, dayIndex, weekIndex }) => (
       <Tooltip>
@@ -160,7 +160,7 @@ export const calendarVariants: VariantSpec[] = [
     )}
   </CalendarHeatmapBody>
   <CalendarHeatmapFooter>
-    <CalendarHeatmapTotalCount />
+    <CalendarHeatmapStat />
     <CalendarHeatmapLegend />
   </CalendarHeatmapFooter>
 </CalendarHeatmap>`,
@@ -168,18 +168,11 @@ export const calendarVariants: VariantSpec[] = [
   {
     title: "i18n labels (German)",
     description:
-      "Pass a date-fns locale to auto-generate localised month and weekday labels. Use labels.totalCount template and labels.legend for custom text. Format tooltip dates with the locale.",
+      "Pass a date-fns locale to auto-generate localised month and weekday labels. Structural text (months/weekdays/legend) goes in the root labels; the footer stat text goes on `<CalendarHeatmapStat label=…>`.",
     code: `import { de } from "date-fns/locale";
 import { format, parseISO } from "date-fns";
 
-<CalendarHeatmap
-  data={activities}
-  locale={de}
-  labels={{
-    totalCount: "{{count}} Aktivitäten in {{year}}",
-    legend: { less: "Weniger", more: "Mehr" },
-  }}
->
+<CalendarHeatmap data={activities} locale={de}>
   <CalendarHeatmapBody>
     {({ activity, dayIndex, weekIndex }) => (
       <Tooltip>
@@ -202,8 +195,8 @@ import { format, parseISO } from "date-fns";
     )}
   </CalendarHeatmapBody>
   <CalendarHeatmapFooter>
-    <CalendarHeatmapTotalCount />
-    <CalendarHeatmapLegend />
+    <CalendarHeatmapStat label="{{value}} Aktivitäten in {{year}}" />
+    <CalendarHeatmapLegend labels={{ less: "Weniger", more: "Mehr" }} />
   </CalendarHeatmapFooter>
 </CalendarHeatmap>`,
   },
@@ -236,7 +229,7 @@ import { format, parseISO } from "date-fns";
     )}
   </CalendarHeatmapBody>
   <CalendarHeatmapFooter>
-    <CalendarHeatmapTotalCount />
+    <CalendarHeatmapStat />
     <CalendarHeatmapLegend />
   </CalendarHeatmapFooter>
 </CalendarHeatmap>`,
@@ -308,10 +301,10 @@ import { format, parseISO } from "date-fns";
   {
     title: "Custom date format in tooltip",
     description:
-      "Use date-fns format strings to customize how dates appear in tooltips.",
+      "Use date-fns format strings inside the render-prop to customize how dates appear in tooltips.",
     code: `import { format, parseISO } from "date-fns";
 
-<CalendarHeatmap data={activities} dateFormat="MMM d, yyyy">
+<CalendarHeatmap data={activities}>
   <CalendarHeatmapBody>
     {({ activity, dayIndex, weekIndex }) => (
       <Tooltip>
@@ -334,7 +327,7 @@ import { format, parseISO } from "date-fns";
     )}
   </CalendarHeatmapBody>
   <CalendarHeatmapFooter>
-    <CalendarHeatmapTotalCount />
+    <CalendarHeatmapStat />
     <CalendarHeatmapLegend />
   </CalendarHeatmapFooter>
 </CalendarHeatmap>`,
@@ -342,11 +335,11 @@ import { format, parseISO } from "date-fns";
   {
     title: "Custom styling",
     description:
-      "Use colors to theme the blocks, labelTextClass and yearTextClass to style axis labels, and className on TotalCount and Legend to style the footer.",
+      "Use colors to theme the blocks, labelClassName and yearClassName to style axis labels, and className on TotalCount and Legend to style the footer.",
     code: `<CalendarHeatmap data={activities} colors={{ scale: "var(--color-destructive)" }}>
   <CalendarHeatmapBody
-    labelTextClass="text-destructive font-bold"
-    yearTextClass="text-destructive font-bold"
+    labelClassName="text-destructive font-bold"
+    yearClassName="text-destructive font-bold"
   >
     {({ activity, dayIndex, weekIndex }) => (
       <Tooltip>
@@ -367,7 +360,7 @@ import { format, parseISO } from "date-fns";
     )}
   </CalendarHeatmapBody>
   <CalendarHeatmapFooter>
-    <CalendarHeatmapTotalCount className="text-destructive" />
+    <CalendarHeatmapStat className="text-destructive" />
     <CalendarHeatmapLegend className="text-destructive" />
   </CalendarHeatmapFooter>
 </CalendarHeatmap>`,

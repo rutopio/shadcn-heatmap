@@ -7,7 +7,7 @@ import {
   StatusDefaultDemo,
   StatusUptimeDemo,
   StatusWithLabelsDemo,
-} from "@/components/landing/demos/status";
+} from "@/components/demos/status";
 import { PropsTable } from "@/components/landing/props-table";
 import { ShowcaseSection } from "@/components/landing/showcase-section";
 import { VariantGrid } from "@/components/landing/variant-grid";

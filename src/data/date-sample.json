@@ -10,11 +10,6 @@
     "value": 0.6
   },
   {
-    "date": "2025-01-06",
-    "hour": 24,
-    "value": 0.9
-  },
-  {
     "date": "2025-01-12",
     "hour": 1,
     "value": 0.1
@@ -30,33 +25,13 @@
     "value": 0.4
   },
   {
-    "date": "2025-01-12",
-    "hour": 24,
-    "value": 0.8
-  },
-  {
-    "date": "2025-01-18",
-    "hour": 24,
-    "value": 0
-  },
-  {
     "date": "2025-01-24",
     "hour": 23,
     "value": 0.3
   },
   {
-    "date": "2025-01-24",
-    "hour": 24,
-    "value": 0.3
-  },
-  {
     "date": "2025-01-30",
     "hour": 16,
-    "value": 0.5
-  },
-  {
-    "date": "2025-01-30",
-    "hour": 24,
     "value": 0.5
   },
   {
@@ -168,11 +143,6 @@
     "date": "2025-07-03",
     "hour": 23,
     "value": 1.8
-  },
-  {
-    "date": "2025-07-03",
-    "hour": 24,
-    "value": 204.1
   },
   {
     "date": "2025-07-09",
@@ -290,11 +260,6 @@
     "value": 0.8
   },
   {
-    "date": "2025-07-09",
-    "hour": 24,
-    "value": 172.1
-  },
-  {
     "date": "2025-07-15",
     "hour": 0,
     "value": 0.3
@@ -410,11 +375,6 @@
     "value": 2.8
   },
   {
-    "date": "2025-07-15",
-    "hour": 24,
-    "value": 133.9
-  },
-  {
     "date": "2025-07-21",
     "hour": 0,
     "value": 1.9
@@ -525,11 +485,6 @@
     "value": 1.9
   },
   {
-    "date": "2025-07-21",
-    "hour": 24,
-    "value": 152.6
-  },
-  {
     "date": "2025-07-27",
     "hour": 0,
     "value": 0.4
@@ -638,130 +593,5 @@
     "date": "2025-07-27",
     "hour": 23,
     "value": 0.5
-  },
-  {
-    "date": "2025-07-27",
-    "hour": 24,
-    "value": 141.3
-  },
-  {
-    "date": "sum",
-    "hour": 0,
-    "value": 3.1
-  },
-  {
-    "date": "sum",
-    "hour": 1,
-    "value": 6
-  },
-  {
-    "date": "sum",
-    "hour": 2,
-    "value": 2.2
-  },
-  {
-    "date": "sum",
-    "hour": 3,
-    "value": 4.9
-  },
-  {
-    "date": "sum",
-    "hour": 4,
-    "value": 1.6
-  },
-  {
-    "date": "sum",
-    "hour": 5,
-    "value": 2.4
-  },
-  {
-    "date": "sum",
-    "hour": 6,
-    "value": 45.6
-  },
-  {
-    "date": "sum",
-    "hour": 7,
-    "value": 31.8
-  },
-  {
-    "date": "sum",
-    "hour": 8,
-    "value": 43.9
-  },
-  {
-    "date": "sum",
-    "hour": 9,
-    "value": 94.3
-  },
-  {
-    "date": "sum",
-    "hour": 10,
-    "value": 86.5
-  },
-  {
-    "date": "sum",
-    "hour": 11,
-    "value": 64.5
-  },
-  {
-    "date": "sum",
-    "hour": 12,
-    "value": 87.1
-  },
-  {
-    "date": "sum",
-    "hour": 13,
-    "value": 77.1
-  },
-  {
-    "date": "sum",
-    "hour": 14,
-    "value": 64.9
-  },
-  {
-    "date": "sum",
-    "hour": 15,
-    "value": 30.1
-  },
-  {
-    "date": "sum",
-    "hour": 16,
-    "value": 43.9
-  },
-  {
-    "date": "sum",
-    "hour": 17,
-    "value": 32
-  },
-  {
-    "date": "sum",
-    "hour": 18,
-    "value": 15.7
-  },
-  {
-    "date": "sum",
-    "hour": 19,
-    "value": 22.4
-  },
-  {
-    "date": "sum",
-    "hour": 20,
-    "value": 20.3
-  },
-  {
-    "date": "sum",
-    "hour": 21,
-    "value": 15.5
-  },
-  {
-    "date": "sum",
-    "hour": 22,
-    "value": 2.6
-  },
-  {
-    "date": "sum",
-    "hour": 23,
-    "value": 8.1
   }
 ]

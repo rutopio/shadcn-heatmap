@@ -7,7 +7,7 @@ import {
   CalendarHeatmapBody,
   CalendarHeatmapFooter,
   CalendarHeatmapLegend,
-  CalendarHeatmapTotalCount,
+  CalendarHeatmapStat,
 } from "@/components/heatmap/calendar-heatmap";
 import {
   Tooltip,
@@ -56,7 +56,7 @@ export function MonthDefaultDemo() {
           )}
         </CalendarHeatmapBody>
         <CalendarHeatmapFooter>
-          <CalendarHeatmapTotalCount />
+          <CalendarHeatmapStat />
           <CalendarHeatmapLegend />
         </CalendarHeatmapFooter>
       </CalendarHeatmap>
@@ -83,7 +83,7 @@ export function MonthMondayStartDemo() {
           )}
         </CalendarHeatmapBody>
         <CalendarHeatmapFooter>
-          <CalendarHeatmapTotalCount />
+          <CalendarHeatmapStat />
           <CalendarHeatmapLegend />
         </CalendarHeatmapFooter>
       </CalendarHeatmap>
@@ -110,7 +110,7 @@ export function MonthChunkyDemo() {
           )}
         </CalendarHeatmapBody>
         <CalendarHeatmapFooter>
-          <CalendarHeatmapTotalCount />
+          <CalendarHeatmapStat />
           <CalendarHeatmapLegend />
         </CalendarHeatmapFooter>
       </CalendarHeatmap>
@@ -121,11 +121,7 @@ export function MonthChunkyDemo() {
 export function MonthBinaryDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <CalendarHeatmap
-        data={monthData}
-        maxLevel={1}
-        labels={{ legend: { less: "Disabled", more: "Enabled" } }}
-      >
+      <CalendarHeatmap data={monthData} levels={2}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
             <Tooltip>
@@ -152,8 +148,10 @@ export function MonthBinaryDemo() {
           )}
         </CalendarHeatmapBody>
         <CalendarHeatmapFooter>
-          <CalendarHeatmapTotalCount />
-          <CalendarHeatmapLegend />
+          <CalendarHeatmapStat />
+          <CalendarHeatmapLegend
+            labels={{ less: "Disabled", more: "Enabled" }}
+          />
         </CalendarHeatmapFooter>
       </CalendarHeatmap>
     </TooltipProvider>
@@ -163,7 +161,7 @@ export function MonthBinaryDemo() {
 export function MonthTenLevelsDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <CalendarHeatmap data={monthData} maxLevel={10}>
+      <CalendarHeatmap data={monthData} levels={10}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
             <Tooltip>
@@ -179,7 +177,7 @@ export function MonthTenLevelsDemo() {
           )}
         </CalendarHeatmapBody>
         <CalendarHeatmapFooter>
-          <CalendarHeatmapTotalCount />
+          <CalendarHeatmapStat />
           <CalendarHeatmapLegend />
         </CalendarHeatmapFooter>
       </CalendarHeatmap>
@@ -190,14 +188,7 @@ export function MonthTenLevelsDemo() {
 export function MonthGermanDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <CalendarHeatmap
-        data={monthData}
-        locale={de}
-        labels={{
-          totalCount: "{{count}} Aktivitäten in {{year}}",
-          legend: { less: "Weniger", more: "Mehr" },
-        }}
-      >
+      <CalendarHeatmap data={monthData} locale={de}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
             <Tooltip>
@@ -224,8 +215,8 @@ export function MonthGermanDemo() {
           )}
         </CalendarHeatmapBody>
         <CalendarHeatmapFooter>
-          <CalendarHeatmapTotalCount />
-          <CalendarHeatmapLegend />
+          <CalendarHeatmapStat label="{{value}} Aktivitäten in {{year}}" />
+          <CalendarHeatmapLegend labels={{ less: "Weniger", more: "Mehr" }} />
         </CalendarHeatmapFooter>
       </CalendarHeatmap>
     </TooltipProvider>
@@ -251,7 +242,7 @@ export function MonthLargeBlocksDemo() {
           )}
         </CalendarHeatmapBody>
         <CalendarHeatmapFooter>
-          <CalendarHeatmapTotalCount />
+          <CalendarHeatmapStat />
           <CalendarHeatmapLegend />
         </CalendarHeatmapFooter>
       </CalendarHeatmap>
@@ -324,7 +315,7 @@ export function MonthNoFooterDemo() {
 export function MonthCustomDateFormatDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <CalendarHeatmap data={monthData} dateFormat="MMM d, yyyy">
+      <CalendarHeatmap data={monthData}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
             <Tooltip>
@@ -351,7 +342,7 @@ export function MonthCustomDateFormatDemo() {
           )}
         </CalendarHeatmapBody>
         <CalendarHeatmapFooter>
-          <CalendarHeatmapTotalCount />
+          <CalendarHeatmapStat />
           <CalendarHeatmapLegend />
         </CalendarHeatmapFooter>
       </CalendarHeatmap>
@@ -367,8 +358,8 @@ export function MonthCustomStylingDemo() {
         colors={{ scale: "var(--color-destructive)" }}
       >
         <CalendarHeatmapBody
-          labelTextClass="text-destructive font-bold"
-          yearTextClass="text-destructive font-bold"
+          labelClassName="text-destructive font-bold"
+          yearClassName="text-destructive font-bold"
         >
           {({ activity, dayIndex, weekIndex }) => (
             <Tooltip>
@@ -384,7 +375,7 @@ export function MonthCustomStylingDemo() {
           )}
         </CalendarHeatmapBody>
         <CalendarHeatmapFooter>
-          <CalendarHeatmapTotalCount className="text-destructive" />
+          <CalendarHeatmapStat className="text-destructive" />
           <CalendarHeatmapLegend className="text-destructive" />
         </CalendarHeatmapFooter>
       </CalendarHeatmap>

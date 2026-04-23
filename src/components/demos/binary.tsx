@@ -6,7 +6,7 @@ import {
   CalendarHeatmapBody,
   CalendarHeatmapFooter,
   CalendarHeatmapLegend,
-  CalendarHeatmapTotalCount,
+  CalendarHeatmapStat,
 } from "@/components/heatmap/calendar-heatmap";
 import {
   DateHeatmap,
@@ -31,11 +31,7 @@ import { HeatmapTooltip, TooltipProvider, WEEKDAY_NAMES } from "./shared";
 export function CalendarBinaryDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <CalendarHeatmap
-        data={calendarBinaryData}
-        maxLevel={1}
-        labels={{ legend: { less: "Missed", more: "Done" } }}
-      >
+      <CalendarHeatmap data={calendarBinaryData} levels={2}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
             <HeatmapTooltip
@@ -59,8 +55,8 @@ export function CalendarBinaryDemo() {
           )}
         </CalendarHeatmapBody>
         <CalendarHeatmapFooter>
-          <CalendarHeatmapTotalCount />
-          <CalendarHeatmapLegend />
+          <CalendarHeatmapStat />
+          <CalendarHeatmapLegend labels={{ less: "Missed", more: "Done" }} />
         </CalendarHeatmapFooter>
       </CalendarHeatmap>
     </TooltipProvider>
@@ -72,11 +68,10 @@ export function WeekdayBinaryDemo() {
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
       <WeekdayHeatmap
         data={weekdayBinaryData}
-        maxLevel={1}
+        levels={2}
         colors={{ scale: "var(--color-chart-2)" }}
-        labels={{ legend: { less: "Free", more: "Meeting" } }}
       >
-        <WeekdayHeatmapBody hideAvgRow hideAvgColumn>
+        <WeekdayHeatmapBody>
           {({ activity }) => (
             <HeatmapTooltip
               content={
@@ -96,7 +91,7 @@ export function WeekdayBinaryDemo() {
           )}
         </WeekdayHeatmapBody>
         <WeekdayHeatmapFooter>
-          <WeekdayHeatmapLegend />
+          <WeekdayHeatmapLegend labels={{ less: "Free", more: "Meeting" }} />
         </WeekdayHeatmapFooter>
       </WeekdayHeatmap>
     </TooltipProvider>
@@ -108,34 +103,22 @@ export function DateBinaryDemo() {
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
       <DateHeatmap
         data={dateBinaryData}
-        maxLevel={1}
+        levels={2}
         colors={{ scale: "var(--color-chart-3)" }}
-        labels={{ legend: { less: "Down", more: "Up" } }}
       >
-        <DateHeatmapBody hideSumColumn hideSumRow>
+        <DateHeatmapBody>
           {({ activity, dateIndex }) => (
             <HeatmapTooltip
               content={
-                activity.date === "sum" ? (
-                  <>
-                    <p className="font-medium">
-                      {`${String(activity.hour).padStart(2, "0")}:00`} total
-                    </p>
-                    <p className="text-muted-foreground">
-                      {activity.value} days up
-                    </p>
-                  </>
-                ) : (
-                  <>
-                    <p className="font-medium">
-                      {format(parseISO(activity.date), "MMM d")},{" "}
-                      {`${String(activity.hour).padStart(2, "0")}:00`}
-                    </p>
-                    <p className="text-muted-foreground">
-                      {activity.value === 1 ? "Up" : "Down"}
-                    </p>
-                  </>
-                )
+                <>
+                  <p className="font-medium">
+                    {format(parseISO(activity.date), "MMM d")},{" "}
+                    {`${String(activity.hour).padStart(2, "0")}:00`}
+                  </p>
+                  <p className="text-muted-foreground">
+                    {activity.value === 1 ? "Up" : "Down"}
+                  </p>
+                </>
               }
             >
               <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
@@ -143,7 +126,7 @@ export function DateBinaryDemo() {
           )}
         </DateHeatmapBody>
         <DateHeatmapFooter>
-          <DateHeatmapLegend />
+          <DateHeatmapLegend labels={{ less: "Down", more: "Up" }} />
         </DateHeatmapFooter>
       </DateHeatmap>
     </TooltipProvider>

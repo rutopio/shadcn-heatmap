@@ -4,7 +4,7 @@ export const dateProps: ComponentPropsSection[] = [
   {
     componentName: "DateHeatmap",
     description:
-      "Root provider for a date × hour matrix (one row per date). A Sum column aggregates each day across all hours and is coloured against its own scale.",
+      "Root provider for a date × hour matrix (one row per date). Pass `extraRow` / `extraColumn` to append an aggregate row / column with your own compute function (sum, avg, p95 — anything).",
     props: [
       // 1. 數據 (required)
       {
@@ -12,7 +12,19 @@ export const dateProps: ComponentPropsSection[] = [
         type: "DateHourlyActivity[]",
         required: true,
         description:
-          "`{ date: 'YYYY-MM-DD', hour: 0–24, value: number }[]`. `hour = 24` is the daily Sum column. Dates are auto-sorted ascending; all hour 0..24 cells are auto-filled with 0 where absent.",
+          "`{ date: 'YYYY-MM-DD', hour: number, value: number }[]`. `hour` is `0..23`. Dates are auto-sorted ascending; missing cells are auto-filled with 0.",
+      },
+      {
+        name: "extraRow",
+        type: "{ label: ReactNode; compute: (data) => number[] }",
+        description:
+          "Append an aggregate row below the grid. `compute(data)` must return 24 numbers (one per hour). `label` appears in the left gutter. Extra row cells have an independent min–max colour scale.",
+      },
+      {
+        name: "extraColumn",
+        type: "{ label: ReactNode; compute: (data, dates) => number[] }",
+        description:
+          "Append an aggregate column to the right of the grid. `compute(data, dates)` must return one number per date (aligned to the sorted `dates` array). `label` appears in the top gutter. Extra column cells have an independent min–max colour scale.",
       },
       // 2. 空狀態處理
       {
@@ -23,17 +35,18 @@ export const dateProps: ComponentPropsSection[] = [
       },
       // 3. 視覺配置
       {
-        name: "maxLevel",
+        name: "levels",
         type: "number",
-        default: "4",
-        description: "Number of intensity buckets (0 to maxLevel).",
+        default: "5",
+        description:
+          "Total number of cells shown in the legend. Non-normalized (default): 1 empty cell + (levels − 1) coloured steps from 20%→100% opacity. Normalized: `levels` coloured steps from 20%→100% opacity (no empty cell).",
       },
       {
         name: "isNormalized",
         type: "boolean",
         default: "false",
         description:
-          "When `true`, levels are assigned via min–max normalization: the minimum value maps to level 1 and the maximum to `maxLevel`. Suitable for datasets with negative values. When `false` (default), values ≤ 0 are treated as empty (level 0) and the scale runs from 0 to max.",
+          "When `true`, uses min–max normalization across the dataset: min maps to level 1 and max to `levels`. Suitable for datasets with negative values (e.g. temperature). When `false` (default), values ≤ 0 are treated as empty (level 0) and the scale runs from 0 to max.",
       },
       {
         name: "colors",
@@ -72,8 +85,7 @@ export const dateProps: ComponentPropsSection[] = [
         name: "fontSize",
         type: "number",
         default: "14",
-        description:
-          "Base font size for labels. Also drives the date-label column width: `fontSize * 7.5 + 8`.",
+        description: "Base font size for labels.",
       },
       {
         name: "use12Hour",
@@ -100,7 +112,7 @@ export const dateProps: ComponentPropsSection[] = [
         name: "labels",
         type: "DateHeatmapLabels",
         description:
-          "Override `hours` (24 strings), `endHour` (set to `null` to hide), `sum` (for sum column label), and legend strings (`legend.less`, `legend.more`). Useful for internationalization.",
+          "Override `hours` (24 strings), `endHour` (set to `null` to hide), and `cellLabel` aria-label template (placeholders: `{{date}}`, `{{hour}}`, `{{value}}`). Legend text goes on `<DateHeatmapLegend labels={…}>`; stat text goes on `<DateHeatmapStat label={…}>` — or set `labels.stat` here if you prefer i18n all in one place. Extra row/column labels come from `extraRow.label` / `extraColumn.label`.",
       },
       // 6. 其他
       {
@@ -121,7 +133,7 @@ export const dateProps: ComponentPropsSection[] = [
         type: "(args) => ReactNode",
         required: true,
         description:
-          "Render function receiving `{ activity, dateIndex }`. Typically returns `<DateHeatmapBlock activity={activity} dateIndex={dateIndex} />`.",
+          "Render function receiving `{ activity, dateIndex, extra }`. `extra` is `'row'` | `'column'` for extra cells, otherwise `undefined`. Typically returns `<DateHeatmapBlock activity={activity} dateIndex={dateIndex} extra={extra} />`.",
       },
       {
         name: "hideDateLabels",
@@ -136,19 +148,7 @@ export const dateProps: ComponentPropsSection[] = [
         description: "Hide hour labels on the top axis.",
       },
       {
-        name: "hideSumColumn",
-        type: "boolean",
-        default: "false",
-        description: "Hide the daily Sum column (hour = 24) and its label.",
-      },
-      {
-        name: "hideSumRow",
-        type: "boolean",
-        default: "false",
-        description: 'Hide the hourly Sum row (date = "sum") and its label.',
-      },
-      {
-        name: "labelTextClass",
+        name: "labelClassName",
         type: "string",
         description:
           "Additional CSS classes for axis labels (date and hour labels). Example: 'text-destructive font-bold'.",
@@ -165,7 +165,7 @@ export const dateProps: ComponentPropsSection[] = [
         type: "DateHourlyActivityWithLevel",
         required: true,
         description:
-          "The activity record including its computed level. Contains `date`, `hour` (0-24), `value`, and `level`.",
+          "The activity record including its computed level. Contains `date`, `hour` (0-23), `value`, and `level`.",
       },
       {
         name: "dateIndex",
@@ -174,15 +174,34 @@ export const dateProps: ComponentPropsSection[] = [
         description: "Row index for this date in the calendar (0-based).",
       },
       {
+        name: "extra",
+        type: "'row' | 'column' | undefined",
+        description:
+          "Marks this block as belonging to the extra aggregate row or column. Forward the value from the Body render-prop as-is.",
+      },
+      {
+        name: "highlighted",
+        type: "boolean",
+        default: "false",
+        description:
+          "Dim this block to 60% opacity of its colour (useful for selected / focus states). Also emits a `data-highlighted` attribute for CSS targeting.",
+      },
+      {
+        name: "onCellClick",
+        type: "(activity: DateHourlyActivityWithLevel) => void",
+        description:
+          "Semantic click handler receiving the cell's activity. Fires alongside any `onClick` passed through.",
+      },
+      {
+        name: "onCellHover",
+        type: "(activity: DateHourlyActivityWithLevel | null) => void",
+        description:
+          "Semantic hover handler. Receives the activity on enter, and `null` on leave. Fires alongside `onMouseEnter`/`onMouseLeave`.",
+      },
+      {
         name: "className",
         type: "string",
         description: "Additional CSS classes for the block element.",
-      },
-      {
-        name: 'data-highlighted="true"',
-        type: "attribute",
-        description:
-          "Opt in to the `chart-2` palette for this block (useful for selected states).",
       },
     ],
   },
@@ -198,20 +217,32 @@ export const dateProps: ComponentPropsSection[] = [
     ],
   },
   {
-    componentName: "DateHeatmapTotalCount",
+    componentName: "DateHeatmapStat",
     description:
-      "Displays total contributions count. Supports custom render function.",
+      "Displays a summary stat in the footer. Defaults to total contributions. Customize the computation with `compute` and the output text with `label` (or `labels.stat`).",
     props: [
+      {
+        name: "compute",
+        type: "(data: DateHourlyActivityWithLevel[]) => number | string",
+        description:
+          "Function to compute the stat from all activities. Defaults to the total sum. Example: `(data) => data.reduce((m, d) => Math.max(m, d.value), 0)` for peak hour.",
+      },
+      {
+        name: "label",
+        type: "string",
+        description:
+          "Template string overriding `labels.stat`. Placeholder: `{{value}}`.",
+      },
       {
         name: "children",
         type: "(args) => ReactNode",
         description:
-          "Render function receiving `{ totalCount }`. If omitted, displays default format.",
+          "Render function receiving `{ value, data }`. Fully takes over rendering.",
       },
       {
         name: "className",
         type: "string",
-        description: "Additional CSS classes for the total count element.",
+        description: "Additional CSS classes for the stat element.",
       },
     ],
   },
@@ -220,10 +251,16 @@ export const dateProps: ComponentPropsSection[] = [
     description: "Displays intensity level legend (Less → More).",
     props: [
       {
+        name: "labels",
+        type: "{ less?: string; more?: string }",
+        description:
+          "Text labels shown at either end of the scale. Defaults to `Less` / `More`.",
+      },
+      {
         name: "children",
         type: "(args) => ReactNode",
         description:
-          "Custom render function receiving `{ level }` for each intensity level (0 to maxLevel).",
+          "Custom render function receiving `{ level }` for each intensity level (0 to levels).",
       },
       {
         name: "className",
