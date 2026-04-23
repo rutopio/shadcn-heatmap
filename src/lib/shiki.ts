@@ -1,14 +1,26 @@
-import type { Highlighter, ThemedToken } from "shiki";
+import {
+  createHighlighterCore,
+  type HighlighterCore,
+  type ThemedToken,
+} from "@shikijs/core";
+import { createOnigurumaEngine } from "@shikijs/engine-oniguruma";
 
-let highlighterPromise: Promise<Highlighter> | null = null;
+let highlighterPromise: Promise<HighlighterCore> | null = null;
 
-async function getHighlighter(): Promise<Highlighter> {
+async function getHighlighter(): Promise<HighlighterCore> {
   if (!highlighterPromise) {
     highlighterPromise = (async () => {
-      const { createHighlighter } = await import("shiki");
-      return createHighlighter({
-        themes: ["github-light", "github-dark"],
-        langs: ["tsx", "bash", "json"],
+      const [githubLight, githubDark, tsx, bash, json] = await Promise.all([
+        import("@shikijs/themes/github-light"),
+        import("@shikijs/themes/github-dark"),
+        import("@shikijs/langs/tsx"),
+        import("@shikijs/langs/bash"),
+        import("@shikijs/langs/json"),
+      ]);
+      return createHighlighterCore({
+        themes: [githubLight.default, githubDark.default],
+        langs: [tsx.default, bash.default, json.default],
+        engine: createOnigurumaEngine(import("shiki/wasm")),
       });
     })();
   }
@@ -32,7 +44,7 @@ export type HighlightedLine = HighlightedToken[];
  */
 export async function highlightTokens(
   code: string,
-  lang: SupportedLang = "tsx",
+  lang: SupportedLang = "tsx"
 ): Promise<HighlightedLine[]> {
   const highlighter = await getHighlighter();
 
@@ -54,7 +66,7 @@ export async function highlightTokens(
         dark: darkLine[tokIndex]?.color,
         fontStyle: tok.fontStyle,
       }));
-    },
+    }
   );
 
   return lines;

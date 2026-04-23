@@ -1,3 +1,4 @@
+import { createFileRoute } from "@tanstack/react-router";
 import { TerminalIcon } from "@phosphor-icons/react";
 
 import { CodeBlock } from "@/components/ui/code-block";
@@ -9,7 +10,7 @@ import {
   utilsSnippet,
 } from "@/content/install";
 
-export function QuickStart() {
+function InstallPage() {
   return (
     <section
       id="quick-start"
@@ -214,3 +215,7 @@ export function QuickStart() {
     </section>
   );
 }
+
+export const Route = createFileRoute("/install/")({
+  component: InstallPage,
+});

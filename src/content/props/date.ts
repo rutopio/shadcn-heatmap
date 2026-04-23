@@ -29,6 +29,13 @@ export const dateProps: ComponentPropsSection[] = [
         description: "Number of intensity buckets (0 to maxLevel).",
       },
       {
+        name: "isNormalized",
+        type: "boolean",
+        default: "false",
+        description:
+          "When `true`, levels are assigned via min–max normalization: the minimum value maps to level 1 and the maximum to `maxLevel`. Suitable for datasets with negative values. When `false` (default), values ≤ 0 are treated as empty (level 0) and the scale runs from 0 to max.",
+      },
+      {
         name: "colors",
         type: "ColorConfig",
         description:
@@ -144,7 +151,7 @@ export const dateProps: ComponentPropsSection[] = [
         name: "labelTextClass",
         type: "string",
         description:
-          "Additional CSS classes for axis labels (date and hour labels). Example: 'text-green-700 font-bold'.",
+          "Additional CSS classes for axis labels (date and hour labels). Example: 'text-destructive font-bold'.",
       },
     ],
   },

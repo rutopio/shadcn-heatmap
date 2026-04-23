@@ -1,5 +1,6 @@
 import * as React from "react";
-import { CheckIcon, CopyIcon } from "@phosphor-icons/react";
+import { CopyIcon } from "@phosphor-icons/react";
+import { toast } from "sonner";
 
 import { highlightTokens } from "@/lib/shiki";
 import { cn } from "@/lib/utils";
@@ -53,7 +54,6 @@ export function CodeBlock({
   maxHeight,
 }: CodeBlockProps) {
   const [lines, setLines] = React.useState<HighlightedLine[] | null>(null);
-  const [copied, setCopied] = React.useState(false);
 
   React.useEffect(() => {
     let cancelled = false;
@@ -67,19 +67,18 @@ export function CodeBlock({
 
   const handleCopy = React.useCallback(async () => {
     await navigator.clipboard.writeText(code);
-    setCopied(true);
-    window.setTimeout(() => setCopied(false), 1500);
+    toast.success("Copied to clipboard");
   }, [code]);
 
   return (
     <div
       className={cn(
-        "group bg-muted/40 relative overflow-hidden rounded-lg border",
+        "group bg-background relative overflow-hidden rounded-lg border",
         className
       )}
     >
       {filename && (
-        <div className="bg-muted/60 flex items-center justify-between border-b px-4 py-2">
+        <div className="bg-muted/60 flex items-center justify-between border-b px-4 py-4">
           <span className="text-muted-foreground font-mono text-xs">
             {filename}
           </span>
@@ -124,15 +123,11 @@ export function CodeBlock({
         <Button
           size="icon"
           variant="ghost"
-          aria-label={copied ? "Copied" : "Copy code"}
+          aria-label="Copy code"
           onClick={handleCopy}
-          className="absolute top-2 right-2 size-8 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+          className="absolute top-3 right-4 size-6 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
         >
-          {copied ? (
-            <CheckIcon weight="bold" className="text-chart-1 size-4" />
-          ) : (
-            <CopyIcon weight="bold" className="size-4" />
-          )}
+          <CopyIcon className="size-4" />
         </Button>
       )}
     </div>

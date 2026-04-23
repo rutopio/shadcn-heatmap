@@ -1,6 +1,6 @@
 import type { ComponentPropsSection } from "../types";
 
-export const monthProps: ComponentPropsSection[] = [
+export const calendarProps: ComponentPropsSection[] = [
   {
     componentName: "CalendarHeatmap",
     description:
@@ -28,6 +28,13 @@ export const monthProps: ComponentPropsSection[] = [
         default: "4",
         description:
           "Number of intensity buckets. Level 0 is empty; 1…maxLevel map onto `chart-1` opacity steps.",
+      },
+      {
+        name: "isNormalized",
+        type: "boolean",
+        default: "false",
+        description:
+          "When `true`, levels are assigned via min–max normalization: the minimum value maps to level 1 and the maximum to `maxLevel`. Suitable for datasets with negative values. When `false` (default), values ≤ 0 are treated as empty (level 0) and the scale runs from 0 to max.",
       },
       {
         name: "colors",
@@ -138,7 +145,7 @@ export const monthProps: ComponentPropsSection[] = [
         name: "labelTextClass",
         type: "string",
         description:
-          "Additional CSS classes for month and weekday label text. Example: 'text-green-700 font-bold'.",
+          "Additional CSS classes for month and weekday label text. Example: 'text-destructive font-bold'.",
       },
       {
         name: "yearTextClass",

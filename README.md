@@ -54,12 +54,11 @@ pnpm add date-fns clsx tailwind-merge @radix-ui/react-tooltip
 2. Add the `cn` helper if not already present:
 
 ```ts
+// src/lib/utils.ts
 import { clsx } from "clsx";
 import { twMerge } from "tailwind-merge";
 
 import type { ClassValue } from "clsx";
-
-// src/lib/utils.ts
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -130,11 +129,11 @@ import {
   StatusHeatmapBlock,
   StatusHeatmapBody,
   StatusHeatmapFooter,
+  StatusHeatmapHealthyDays,
   StatusHeatmapLegend,
-  StatusHeatmapNormalDays,
 } from "@/components/heatmap/status-heatmap";
 
-// value: 0 = no data, 1 = error, 2 = warning, 3 = normal
+// value: 0 = no data, 1 = critical, 2 = degraded, 3 = healthy
 const data = [
   { date: "2025-01-01", value: 3 },
   { date: "2025-01-02", value: 2 },
@@ -150,7 +149,7 @@ export default function Example() {
         )}
       </StatusHeatmapBody>
       <StatusHeatmapFooter>
-        <StatusHeatmapNormalDays />
+        <StatusHeatmapHealthyDays />
         <StatusHeatmapLegend />
       </StatusHeatmapFooter>
     </StatusHeatmap>
@@ -178,6 +177,19 @@ All components accept a `colors` prop to override the default theme tokens:
 
 Pass a `locale` prop (a `date-fns` locale object) for internationalized month and weekday labels.
 
+## Contributing
+
+Contributions are warmly welcome. Whether it's a bug report, a new variant idea, a11y improvement, or docs polish — feel free to open an [issue](https://github.com/rutopio/shadcn-heatmap/issues) or send a pull request.
+
+If you're adding a new component or changing the public API, please open an issue first so we can align on scope before you write the code.
+
+Before opening a pull request, please make sure the following commands pass locally — CI will run the same checks and block merges on failure:
+
+```bash
+pnpm run check
+pnpm run build
+```
+
 ## License
 
-MIT
+MIT License

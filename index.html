@@ -20,8 +20,20 @@
     <meta property="og:site_name" content="shadcn-heatmap" />
     <meta property="og:locale" content="en_US" />
     <meta property="og:url" content="https://shadcn-heatmap.pages.dev" />
+    <meta property="og:image" content="https://shadcn-heatmap.pages.dev/og-image.png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <link rel="canonical" href="https://shadcn-heatmap.pages.dev" />
-    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta
+      name="twitter:title"
+      content="shadcn-heatmap — composable React heatmap components"
+    />
+    <meta
+      name="twitter:description"
+      content="Beautiful, accessible heatmap components for React. Calendar, Weekday, Date, and Status heatmaps built with SVG, Tailwind v4, and shadcn/ui conventions."
+    />
+    <meta name="twitter:image" content="https://shadcn-heatmap.pages.dev/og-image.png" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
     <meta
       name="theme-color"
@@ -38,10 +50,7 @@
       (() => {
         try {
           const stored = localStorage.getItem("theme");
-          const prefersDark = window.matchMedia(
-            "(prefers-color-scheme: dark)"
-          ).matches;
-          const isDark = stored ? stored === "dark" : prefersDark;
+          const isDark = stored ? stored === "dark" : false;
           if (isDark) document.documentElement.classList.add("dark");
         } catch (e) {
           // ignore

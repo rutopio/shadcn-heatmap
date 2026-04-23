@@ -1,6 +1,6 @@
 import type { VariantSpec } from "../types";
 
-export const monthSampleData = `// type Activity = { date: string; value: number }
+export const calendarSampleData = `// type Activity = { date: string; value: number }
 
 const activities: Activity[] = [
   { date: "2025-01-01", value: 3 },
@@ -16,7 +16,7 @@ const activities: Activity[] = [
   { date: "2025-12-31", value: 5 },
 ];`;
 
-export const monthBasicCode = `import {
+export const calendarBasicCode = `import {
   CalendarHeatmap,
   CalendarHeatmapBlock,
   CalendarHeatmapBody,
@@ -71,7 +71,7 @@ export function YearContributions() {
   );
 }`;
 
-export const monthVariants: VariantSpec[] = [
+export const calendarVariants: VariantSpec[] = [
   {
     title: "Monday-start week (ISO)",
     description:
@@ -136,42 +136,6 @@ export const monthVariants: VariantSpec[] = [
 </CalendarHeatmap>`,
   },
   {
-    title: "Binary on/off",
-    description:
-      "Two colours only — active or inactive. Useful when presence matters more than intensity.",
-    code: `<CalendarHeatmap
-  data={activities}
-  maxLevel={1}
-  labels={{
-    legend: { less: "Disabled", more: "Enabled" },
-  }}
->
-  <CalendarHeatmapBody>
-    {({ activity, dayIndex, weekIndex }) => (
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <CalendarHeatmapBlock
-            activity={activity}
-            dayIndex={dayIndex}
-            weekIndex={weekIndex}
-          />
-        </TooltipTrigger>
-        <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
-          <p className="font-medium">{format(parseISO(activity.date), "PPP")}</p>
-          <p className="text-muted-foreground">
-            {activity.value > 0 ? "Enabled" : "Disabled"}
-          </p>
-        </TooltipContent>
-      </Tooltip>
-    )}
-  </CalendarHeatmapBody>
-  <CalendarHeatmapFooter>
-    <CalendarHeatmapTotalCount />
-    <CalendarHeatmapLegend />
-  </CalendarHeatmapFooter>
-</CalendarHeatmap>`,
-  },
-  {
     title: "10 level intensity",
     description:
       "Expand the intensity scale to 10 levels for a more granular, detailed gradient.",
@@ -212,7 +176,7 @@ import { format, parseISO } from "date-fns";
   data={activities}
   locale={de}
   labels={{
-    totalCount: "{{value}} Aktivitäten in {{year}}",
+    totalCount: "{{count}} Aktivitäten in {{year}}",
     legend: { less: "Weniger", more: "Mehr" },
   }}
 >
@@ -379,10 +343,10 @@ import { format, parseISO } from "date-fns";
     title: "Custom styling",
     description:
       "Use colors to theme the blocks, labelTextClass and yearTextClass to style axis labels, and className on TotalCount and Legend to style the footer.",
-    code: `<CalendarHeatmap data={activities} colors={{ scale: "#22c55e" }}>
+    code: `<CalendarHeatmap data={activities} colors={{ scale: "var(--color-destructive)" }}>
   <CalendarHeatmapBody
-    labelTextClass="text-green-700 font-bold"
-    yearTextClass="text-green-700 font-bold"
+    labelTextClass="text-destructive font-bold"
+    yearTextClass="text-destructive font-bold"
   >
     {({ activity, dayIndex, weekIndex }) => (
       <Tooltip>
@@ -403,8 +367,8 @@ import { format, parseISO } from "date-fns";
     )}
   </CalendarHeatmapBody>
   <CalendarHeatmapFooter>
-    <CalendarHeatmapTotalCount className="text-green-700" />
-    <CalendarHeatmapLegend className="text-green-700" />
+    <CalendarHeatmapTotalCount className="text-destructive" />
+    <CalendarHeatmapLegend className="text-destructive" />
   </CalendarHeatmapFooter>
 </CalendarHeatmap>`,
   },

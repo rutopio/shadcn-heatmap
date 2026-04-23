@@ -13,7 +13,7 @@ type VariantGridProps = {
 
 export function VariantGrid({ variants }: VariantGridProps) {
   return (
-    <div className="grid grid-cols-1 gap-6">
+    <div className="bg-background grid grid-cols-1 gap-6">
       {variants.map((variant) => (
         <div
           key={variant.title}

@@ -4,7 +4,6 @@ import {
   CodeIcon,
   GithubLogoIcon,
   ListIcon,
-  SquaresFourIcon,
   XIcon,
 } from "@phosphor-icons/react";
 
@@ -20,6 +19,7 @@ const navLinks = [
   { to: "/weekday" as const, label: "Weekday" },
   { to: "/date" as const, label: "Date" },
   { to: "/status" as const, label: "Status" },
+  { to: "/binary" as const, label: "Binary" },
 ];
 
 export function SiteHeader() {
@@ -37,18 +37,101 @@ export function SiteHeader() {
           aria-label="shadcn-heatmap home"
           onClick={closeMenu}
         >
-          <span className="bg-foreground text-background flex size-7 items-center justify-center rounded-md">
-            <SquaresFourIcon
+          <span className="flex size-7 items-center justify-center rounded-md">
+            <svg
               aria-hidden="true"
-              weight="fill"
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 32 32"
               className="size-4"
-            />
+            >
+              <rect
+                x="2"
+                y="2"
+                width="8"
+                height="8"
+                rx="1.5"
+                fill="currentColor"
+                opacity="0.15"
+              />
+              <rect
+                x="12"
+                y="2"
+                width="8"
+                height="8"
+                rx="1.5"
+                fill="currentColor"
+                opacity="0.35"
+              />
+              <rect
+                x="22"
+                y="2"
+                width="8"
+                height="8"
+                rx="1.5"
+                fill="currentColor"
+                opacity="0.75"
+              />
+              <rect
+                x="2"
+                y="12"
+                width="8"
+                height="8"
+                rx="1.5"
+                fill="currentColor"
+                opacity="0.55"
+              />
+              <rect
+                x="12"
+                y="12"
+                width="8"
+                height="8"
+                rx="1.5"
+                fill="currentColor"
+                opacity="1"
+              />
+              <rect
+                x="22"
+                y="12"
+                width="8"
+                height="8"
+                rx="1.5"
+                fill="currentColor"
+                opacity="0.35"
+              />
+              <rect
+                x="2"
+                y="22"
+                width="8"
+                height="8"
+                rx="1.5"
+                fill="currentColor"
+                opacity="0.9"
+              />
+              <rect
+                x="12"
+                y="22"
+                width="8"
+                height="8"
+                rx="1.5"
+                fill="currentColor"
+                opacity="0.15"
+              />
+              <rect
+                x="22"
+                y="22"
+                width="8"
+                height="8"
+                rx="1.5"
+                fill="currentColor"
+                opacity="0.55"
+              />
+            </svg>
           </span>
-          <span className="hidden sm:inline">shadcn-heatmap</span>
+          <span className="hidden lg:inline">shadcn-heatmap</span>
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
-          <Button asChild variant="ghost" size="sm" className="mr-8">
+          <Button asChild variant="ghost" size="sm">
             <Link to="/install">
               Install
               <CodeIcon aria-hidden="true" weight="bold" className="size-4" />
@@ -85,7 +168,7 @@ export function SiteHeader() {
                 weight="bold"
                 className="size-4"
               />
-              rutopio/shadcn-heatmap
+              <span className="hidden lg:inline">rutopio/shadcn-heatmap</span>
             </a>
           </Button>
           <ThemeToggle />

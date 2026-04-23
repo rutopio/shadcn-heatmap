@@ -15,9 +15,8 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { generateMonthSample } from "@/data/month-sample";
-
-const monthData = generateMonthSample(42, 2025);
+import multiYearData from "@/data/calendar-multi-year.json";
+import monthData from "@/data/calendar-sample.json";
 
 function MonthTooltip({
   activity,
@@ -260,10 +259,7 @@ export function MonthLargeBlocksDemo() {
   );
 }
 
-const monthMultiYear = [
-  ...generateMonthSample(7, 2024),
-  ...generateMonthSample(8, 2025),
-];
+const monthMultiYear = multiYearData;
 
 const multiYearYears = [2024, 2025];
 
@@ -366,10 +362,13 @@ export function MonthCustomDateFormatDemo() {
 export function MonthCustomStylingDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <CalendarHeatmap data={monthData} colors={{ scale: "#22c55e" }}>
+      <CalendarHeatmap
+        data={monthData}
+        colors={{ scale: "var(--color-destructive)" }}
+      >
         <CalendarHeatmapBody
-          labelTextClass="text-green-700 font-bold"
-          yearTextClass="text-green-700 font-bold"
+          labelTextClass="text-destructive font-bold"
+          yearTextClass="text-destructive font-bold"
         >
           {({ activity, dayIndex, weekIndex }) => (
             <Tooltip>
@@ -385,8 +384,8 @@ export function MonthCustomStylingDemo() {
           )}
         </CalendarHeatmapBody>
         <CalendarHeatmapFooter>
-          <CalendarHeatmapTotalCount className="text-green-700" />
-          <CalendarHeatmapLegend className="text-green-700" />
+          <CalendarHeatmapTotalCount className="text-destructive" />
+          <CalendarHeatmapLegend className="text-destructive" />
         </CalendarHeatmapFooter>
       </CalendarHeatmap>
     </TooltipProvider>

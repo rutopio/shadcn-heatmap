@@ -1,6 +1,12 @@
+// Binary demos
+export {
+  CalendarBinaryDemo,
+  DateBinaryDemo,
+  WeekdayBinaryDemo,
+} from "./binary";
+
 // Month demos
 export {
-  MonthBinaryDemo,
   MonthChunkyDemo,
   MonthCustomDateFormatDemo,
   MonthCustomStylingDemo,
@@ -16,10 +22,9 @@ export {
 // Week demos
 export {
   Week12HourDemo,
-  WeekBinaryDemo,
   WeekCustomStylingDemo,
   WeekDefaultDemo,
-  WeekHideSumDemo,
+  WeekHideAvgDemo,
   WeekJapaneseDemo,
   WeekLargeBlocksDemo,
   WeekMinimalTicksDemo,

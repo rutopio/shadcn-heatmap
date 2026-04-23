@@ -44,7 +44,7 @@ function parseDescription(text: string): ReactNode {
 
 export function PropsTable({ sections }: PropsTableProps) {
   return (
-    <div className="space-y-8">
+    <div className="bg-background space-y-8">
       {sections.map((section) => (
         <div key={section.componentName} className="space-y-3">
           <div className="flex flex-col gap-1">

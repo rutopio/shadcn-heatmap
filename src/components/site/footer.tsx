@@ -4,6 +4,7 @@ export function SiteFooter() {
   return (
     <footer className="border-t py-10">
       <div className="text-muted-foreground container flex flex-col items-center justify-end gap-4 text-sm sm:flex-row">
+        <span>MIT License</span>
         <div className="flex items-center gap-4">
           <a
             className="hover:text-foreground inline-flex items-center gap-1.5"

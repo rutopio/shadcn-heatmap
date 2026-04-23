@@ -5,8 +5,8 @@ import {
   StatusHeatmapBlock,
   StatusHeatmapBody,
   StatusHeatmapFooter,
+  StatusHeatmapHealthyDays,
   StatusHeatmapLegend,
-  StatusHeatmapNormalDays,
 } from "@/components/heatmap/status-heatmap";
 import {
   Tooltip,
@@ -14,17 +14,18 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import { generateStatusSample } from "@/data/status-sample";
+import type { StatusActivity, StatusValue } from "@/components/heatmap/status-heatmap";
+import _statusData from "@/data/status-sample.json";
+import _statusUptimeData from "@/data/status-uptime.json";
 
-import type { StatusValue } from "@/components/heatmap/status-heatmap";
-
-const statusData = generateStatusSample(42, 90);
+const statusData = _statusData as StatusActivity[];
+const statusUptimeData = _statusUptimeData as StatusActivity[];
 
 const STATUS_LABELS: Record<StatusValue, string> = {
   0: "No Data",
-  1: "Error",
-  2: "Warning",
-  3: "Normal",
+  1: "Critical",
+  2: "Degraded",
+  3: "Healthy",
 };
 
 function StatusTooltip({
@@ -59,7 +60,7 @@ export function StatusDefaultDemo() {
           )}
         </StatusHeatmapBody>
         <StatusHeatmapFooter>
-          <StatusHeatmapNormalDays />
+          <StatusHeatmapHealthyDays />
           <StatusHeatmapLegend />
         </StatusHeatmapFooter>
       </StatusHeatmap>
@@ -82,7 +83,7 @@ export function StatusWithLabelsDemo() {
           )}
         </StatusHeatmapBody>
         <StatusHeatmapFooter>
-          <StatusHeatmapNormalDays />
+          <StatusHeatmapHealthyDays />
           <StatusHeatmapLegend />
         </StatusHeatmapFooter>
       </StatusHeatmap>
@@ -96,9 +97,9 @@ export function StatusCustomColorDemo() {
       <StatusHeatmap
         data={statusData}
         colors={{
-          error: "#dc2626",
-          warning: "#ea580c",
-          normal: "#16a34a",
+          critical: "#dc2626",
+          degraded: "#ea580c",
+          healthy: "#16a34a",
         }}
       >
         <StatusHeatmapBody>
@@ -112,7 +113,7 @@ export function StatusCustomColorDemo() {
           )}
         </StatusHeatmapBody>
         <StatusHeatmapFooter>
-          <StatusHeatmapNormalDays />
+          <StatusHeatmapHealthyDays />
           <StatusHeatmapLegend />
         </StatusHeatmapFooter>
       </StatusHeatmap>
@@ -140,7 +141,7 @@ export function StatusCustomSizeDemo() {
           )}
         </StatusHeatmapBody>
         <StatusHeatmapFooter>
-          <StatusHeatmapNormalDays />
+          <StatusHeatmapHealthyDays />
           <StatusHeatmapLegend />
         </StatusHeatmapFooter>
       </StatusHeatmap>
@@ -149,7 +150,7 @@ export function StatusCustomSizeDemo() {
 }
 
 export function StatusUptimeDemo() {
-  const last30Days = generateStatusSample(123, 30);
+  const last30Days = statusUptimeData;
 
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
@@ -170,7 +171,7 @@ export function StatusUptimeDemo() {
           )}
         </StatusHeatmapBody>
         <StatusHeatmapFooter>
-          <StatusHeatmapNormalDays />
+          <StatusHeatmapHealthyDays />
           <StatusHeatmapLegend />
         </StatusHeatmapFooter>
       </StatusHeatmap>

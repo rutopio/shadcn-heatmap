@@ -71,11 +71,17 @@ const getLevelFill = (
 
 const calculateLevel = (
   value: number,
+  minValue: number,
   maxValue: number,
-  maxLevel: number
+  maxLevel: number,
+  isNormalized: boolean
 ): number => {
+  if (isNormalized) {
+    if (maxValue <= minValue) return 1;
+    const percentage = (value - minValue) / (maxValue - minValue);
+    return Math.max(1, Math.min(maxLevel, Math.ceil(percentage * maxLevel)));
+  }
   if (value <= 0 || maxValue <= 0) return 0;
-
   const percentage = value / maxValue;
   return Math.max(1, Math.min(maxLevel, Math.ceil(percentage * maxLevel)));
 };
@@ -118,6 +124,7 @@ export type DateHeatmapProps = HTMLAttributes<HTMLDivElement> & {
   blockRadius?: number;
   blockSizeRatio?: number;
   maxLevel?: number;
+  isNormalized?: boolean;
   colors?: ColorConfig;
   locale?: Locale;
   labels?: DateHeatmapLabels;
@@ -158,6 +165,7 @@ export type DateHeatmapProps = HTMLAttributes<HTMLDivElement> & {
  * @param dateFormat - Date format string for date labels. Default: "MMM dd, yyyy"
  * @param blockSizeRatio - Width/height ratio of blocks. Default: 1
  * @param maxLevel - Maximum intensity level (0 to maxLevel). Default: 4
+ * @param isNormalized - When true, uses min-max normalization across the dataset (suitable for signed values). When false (default), treats 0 as empty and scales from 0 to max.
  */
 export const DateHeatmap = ({
   data,
@@ -168,6 +176,7 @@ export const DateHeatmap = ({
   blockRadius = 2,
   blockSizeRatio = 1,
   maxLevel: maxLevelProp = 4,
+  isNormalized = false,
   colors,
   locale,
   labels: labelsProp,
@@ -194,22 +203,41 @@ export const DateHeatmap = ({
     const maxDailySum = Math.max(...dailySumColumn.map((d) => d.value), 1);
     const maxHourlySum = Math.max(...hourlySumRow.map((d) => d.value), 1);
 
+    const minRegular = isNormalized
+      ? Math.min(...regularCells.map((d) => d.value), Infinity)
+      : 0;
+    const minDailySum = isNormalized
+      ? Math.min(...dailySumColumn.map((d) => d.value), Infinity)
+      : 0;
+    const minHourlySum = isNormalized
+      ? Math.min(...hourlySumRow.map((d) => d.value), Infinity)
+      : 0;
+
     return data.map((activity) => {
-      let maxCount: number;
+      let maxCount: number, minCount: number;
       if (activity.date === "sum") {
         maxCount = maxHourlySum;
+        minCount = minHourlySum;
       } else if (activity.hour === 24) {
         maxCount = maxDailySum;
+        minCount = minDailySum;
       } else {
         maxCount = maxRegular;
+        minCount = minRegular;
       }
 
       return {
         ...activity,
-        level: calculateLevel(activity.value, maxCount, maxLevel),
+        level: calculateLevel(
+          activity.value,
+          minCount,
+          maxCount,
+          maxLevel,
+          isNormalized
+        ),
       };
     });
-  }, [data, maxLevel]);
+  }, [data, maxLevel, isNormalized]);
 
   const labels = {
     hours: use12Hour ? TWELVE_HOUR_LABELS : DEFAULT_HOUR_LABELS,

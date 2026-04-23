@@ -8,16 +8,26 @@ import {
   WeekdayHeatmapLegend,
   WeekdayHeatmapTotalCount,
 } from "@/components/heatmap/weekday-heatmap";
-import { generateWeekSample } from "@/data/week-sample";
+import weekData from "@/data/weekday-sample.json";
 
 import { HeatmapTooltip, TooltipProvider, WeekTooltipContent } from "./shared";
 
-const weekData = generateWeekSample(17);
+const weekRegularCells = weekData.filter((a) => a.weekday < 7 && a.hour < 24);
+const weekAvgTemp =
+  Math.round(
+    (weekRegularCells.reduce((s, a) => s + a.value, 0) /
+      weekRegularCells.length) *
+      10
+  ) / 10;
 
 export function WeekDefaultDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <WeekdayHeatmap data={weekData}>
+      <WeekdayHeatmap
+        data={weekData}
+        isNormalized
+        colors={{ scale: "var(--color-chart-2)" }}
+      >
         <WeekdayHeatmapBody>
           {({ activity }) => (
             <HeatmapTooltip
@@ -28,7 +38,13 @@ export function WeekDefaultDemo() {
           )}
         </WeekdayHeatmapBody>
         <WeekdayHeatmapFooter>
-          <WeekdayHeatmapTotalCount />
+          <WeekdayHeatmapTotalCount>
+            {() => (
+              <div className="text-muted-foreground">
+                avg. {weekAvgTemp.toFixed(1)} °C
+              </div>
+            )}
+          </WeekdayHeatmapTotalCount>
           <WeekdayHeatmapLegend />
         </WeekdayHeatmapFooter>
       </WeekdayHeatmap>
@@ -39,7 +55,12 @@ export function WeekDefaultDemo() {
 export function WeekMondayStartDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <WeekdayHeatmap data={weekData} weekStart={1}>
+      <WeekdayHeatmap
+        data={weekData}
+        weekStart={1}
+        isNormalized
+        colors={{ scale: "var(--color-chart-2)" }}
+      >
         <WeekdayHeatmapBody>
           {({ activity }) => (
             <HeatmapTooltip
@@ -59,6 +80,8 @@ export function WeekMinimalTicksDemo() {
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
       <WeekdayHeatmap
         data={weekData}
+        isNormalized
+        colors={{ scale: "var(--color-chart-2)" }}
         labels={{
           hours: Array.from({ length: 24 }, (_, i) =>
             i % 6 === 0 ? String(i).padStart(2, "0") : ""
@@ -83,7 +106,12 @@ export function WeekMinimalTicksDemo() {
 export function WeekBinaryDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <WeekdayHeatmap data={weekData} maxLevel={1}>
+      <WeekdayHeatmap
+        data={weekData}
+        maxLevel={1}
+        isNormalized
+        colors={{ scale: "var(--color-chart-2)" }}
+      >
         <WeekdayHeatmapBody>
           {({ activity }) => (
             <HeatmapTooltip
@@ -104,7 +132,12 @@ export function WeekBinaryDemo() {
 export function WeekThreeBucketsDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <WeekdayHeatmap data={weekData} maxLevel={10}>
+      <WeekdayHeatmap
+        data={weekData}
+        maxLevel={10}
+        isNormalized
+        colors={{ scale: "var(--color-chart-2)" }}
+      >
         <WeekdayHeatmapBody>
           {({ activity }) => (
             <HeatmapTooltip
@@ -127,9 +160,12 @@ export function WeekJapaneseDemo() {
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
       <WeekdayHeatmap
         data={weekData}
+        totalCount={weekAvgTemp}
+        isNormalized
         locale={ja}
+        colors={{ scale: "var(--color-chart-2)" }}
         labels={{
-          sum: "合計",
+          avg: "合計",
           legend: { less: "少ない", more: "多い" },
         }}
       >
@@ -145,7 +181,9 @@ export function WeekJapaneseDemo() {
         <WeekdayHeatmapFooter>
           <WeekdayHeatmapTotalCount>
             {({ totalCount }) => (
-              <div className="text-muted-foreground">{totalCount} 件の活動</div>
+              <div className="text-muted-foreground">
+                平均 {totalCount.toFixed(1)} °C
+              </div>
             )}
           </WeekdayHeatmapTotalCount>
           <WeekdayHeatmapLegend />
@@ -155,11 +193,15 @@ export function WeekJapaneseDemo() {
   );
 }
 
-export function WeekHideSumDemo() {
+export function WeekHideAvgDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <WeekdayHeatmap data={weekData}>
-        <WeekdayHeatmapBody hideSumColumn hideSumRow>
+      <WeekdayHeatmap
+        data={weekData}
+        isNormalized
+        colors={{ scale: "var(--color-chart-2)" }}
+      >
+        <WeekdayHeatmapBody hideAvgColumn hideAvgRow>
           {({ activity }) => (
             <HeatmapTooltip
               content={<WeekTooltipContent activity={activity} />}
@@ -179,7 +221,11 @@ export function WeekHideSumDemo() {
 export function WeekMiniDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <WeekdayHeatmap data={weekData}>
+      <WeekdayHeatmap
+        data={weekData}
+        isNormalized
+        colors={{ scale: "var(--color-chart-2)" }}
+      >
         <WeekdayHeatmapBody hideHourLabels hideWeekdayLabels>
           {({ activity }) => (
             <HeatmapTooltip
@@ -197,7 +243,13 @@ export function WeekMiniDemo() {
 export function WeekLargeBlocksDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <WeekdayHeatmap data={weekData} blockSize={32} blockMargin={3}>
+      <WeekdayHeatmap
+        data={weekData}
+        blockSize={32}
+        blockMargin={3}
+        isNormalized
+        colors={{ scale: "var(--color-chart-2)" }}
+      >
         <WeekdayHeatmapBody>
           {({ activity }) => (
             <HeatmapTooltip
@@ -215,7 +267,12 @@ export function WeekLargeBlocksDemo() {
 export function Week12HourDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <WeekdayHeatmap data={weekData} use12Hour>
+      <WeekdayHeatmap
+        data={weekData}
+        use12Hour
+        isNormalized
+        colors={{ scale: "var(--color-chart-2)" }}
+      >
         <WeekdayHeatmapBody>
           {({ activity }) => (
             <HeatmapTooltip
@@ -236,8 +293,12 @@ export function Week12HourDemo() {
 export function WeekCustomStylingDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <WeekdayHeatmap data={weekData} colors={{ scale: "#22c55e" }}>
-        <WeekdayHeatmapBody labelTextClass="text-green-700 font-bold">
+      <WeekdayHeatmap
+        data={weekData}
+        isNormalized
+        colors={{ scale: "var(--color-destructive)" }}
+      >
+        <WeekdayHeatmapBody labelTextClass="text-destructive font-bold">
           {({ activity }) => (
             <HeatmapTooltip
               content={<WeekTooltipContent activity={activity} />}
@@ -247,8 +308,14 @@ export function WeekCustomStylingDemo() {
           )}
         </WeekdayHeatmapBody>
         <WeekdayHeatmapFooter>
-          <WeekdayHeatmapTotalCount className="text-green-700" />
-          <WeekdayHeatmapLegend className="text-green-700" />
+          <WeekdayHeatmapTotalCount className="text-destructive">
+            {() => (
+              <div className="text-destructive">
+                avg. {weekAvgTemp.toFixed(1)} °C
+              </div>
+            )}
+          </WeekdayHeatmapTotalCount>
+          <WeekdayHeatmapLegend className="text-destructive" />
         </WeekdayHeatmapFooter>
       </WeekdayHeatmap>
     </TooltipProvider>

@@ -8,12 +8,12 @@ import { cn } from "@/lib/utils";
 import type { Locale } from "date-fns";
 import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
 
-// Status values: 0 = no-data, 1 = error, 2 = warning, 3 = normal
+// Status values: 0 = no-data, 1 = critical, 2 = degraded, 3 = healthy
 export type StatusValue = 0 | 1 | 2 | 3;
 
 export type StatusActivity = {
   date: string; // YYYY-MM-DD
-  value: StatusValue; // Status: 0=no-data, 1=error, 2=warning, 3=normal
+  value: StatusValue; // Status: 0=no-data, 1=critical, 2=degraded, 3=healthy
 };
 
 type StatusHeatmapContextType = {
@@ -26,7 +26,7 @@ type StatusHeatmapContextType = {
   blockWidth: number;
   fontSize: number;
   labels: StatusHeatmapLabels;
-  normalDays: number;
+  healthyDays: number;
   width: number;
   height: number;
   dateFormat: string;
@@ -37,24 +37,24 @@ type StatusHeatmapContextType = {
 export type StatusHeatmapLabels = {
   statuses?: {
     noData?: string;
-    error?: string;
-    warning?: string;
-    normal?: string;
+    critical?: string;
+    degraded?: string;
+    healthy?: string;
   };
-  normalDays?: string;
+  healthyDays?: string;
 };
 
 export type ColorConfig = {
-  error?: string;
-  warning?: string;
-  normal?: string;
+  critical?: string;
+  degraded?: string;
+  healthy?: string;
 };
 
 const DEFAULT_COLORS = {
   noData: "var(--color-secondary)",
-  error: "oklch(57.7% 0.245 27.325)", //red-600
-  warning: "oklch(82.8% 0.189 84.429)", // amber-400
-  normal: "oklch(72.3% 0.219 149.579)", // green-500
+  critical: "oklch(57.7% 0.245 27.325)", //red-600
+  degraded: "oklch(82.8% 0.189 84.429)", // amber-400
+  healthy: "oklch(72.3% 0.219 149.579)", // green-500
 };
 
 const getStatusFill = (value: StatusValue, colors?: ColorConfig): string => {
@@ -62,11 +62,11 @@ const getStatusFill = (value: StatusValue, colors?: ColorConfig): string => {
     case 0:
       return DEFAULT_COLORS.noData;
     case 1:
-      return colors?.error ?? DEFAULT_COLORS.error;
+      return colors?.critical ?? DEFAULT_COLORS.critical;
     case 2:
-      return colors?.warning ?? DEFAULT_COLORS.warning;
+      return colors?.degraded ?? DEFAULT_COLORS.degraded;
     case 3:
-      return colors?.normal ?? DEFAULT_COLORS.normal;
+      return colors?.healthy ?? DEFAULT_COLORS.healthy;
     default:
       return DEFAULT_COLORS.noData;
   }
@@ -113,7 +113,7 @@ export type StatusHeatmapProps = HTMLAttributes<HTMLDivElement> & {
  *
  * A timeline indicator showing daily status over a period (e.g., 90 days).
  * Similar to Atlassian Statuspage - each day is represented by a vertical bar.
- * Supports 4 status values: 0=no-data, 1=error, 2=warning, 3=normal
+ * Supports 4 status values: 0=no-data, 1=critical, 2=degraded, 3=healthy
  *
  * @example
  * ```tsx
@@ -127,7 +127,7 @@ export type StatusHeatmapProps = HTMLAttributes<HTMLDivElement> & {
  *     )}
  *   </StatusHeatmapBody>
  *   <StatusHeatmapFooter>
- *     <StatusHeatmapNormalDays />
+ *     <StatusHeatmapHealthyDays />
  *     <StatusHeatmapLegend />
  *   </StatusHeatmapFooter>
  * </StatusHeatmap>
@@ -136,7 +136,7 @@ export type StatusHeatmapProps = HTMLAttributes<HTMLDivElement> & {
  * @param data - Array of activities with date (YYYY-MM-DD) and status value (0-3)
  * @param dateFormat - Date format string for tooltips. Default: "MMM d"
  * @param blockSizeRatio - Width/height ratio of blocks. Default: 0.2 (narrow vertical bars)
- * @param colors - Custom colors for error, warning, and normal states
+ * @param colors - Custom colors for critical, degraded, and healthy states
  */
 export const StatusHeatmap = ({
   data,
@@ -158,11 +158,11 @@ export const StatusHeatmap = ({
   const labels = {
     statuses: {
       noData: "No Data",
-      error: "Error",
-      warning: "Warning",
-      normal: "Normal",
+      critical: "Critical",
+      degraded: "Degraded",
+      healthy: "Healthy",
     },
-    normalDays: "{{count}} days normal",
+    healthyDays: "{{count}} days healthy",
     ...labelsProp,
   };
 
@@ -174,7 +174,7 @@ export const StatusHeatmap = ({
     return Array.from(uniqueDates).sort();
   }, [data]);
 
-  const normalDays = useMemo(() => {
+  const healthyDays = useMemo(() => {
     return data.filter((activity) => activity.value === 3).length;
   }, [data]);
 
@@ -198,7 +198,7 @@ export const StatusHeatmap = ({
         blockWidth,
         fontSize,
         labels,
-        normalDays,
+        healthyDays,
         width,
         height,
         dateFormat,
@@ -238,7 +238,7 @@ export const StatusHeatmapBlock = ({
 
   if (activity.value < 0 || activity.value > 3) {
     throw new RangeError(
-      `Invalid status value ${activity.value} for date ${activity.date}. Must be 0 (no-data), 1 (error), 2 (warning), or 3 (normal).`
+      `Invalid status value ${activity.value} for date ${activity.date}. Must be 0 (no-data), 1 (critical), 2 (degraded), or 3 (healthy).`
     );
   }
 
@@ -388,34 +388,31 @@ export const StatusHeatmapFooter = ({
   />
 );
 
-export type StatusHeatmapNormalDaysProps = Omit<
+export type StatusHeatmapHealthyDaysProps = Omit<
   HTMLAttributes<HTMLDivElement>,
   "children"
 > & {
-  children?: (props: { normalDays: number }) => ReactNode;
+  children?: (props: { healthyDays: number }) => ReactNode;
 };
 
-export const StatusHeatmapNormalDays = ({
+export const StatusHeatmapHealthyDays = ({
   className,
   children,
   ...props
-}: StatusHeatmapNormalDaysProps) => {
-  const { normalDays, labels } = useStatusHeatmap();
+}: StatusHeatmapHealthyDaysProps) => {
+  const { healthyDays, labels } = useStatusHeatmap();
 
   if (children) {
-    return <>{children({ normalDays })}</>;
+    return <>{children({ healthyDays })}</>;
   }
 
   return (
     <div className={cn("text-muted-foreground", className)} {...props}>
-      {labels.normalDays?.replace("{{count}}", String(normalDays)) ??
-        `${normalDays} days normal`}
+      {labels.healthyDays?.replace("{{count}}", String(healthyDays)) ??
+        `${healthyDays} days healthy`}
     </div>
   );
 };
-
-// Backwards compatibility alias
-export const StatusHeatmapTotalCount = StatusHeatmapNormalDays;
 
 export type StatusHeatmapLegendProps = Omit<
   HTMLAttributes<HTMLDivElement>,
@@ -434,9 +431,9 @@ export const StatusHeatmapLegend = ({
 
   const statuses: Array<{ value: StatusValue; label: string }> = [
     { value: 0, label: labels.statuses?.noData || "No Data" },
-    { value: 1, label: labels.statuses?.error || "Error" },
-    { value: 2, label: labels.statuses?.warning || "Warning" },
-    { value: 3, label: labels.statuses?.normal || "Normal" },
+    { value: 1, label: labels.statuses?.critical || "Critical" },
+    { value: 2, label: labels.statuses?.degraded || "Degraded" },
+    { value: 3, label: labels.statuses?.healthy || "Healthy" },
   ];
 
   return (

@@ -9,8 +9,8 @@ import type { Locale, Day as WeekDay } from "date-fns";
 import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
 
 export type HeatmapActivity = {
-  weekday: number; // 0-6 = Sun-Sat, 7 = hourly sum row
-  hour: number; // 0-23 = hour of day, 24 = daily sum column
+  weekday: number; // 0-6 = Sun-Sat, 7 = hourly avg row
+  hour: number; // 0-23 = hour of day, 24 = daily avg column
   value: number;
 };
 
@@ -41,7 +41,7 @@ export type WeekdayHeatmapLabels = {
   hours?: string[];
   endHour?: string | null;
   weekdays?: string[];
-  sum?: string;
+  avg?: string;
   legend?: {
     less?: string;
     more?: string;
@@ -55,11 +55,17 @@ export type ColorConfig = {
 
 const calculateLevel = (
   value: number,
+  minValue: number,
   maxValue: number,
-  maxLevel: number
+  maxLevel: number,
+  isNormalized: boolean
 ): number => {
+  if (isNormalized) {
+    if (maxValue <= minValue) return 1;
+    const percentage = (value - minValue) / (maxValue - minValue);
+    return Math.max(1, Math.min(maxLevel, Math.ceil(percentage * maxLevel)));
+  }
   if (value <= 0 || maxValue <= 0) return 0;
-
   const percentage = value / maxValue;
   return Math.max(1, Math.min(maxLevel, Math.ceil(percentage * maxLevel)));
 };
@@ -137,6 +143,7 @@ export type WeekdayHeatmapProps = HTMLAttributes<HTMLDivElement> & {
   blockRadius?: number;
   blockSizeRatio?: number;
   maxLevel?: number;
+  isNormalized?: boolean;
   colors?: ColorConfig;
   locale?: Locale;
   labels?: WeekdayHeatmapLabels;
@@ -152,7 +159,7 @@ export type WeekdayHeatmapProps = HTMLAttributes<HTMLDivElement> & {
  * Weekday Heatmap
  *
  * A GitHub punch card style heatmap showing activity distribution by weekday (rows) and hour (columns).
- * Displays intensity levels with optional sum row and sum column for daily and hourly totals.
+ * Displays intensity levels with optional avg row and avg column for daily and hourly totals.
  *
  * @example
  * ```tsx
@@ -169,11 +176,12 @@ export type WeekdayHeatmapProps = HTMLAttributes<HTMLDivElement> & {
  * </WeekdayHeatmap>
  * ```
  *
- * @param data - Array of activities with weekday (0-6 for Sun-Sat, 7 for sum row), hour (0-23, 24 for sum column), and count
+ * @param data - Array of activities with weekday (0-6 for Sun-Sat, 7 for avg row), hour (0-23, 24 for avg column), and count
  * @param weekStart - First day of week (0=Sunday, 1=Monday). Default: 0
  * @param use12Hour - Use 12-hour format for hour labels. Default: false
  * @param blockSizeRatio - Width/height ratio of blocks. Default: 1
  * @param maxLevel - Maximum intensity level (0 to maxLevel). Default: 4
+ * @param isNormalized - When true, uses min-max normalization across the dataset (suitable for signed values like temperature). When false (default), treats 0 as empty and scales from 0 to max.
  */
 export const WeekdayHeatmap = ({
   data,
@@ -184,6 +192,7 @@ export const WeekdayHeatmap = ({
   blockRadius = 2,
   blockSizeRatio = 1,
   maxLevel: maxLevelProp = 4,
+  isNormalized = false,
   colors,
   locale,
   labels: labelsProp,
@@ -201,29 +210,46 @@ export const WeekdayHeatmap = ({
     if (data.length === 0) return [];
 
     const regularCells = data.filter((a) => a.weekday < 7 && a.hour < 24);
-    const sumColumn = data.filter((a) => a.weekday < 7 && a.hour === 24);
-    const sumRow = data.filter((a) => a.weekday === 7 && a.hour < 24);
+    const avgColumn = data.filter((a) => a.weekday < 7 && a.hour === 24);
+    const avgRow = data.filter((a) => a.weekday === 7 && a.hour < 24);
 
-    const maxRegular = Math.max(...regularCells.map((d) => d.value), 1);
-    const maxSumColumn = Math.max(...sumColumn.map((d) => d.value), 1);
-    const maxSumRow = Math.max(...sumRow.map((d) => d.value), 1);
+    const regularValues = regularCells.map((d) => d.value);
+    const minRegular = Math.min(...regularValues);
+    const maxRegular = Math.max(...regularValues);
+
+    const avgColValues = avgColumn.map((d) => d.value);
+    const minAvgColumn = Math.min(...avgColValues);
+    const maxAvgColumn = Math.max(...avgColValues);
+
+    const avgRowValues = avgRow.map((d) => d.value);
+    const minAvgRow = Math.min(...avgRowValues);
+    const maxAvgRow = Math.max(...avgRowValues);
 
     return data.map((activity) => {
-      let maxCount: number;
+      let minCount: number, maxCount: number;
       if (activity.weekday === 7) {
-        maxCount = maxSumRow;
+        minCount = minAvgRow;
+        maxCount = maxAvgRow;
       } else if (activity.hour === 24) {
-        maxCount = maxSumColumn;
+        minCount = minAvgColumn;
+        maxCount = maxAvgColumn;
       } else {
+        minCount = minRegular;
         maxCount = maxRegular;
       }
 
       return {
         ...activity,
-        level: calculateLevel(activity.value, maxCount, maxLevel),
+        level: calculateLevel(
+          activity.value,
+          minCount,
+          maxCount,
+          maxLevel,
+          isNormalized
+        ),
       };
     });
-  }, [data, maxLevel]);
+  }, [data, maxLevel, isNormalized]);
 
   const weekdayLabels = locale
     ? generateWeekdayLabels(locale)
@@ -233,7 +259,7 @@ export const WeekdayHeatmap = ({
     hours: use12Hour ? TWELVE_HOUR_LABELS : DEFAULT_HOUR_LABELS,
     endHour: use12Hour ? "12" : "00",
     weekdays: weekdayLabels,
-    sum: "Total",
+    avg: "Avg",
     legend: { less: "Less", more: "More" },
     ...labelsProp,
   };
@@ -255,7 +281,7 @@ export const WeekdayHeatmap = ({
     (blockWidth + blockMargin) * 2 -
     blockMargin +
     labelWidth;
-  // 7 weekdays + 1 sum row = 8 rows + extra gap before sum row
+  // 7 weekdays + 1 avg row = 8 rows + extra gap before avg row
   const height =
     8 * (blockSize + blockMargin) +
     (blockSize + blockMargin) -
@@ -332,17 +358,17 @@ export const WeekdayHeatmapBlock = ({
 
   const rowIndex =
     activity.weekday === 7 ? 7 : (activity.weekday - weekStart + 7) % 7;
-  const sumRowGap = activity.weekday === 7 ? blockSize + blockMargin : 0;
+  const avgRowGap = activity.weekday === 7 ? blockSize + blockMargin : 0;
   const yPosition =
-    labelHeight + (blockSize + blockMargin) * rowIndex + sumRowGap;
+    labelHeight + (blockSize + blockMargin) * rowIndex + avgRowGap;
 
-  const sumColumnGap = activity.hour === 24 ? blockWidth + blockMargin : 0;
+  const avgColumnGap = activity.hour === 24 ? blockWidth + blockMargin : 0;
   const xPosition =
     activity.hour === 24
       ? labelWidth +
         24 * (blockWidth + blockMargin) +
         blockSize / 2 +
-        sumColumnGap
+        avgColumnGap
       : labelWidth + (blockWidth + blockMargin) * activity.hour;
 
   const isHighlighted =
@@ -379,8 +405,8 @@ export type WeekdayHeatmapBodyProps = Omit<
   HTMLAttributes<HTMLDivElement>,
   "children"
 > & {
-  hideSumRow?: boolean;
-  hideSumColumn?: boolean;
+  hideAvgRow?: boolean;
+  hideAvgColumn?: boolean;
   hideHourLabels?: boolean;
   hideWeekdayLabels?: boolean;
   className?: string;
@@ -389,8 +415,8 @@ export type WeekdayHeatmapBodyProps = Omit<
 };
 
 export const WeekdayHeatmapBody = ({
-  hideSumRow = false,
-  hideSumColumn = false,
+  hideAvgRow = false,
+  hideAvgColumn = false,
   hideHourLabels = false,
   hideWeekdayLabels = false,
   className,
@@ -420,7 +446,7 @@ export const WeekdayHeatmapBody = ({
 
   const allActivities = useMemo(() => {
     const activities: HeatmapActivityWithLevel[] = [];
-    const maxHour = hideSumColumn ? 23 : 24;
+    const maxHour = hideAvgColumn ? 23 : 24;
 
     for (let di = 0; di < 7; di++) {
       const weekday = (weekStart + di) % 7;
@@ -432,7 +458,7 @@ export const WeekdayHeatmapBody = ({
       }
     }
 
-    if (!hideSumRow) {
+    if (!hideAvgRow) {
       for (let hour = 0; hour < 24; hour++) {
         const key = `7-${hour}`;
         activities.push(
@@ -442,23 +468,23 @@ export const WeekdayHeatmapBody = ({
     }
 
     return activities;
-  }, [activityMap, hideSumRow, hideSumColumn, weekStart]);
+  }, [activityMap, hideAvgRow, hideAvgColumn, weekStart]);
 
-  const rowCount = hideSumRow ? 7 : 8;
-  const sumRowGap = hideSumRow ? 0 : blockSize + blockMargin;
+  const rowCount = hideAvgRow ? 7 : 8;
+  const avgRowGap = hideAvgRow ? 0 : blockSize + blockMargin;
   const svgHeight =
     rowCount * (blockSize + blockMargin) +
-    sumRowGap -
+    avgRowGap -
     blockMargin +
     labelHeight;
-  const sumColumnGap = hideSumColumn ? 0 : blockWidth + blockMargin;
-  const svgWidth = hideSumColumn
+  const avgColumnGap = hideAvgColumn ? 0 : blockWidth + blockMargin;
+  const svgWidth = hideAvgColumn
     ? labelWidth + 24 * (blockWidth + blockMargin) - blockMargin
     : labelWidth +
       24 * (blockWidth + blockMargin) +
       blockSize / 2 +
       (blockWidth + blockMargin) +
-      sumColumnGap;
+      avgColumnGap;
 
   const orderedWeekdayIndices = Array.from(
     { length: 7 },
@@ -507,9 +533,9 @@ export const WeekdayHeatmapBody = ({
                 {labels.endHour}
               </text>
             )}
-            {!hideSumColumn && (
+            {!hideAvgColumn && (
               <text
-                key="sum-col-label"
+                key="avg-col-label"
                 x={
                   labelWidth +
                   24 * (blockWidth + blockMargin) +
@@ -522,7 +548,7 @@ export const WeekdayHeatmapBody = ({
                 dominantBaseline="hanging"
                 style={{ fontSize: `${fontSize * 0.75}px` }}
               >
-                {labels.sum}
+                {labels.avg}
               </text>
             )}
           </g>
@@ -549,9 +575,9 @@ export const WeekdayHeatmapBody = ({
                 </text>
               );
             })}
-            {!hideSumRow && (
+            {!hideAvgRow && (
               <text
-                key="weekday-sum"
+                key="weekday-avg"
                 x={labelWidth - 8}
                 y={
                   labelHeight +
@@ -563,7 +589,7 @@ export const WeekdayHeatmapBody = ({
                 textAnchor="end"
                 style={{ fontSize: `${fontSize * 0.75}px` }}
               >
-                {labels.sum}
+                {labels.avg}
               </text>
             )}
           </g>

@@ -12,7 +12,7 @@ export const statusProps: ComponentPropsSection[] = [
         type: "StatusActivity[]",
         required: true,
         description:
-          "`{ date: 'YYYY-MM-DD', value: 0 | 1 | 2 | 3 }[]`. Status values: 0=no-data (secondary), 1=error (red), 2=warning (orange), 3=normal (green). Missing days are auto-filled with value 0.",
+          "`{ date: 'YYYY-MM-DD', value: 0 | 1 | 2 | 3 }[]`. Status values: 0=no-data (secondary), 1=critical (red), 2=degraded (orange), 3=healthy (green). Missing days are auto-filled with value 0.",
       },
       // 2. 空狀態處理
       {
@@ -26,7 +26,7 @@ export const statusProps: ComponentPropsSection[] = [
         name: "colors",
         type: "ColorConfig",
         description:
-          "Customize colors: `{ error?: string, warning?: string, normal?: string }`. Defaults: error=red-500, warning=orange-500, normal=green-500. No-data always uses secondary color.",
+          "Customize colors: `{ critical?: string, degraded?: string, healthy?: string }`. Defaults: critical=red-600, degraded=amber-400, healthy=green-500. No-data always uses secondary color.",
       },
       // 4. 尺寸配置
       {
@@ -79,7 +79,7 @@ export const statusProps: ComponentPropsSection[] = [
         name: "labels",
         type: "StatusHeatmapLabels",
         description:
-          "Override status labels (`statuses.noData`, `statuses.error`, `statuses.warning`, `statuses.normal`) and `normalDays` template string. Useful for internationalization.",
+          "Override status labels (`statuses.noData`, `statuses.critical`, `statuses.degraded`, `statuses.healthy`) and `healthyDays` template string. Useful for internationalization.",
       },
     ],
   },
@@ -112,21 +112,21 @@ export const statusProps: ComponentPropsSection[] = [
         name: "labelTextClass",
         type: "string",
         description:
-          "Additional CSS classes for date labels. Example: 'text-green-700 font-bold'.",
+          "Additional CSS classes for date labels. Example: 'text-destructive font-bold'.",
       },
     ],
   },
   {
     componentName: "StatusHeatmapBlock",
     description:
-      "A single SVG rect element representing one day. Displays fixed status colors: no-data (secondary), error (red), warning (orange), normal (green). Colors can be customized via the root `colors` prop.",
+      "A single SVG rect element representing one day. Displays fixed status colors: no-data (secondary), critical (red), degraded (orange), healthy (green). Colors can be customized via the root `colors` prop.",
     props: [
       {
         name: "activity",
         type: "StatusActivity",
         required: true,
         description:
-          "The status record. Contains `date` and `value` (0=no-data, 1=error, 2=warning, 3=normal).",
+          "The status record. Contains `date` and `value` (0=no-data, 1=critical, 2=degraded, 3=healthy).",
       },
       {
         name: "dayIndex",
@@ -153,15 +153,15 @@ export const statusProps: ComponentPropsSection[] = [
     ],
   },
   {
-    componentName: "StatusHeatmapNormalDays",
+    componentName: "StatusHeatmapHealthyDays",
     description:
-      "Displays the count of days with normal status (value=3). Supports custom render function.",
+      "Displays the count of days with healthy status (value=3). Supports custom render function.",
     props: [
       {
         name: "children",
         type: "(args) => ReactNode",
         description:
-          "Render function receiving `{ normalDays }`. If omitted, displays default format.",
+          "Render function receiving `{ healthyDays }`. If omitted, displays default format.",
       },
       {
         name: "className",
@@ -173,13 +173,13 @@ export const statusProps: ComponentPropsSection[] = [
   {
     componentName: "StatusHeatmapLegend",
     description:
-      "Displays all 4 status states with their colors and labels: No Data, Error, Warning, Normal.",
+      "Displays all 4 status states with their colors and labels: No Data, Critical, Degraded, Healthy.",
     props: [
       {
         name: "children",
         type: "(args) => ReactNode",
         description:
-          "Custom render function receiving `{ value, label }` for each status (0=no-data, 1=error, 2=warning, 3=normal).",
+          "Custom render function receiving `{ value, label }` for each status (0=no-data, 1=critical, 2=degraded, 3=healthy).",
       },
       {
         name: "className",

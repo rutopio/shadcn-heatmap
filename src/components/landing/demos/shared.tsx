@@ -45,7 +45,7 @@ export const WEEKDAY_NAMES = [
   "Thu",
   "Fri",
   "Sat",
-  "Sum",
+  "Avg",
 ];
 
 export function MonthTooltipContent({
@@ -103,14 +103,16 @@ export function WeekTooltipContent({
 }) {
   const day = WEEKDAY_NAMES[activity.weekday];
   const hour =
-    activity.hour === 24 ? "Total" : formatHourRange(activity.hour, use12Hour);
+    activity.hour === 24 ? "Avg" : formatHourRange(activity.hour, use12Hour);
+  const isAvg = activity.weekday === 7 || activity.hour === 24;
   return (
     <>
       <p className="font-medium">
         {day}, {hour}
       </p>
       <p className="text-muted-foreground">
-        {activity.value} contribution{activity.value !== 1 ? "s" : ""}
+        {isAvg ? "avg. " : ""}
+        {activity.value.toFixed(1)} °C
       </p>
     </>
   );
@@ -144,9 +146,7 @@ export function DateTooltipContent({
       <p className="font-medium">
         {dateLabel}, {hour}
       </p>
-      <p className="text-muted-foreground">
-        {activity.value} contribution{activity.value !== 1 ? "s" : ""}
-      </p>
+      <p className="text-muted-foreground">{activity.value.toFixed(1)} mm</p>
     </>
   );
 }

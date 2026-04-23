@@ -22,7 +22,7 @@ export function DemoFrame({
   previewClassName,
 }: DemoFrameProps) {
   return (
-    <div className="bg-card/50 rounded-xl border">
+    <div className="bg-background rounded-xl border">
       {(title || description) && (
         <div className="flex flex-col gap-1 border-b px-6 py-4">
           {title && <h4 className="font-medium">{title}</h4>}

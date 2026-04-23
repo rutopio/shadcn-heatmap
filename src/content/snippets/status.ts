@@ -3,15 +3,15 @@ import type { VariantSpec } from "../types";
 export const statusSampleData = `// type StatusActivity = { date: string; value: 0 | 1 | 2 | 3 }
 //   date: YYYY-MM-DD format
 //   value: 0 = no-data (secondary)
-//          1 = error (red)
-//          2 = warning (orange)
-//          3 = normal (green)
+//          1 = critical (red)
+//          2 = degraded (orange)
+//          3 = healthy (green)
 
 const data: StatusActivity[] = [
-  { date: "2025-01-01", value: 3 },  // Normal
-  { date: "2025-01-02", value: 3 },  // Normal
-  { date: "2025-01-03", value: 2 },  // Warning
-  { date: "2025-01-04", value: 1 },  // Error
+  { date: "2025-01-01", value: 3 },  // Healthy
+  { date: "2025-01-02", value: 3 },  // Healthy
+  { date: "2025-01-03", value: 2 },  // Degraded
+  { date: "2025-01-04", value: 1 },  // Critical
   { date: "2025-01-05", value: 0 },  // No Data
   // ... more days
 ];`;
@@ -21,8 +21,8 @@ export const statusBasicCode = `import {
   StatusHeatmapBlock,
   StatusHeatmapBody,
   StatusHeatmapFooter,
+  StatusHeatmapHealthyDays,
   StatusHeatmapLegend,
-  StatusHeatmapNormalDays,
   type StatusValue,
 } from "@/components/heatmap/status-heatmap";
 import {
@@ -35,14 +35,14 @@ import { format, parseISO } from "date-fns";
 
 const STATUS_LABELS: Record<StatusValue, string> = {
   0: "No Data",
-  1: "Error",
-  2: "Warning",
-  3: "Normal",
+  1: "Critical",
+  2: "Degraded",
+  3: "Healthy",
 };
 
 const data = [
-  { date: "2025-01-01", value: 3 },  // Normal
-  { date: "2025-01-02", value: 2 },  // Warning
+  { date: "2025-01-01", value: 3 },  // Healthy
+  { date: "2025-01-02", value: 2 },  // Degraded
   // ... 90 days
 ];
 
@@ -66,7 +66,7 @@ export function StatusTimeline() {
           )}
         </StatusHeatmapBody>
         <StatusHeatmapFooter>
-          <StatusHeatmapNormalDays />
+          <StatusHeatmapHealthyDays />
           <StatusHeatmapLegend />
         </StatusHeatmapFooter>
       </StatusHeatmap>
@@ -93,20 +93,20 @@ export const statusVariants: VariantSpec[] = [
     )}
   </StatusHeatmapBody>
   <StatusHeatmapFooter>
-    <StatusHeatmapNormalDays />
+    <StatusHeatmapHealthyDays />
     <StatusHeatmapLegend />
   </StatusHeatmapFooter>
 </StatusHeatmap>`,
   },
   {
     title: "Custom colors",
-    description: "Customize error, warning, and normal status colors.",
+    description: "Customize critical, degraded, and healthy status colors.",
     code: `<StatusHeatmap
   data={data}
   colors={{
-    error: "#dc2626",
-    warning: "#ea580c",
-    normal: "#16a34a",
+    critical: "#dc2626",
+    degraded: "#ea580c",
+    healthy: "#16a34a",
   }}
 >
   <StatusHeatmapBody>
@@ -123,7 +123,7 @@ export const statusVariants: VariantSpec[] = [
     )}
   </StatusHeatmapBody>
   <StatusHeatmapFooter>
-    <StatusHeatmapNormalDays />
+    <StatusHeatmapHealthyDays />
     <StatusHeatmapLegend />
   </StatusHeatmapFooter>
 </StatusHeatmap>`,
@@ -151,7 +151,7 @@ export const statusVariants: VariantSpec[] = [
     )}
   </StatusHeatmapBody>
   <StatusHeatmapFooter>
-    <StatusHeatmapNormalDays />
+    <StatusHeatmapHealthyDays />
     <StatusHeatmapLegend />
   </StatusHeatmapFooter>
 </StatusHeatmap>`,
@@ -179,7 +179,7 @@ export const statusVariants: VariantSpec[] = [
     )}
   </StatusHeatmapBody>
   <StatusHeatmapFooter>
-    <StatusHeatmapNormalDays />
+    <StatusHeatmapHealthyDays />
     <StatusHeatmapLegend />
   </StatusHeatmapFooter>
 </StatusHeatmap>`,

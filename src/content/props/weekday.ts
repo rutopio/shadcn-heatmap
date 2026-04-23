@@ -1,10 +1,10 @@
 import type { ComponentPropsSection } from "../types";
 
-export const weekProps: ComponentPropsSection[] = [
+export const weekdayProps: ComponentPropsSection[] = [
   {
     componentName: "WeekdayHeatmap",
     description:
-      "Root provider for the weekday × hour matrix. The grid includes a right-hand daily Sum column and a bottom hourly Sum row.",
+      "Root provider for the weekday × hour matrix. The grid includes a right-hand daily Avg column and a bottom hourly Avg row.",
     props: [
       // 1. 數據 (required)
       {
@@ -12,7 +12,7 @@ export const weekProps: ComponentPropsSection[] = [
         type: "HeatmapActivity[]",
         required: true,
         description:
-          "`{ weekday: 0–7, hour: 0–24, value: number }[]`. Use `weekday = 7` for the Sum row and `hour = 24` for the Sum column. Sum cells are coloured against their own max (independent scales).",
+          "`{ weekday: 0–7, hour: 0–24, value: number }[]`. Use `weekday = 7` for the Avg row and `hour = 24` for the Avg column. Avg cells use an independent min–max colour scale.",
       },
       // 2. 空狀態處理
       {
@@ -27,6 +27,13 @@ export const weekProps: ComponentPropsSection[] = [
         type: "number",
         default: "4",
         description: "Number of intensity buckets (0 to maxLevel).",
+      },
+      {
+        name: "isNormalized",
+        type: "boolean",
+        default: "false",
+        description:
+          "When `true`, levels are assigned via min–max normalization: the minimum value maps to level 1 and the maximum to `maxLevel`. Suitable for datasets with negative values (e.g. temperature). When `false` (default), values ≤ 0 are treated as empty (level 0) and the scale runs from 0 to max.",
       },
       {
         name: "colors",
@@ -92,7 +99,7 @@ export const weekProps: ComponentPropsSection[] = [
         name: "labels",
         type: "WeekdayHeatmapLabels",
         description:
-          "Override `weekdays` (length 7), `hours` (length 24), `endHour`, `sum` (for sum row/column labels), and `legend.less`/`legend.more` strings. Set `endHour: null` to suppress the trailing hour label. Useful for internationalization.",
+          "Override `weekdays` (length 7), `hours` (length 24), `endHour`, `avg` (for avg row/column labels), and `legend.less`/`legend.more` strings. Set `endHour: null` to suppress the trailing hour label. Useful for internationalization.",
       },
       // 6. 其他
       {
@@ -116,16 +123,16 @@ export const weekProps: ComponentPropsSection[] = [
           "Render function receiving `{ activity }`. Typically returns `<WeekdayHeatmapBlock activity={activity} />`.",
       },
       {
-        name: "hideSumRow",
+        name: "hideAvgRow",
         type: "boolean",
         default: "false",
-        description: "Hide the hourly Sum row (weekday = 7) and its label.",
+        description: "Hide the hourly Avg row (weekday = 7) and its label.",
       },
       {
-        name: "hideSumColumn",
+        name: "hideAvgColumn",
         type: "boolean",
         default: "false",
-        description: "Hide the daily Sum column (hour = 24) and its label.",
+        description: "Hide the daily Avg column (hour = 24) and its label.",
       },
       {
         name: "hideWeekdayLabels",
