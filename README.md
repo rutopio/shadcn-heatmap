@@ -1,21 +1,42 @@
+<div align="center">
+
 # shadcn-heatmap
 
-Contribution heatmap components for React, styled like [shadcn/ui](https://ui.shadcn.com).
+Heatmap components for React, styled like [shadcn/ui](https://ui.shadcn.com).
 
-**Live demo → [https://shadcn-heatmap.pages.dev](https://shadcn-heatmap.pages.dev)**
+**Live demo: [https://shadcn-heatmap.pages.dev](https://shadcn-heatmap.pages.dev)**
+
+</div>
 
 ---
 
 ## Components
 
-| Component         | Description                               |
-| ----------------- | ----------------------------------------- |
-| `CalendarHeatmap` | GitHub-style yearly contribution calendar |
-| `WeekdayHeatmap`  | Weekday × hour activity grid              |
-| `DateHeatmap`     | Date × hour activity grid                 |
-| `StatusHeatmap`   | Atlassian-style status timeline           |
+All four are single-file, zero-config components.
 
-All four are single-file, zero-config components. You own the code after installation — copy, tweak, ship.
+### CalendarHeatmap
+
+GitHub-style yearly contribution calendar.
+
+![CalendarHeatmap](assets/calendar-heatmap.png)
+
+### WeekdayHeatmap
+
+Weekday × hour-of-day matrix with optional Avg row and Avg column.
+
+![WeekdayHeatmap](assets/weekday-heatmap.png)
+
+### DateHeatmap
+
+One row per calendar date × 24 hours + a daily Sum column.
+
+![DateHeatmap](assets/date-heatmap.png)
+
+### StatusHeatmap
+
+Timeline status indicator showing daily activity over a period.
+
+![StatusHeatmap](assets/status-heatmap.png)
 
 ## Requirements
 
@@ -78,7 +99,7 @@ export function cn(...inputs: ClassValue[]) {
 }
 ```
 
-4. Copy the component source from the [live demo](https://shadcn-heatmap.pages.dev) (each component page has a **Code** tab with the full source).
+4. Copy the component source from [`src/components/heatmap/`](https://github.com/rutopio/shadcn-heatmap/tree/master/src/components/heatmap) on GitHub and place the files under `src/components/heatmap/` in your project.
 
 ## Usage
 
@@ -121,6 +142,82 @@ export default function Example() {
 }
 ```
 
+### WeekdayHeatmap
+
+```tsx
+import {
+  WeekdayHeatmap,
+  WeekdayHeatmapBlock,
+  WeekdayHeatmapBody,
+  WeekdayHeatmapFooter,
+  WeekdayHeatmapLegend,
+  WeekdayHeatmapTotalCount,
+} from "@/components/heatmap/weekday-heatmap";
+
+// weekday: 0–6 (Sun–Sat), 7 = hourly average row
+// hour:    0–23,          24 = daily average column
+const data = [
+  { weekday: 1, hour: 9, value: 16.3 },
+  { weekday: 1, hour: 14, value: 22.1 },
+  { weekday: 1, hour: 24, value: 15.2 }, // daily avg
+  { weekday: 7, hour: 14, value: 21.5 }, // hourly avg
+  // ...
+];
+
+export default function Example() {
+  return (
+    <WeekdayHeatmap data={data} isNormalized>
+      <WeekdayHeatmapBody>
+        {({ activity }) => <WeekdayHeatmapBlock activity={activity} />}
+      </WeekdayHeatmapBody>
+      <WeekdayHeatmapFooter>
+        <WeekdayHeatmapTotalCount />
+        <WeekdayHeatmapLegend />
+      </WeekdayHeatmapFooter>
+    </WeekdayHeatmap>
+  );
+}
+```
+
+### DateHeatmap
+
+```tsx
+import {
+  DateHeatmap,
+  DateHeatmapBlock,
+  DateHeatmapBody,
+  DateHeatmapFooter,
+  DateHeatmapLegend,
+  DateHeatmapTotalCount,
+} from "@/components/heatmap/date-heatmap";
+
+// date: "YYYY-MM-DD" or "sum" (hourly total row)
+// hour: 0–23 or 24 (daily total column)
+const data = [
+  { date: "2025-12-11", hour: 13, value: 8.4 },
+  { date: "2025-12-11", hour: 14, value: 22.7 },
+  { date: "2025-12-11", hour: 24, value: 48.2 }, // daily total
+  { date: "sum", hour: 14, value: 156.3 }, // hourly total
+  // ...
+];
+
+export default function Example() {
+  return (
+    <DateHeatmap data={data}>
+      <DateHeatmapBody>
+        {({ activity, dateIndex }) => (
+          <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
+        )}
+      </DateHeatmapBody>
+      <DateHeatmapFooter>
+        <DateHeatmapTotalCount />
+        <DateHeatmapLegend />
+      </DateHeatmapFooter>
+    </DateHeatmap>
+  );
+}
+```
+
 ### StatusHeatmap
 
 ```tsx
@@ -158,24 +255,6 @@ export default function Example() {
 ```
 
 See the [live demo](https://shadcn-heatmap.pages.dev) for full examples of all four components, including tooltips, i18n, and custom colors.
-
-## Customization
-
-All components accept a `colors` prop to override the default theme tokens:
-
-```tsx
-<CalendarHeatmap
-  data={data}
-  colors={{
-    empty: "#e5e7eb",
-    scale: "#6366f1",
-  }}
->
-  ...
-</CalendarHeatmap>
-```
-
-Pass a `locale` prop (a `date-fns` locale object) for internationalized month and weekday labels.
 
 ## Contributing
 

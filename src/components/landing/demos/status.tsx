@@ -14,9 +14,13 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import type { StatusActivity, StatusValue } from "@/components/heatmap/status-heatmap";
 import _statusData from "@/data/status-sample.json";
 import _statusUptimeData from "@/data/status-uptime.json";
+
+import type {
+  StatusActivity,
+  StatusValue,
+} from "@/components/heatmap/status-heatmap";
 
 const statusData = _statusData as StatusActivity[];
 const statusUptimeData = _statusUptimeData as StatusActivity[];

@@ -243,12 +243,16 @@ export const StatusHeatmapBlock = ({
   }
 
   const xPosition = (blockWidth + blockMargin) * dayIndex;
+  const statusNames = ["No Data", "Critical", "Degraded", "Healthy"];
 
   return (
     <rect
       ref={ref}
+      role="img"
+      tabIndex={0}
+      aria-label={`${activity.date}: ${statusNames[activity.value] ?? "Unknown"}`}
       className={cn(
-        "hover:stroke-foreground transition-[stroke,stroke-width] hover:stroke-1",
+        "motion-safe:transition-opacity motion-safe:hover:opacity-70",
         className
       )}
       data-value={activity.value}
@@ -407,7 +411,10 @@ export const StatusHeatmapHealthyDays = ({
   }
 
   return (
-    <div className={cn("text-muted-foreground", className)} {...props}>
+    <div
+      className={cn("text-muted-foreground tabular-nums", className)}
+      {...props}
+    >
       {labels.healthyDays?.replace("{{count}}", String(healthyDays)) ??
         `${healthyDays} days healthy`}
     </div>
@@ -438,6 +445,8 @@ export const StatusHeatmapLegend = ({
 
   return (
     <div
+      role="group"
+      aria-label="Status legend"
       className={cn("ml-auto flex items-center gap-2", className)}
       {...props}
     >

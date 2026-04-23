@@ -1,9 +1,7 @@
-import {
-  createHighlighterCore,
-  type HighlighterCore,
-  type ThemedToken,
-} from "@shikijs/core";
+import { createHighlighterCore } from "@shikijs/core";
 import { createOnigurumaEngine } from "@shikijs/engine-oniguruma";
+
+import type { HighlighterCore, ThemedToken } from "@shikijs/core";
 
 let highlighterPromise: Promise<HighlighterCore> | null = null;
 

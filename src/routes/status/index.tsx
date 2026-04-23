@@ -18,6 +18,7 @@ import {
   statusSampleData,
   statusVariants,
 } from "@/content/snippets/status";
+import { pageHead } from "@/lib/seo";
 
 function StatusPage() {
   return (
@@ -87,4 +88,11 @@ function StatusPage() {
 
 export const Route = createFileRoute("/status/")({
   component: StatusPage,
+  head: () =>
+    pageHead({
+      title: "StatusHeatmap — shadcn-heatmap",
+      description:
+        "Atlassian-style status timeline for React. Vertical bars show daily uptime across a period, with healthy-day counts, custom colors, and legends.",
+      path: "/status",
+    }),
 });

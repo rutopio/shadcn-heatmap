@@ -25,9 +25,11 @@ export function DemoFrame({
     <div className="bg-background rounded-xl border">
       {(title || description) && (
         <div className="flex flex-col gap-1 border-b px-6 py-4">
-          {title && <h4 className="font-medium">{title}</h4>}
+          {title && <h4 className="font-medium text-balance">{title}</h4>}
           {description && (
-            <p className="text-muted-foreground text-sm">{description}</p>
+            <p className="text-muted-foreground text-sm text-pretty">
+              {description}
+            </p>
           )}
         </div>
       )}
@@ -38,7 +40,11 @@ export function DemoFrame({
             <TabsTrigger value="code">Code</TabsTrigger>
           </TabsList>
         </div>
-        <TabsContent value="preview" className="mt-0 px-6 pt-4 pb-6">
+        <TabsContent
+          value="preview"
+          aria-label={title ? `${title} preview` : "Component preview"}
+          className="mt-0 px-6 pt-4 pb-6"
+        >
           <div
             className={cn(
               "bg-background flex min-h-[120px] items-center justify-center overflow-x-auto rounded-lg border p-3 sm:min-h-[160px] sm:p-6",

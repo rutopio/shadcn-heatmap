@@ -20,12 +20,15 @@ export function VariantGrid({ variants }: VariantGridProps) {
           className="bg-card/40 flex flex-col overflow-hidden rounded-xl border"
         >
           <div className="border-b px-5 py-4">
-            <h5 className="font-medium">{variant.title}</h5>
-            <p className="text-muted-foreground mt-1 text-xs">
+            <h5 className="font-medium text-balance">{variant.title}</h5>
+            <p className="text-muted-foreground mt-1 text-xs text-pretty">
               {variant.description}
             </p>
           </div>
-          <div className="flex min-h-[180px] flex-1 items-center justify-center overflow-auto p-5">
+          <div
+            aria-label={`Preview: ${variant.title}`}
+            className="flex min-h-[180px] flex-1 items-center justify-center overflow-auto p-5"
+          >
             {variant.preview}
           </div>
           <CodeBlock

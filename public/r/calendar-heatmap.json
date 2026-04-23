@@ -4,11 +4,7 @@
   "type": "registry:component",
   "title": "CalendarHeatmap",
   "description": "GitHub-style yearly contribution heatmap with multi-year, weekStart, and i18n support.",
-  "dependencies": [
-    "clsx",
-    "tailwind-merge",
-    "date-fns"
-  ],
+  "dependencies": ["clsx", "tailwind-merge", "date-fns"],
   "registryDependencies": [],
   "files": [
     {

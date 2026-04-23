@@ -23,6 +23,7 @@ import {
   calendarSampleData,
   calendarVariants,
 } from "@/content/snippets/calendar";
+import { pageHead } from "@/lib/seo";
 
 function CalendarPage() {
   return (
@@ -99,4 +100,11 @@ function CalendarPage() {
 
 export const Route = createFileRoute("/calendar/")({
   component: CalendarPage,
+  head: () =>
+    pageHead({
+      title: "CalendarHeatmap — shadcn-heatmap",
+      description:
+        "GitHub-style yearly contribution calendar for React. 7-row × N-week grid with multi-year support, ISO weeks, custom colors, and tooltips.",
+      path: "/calendar",
+    }),
 });

@@ -48,16 +48,22 @@ export function PropsTable({ sections }: PropsTableProps) {
       {sections.map((section) => (
         <div key={section.componentName} className="space-y-3">
           <div className="flex flex-col gap-1">
-            <h4 className="font-mono text-sm font-semibold text-balance">
+            <h4
+              id={`props-heading-${section.componentName}`}
+              className="font-mono text-sm font-semibold text-balance"
+            >
               {section.componentName}
             </h4>
-            <p className="text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-sm text-pretty">
               {section.description}
             </p>
           </div>
 
           <div className="overflow-x-auto rounded-lg border">
-            <table className="w-full text-sm">
+            <table
+              aria-labelledby={`props-heading-${section.componentName}`}
+              className="w-full text-sm"
+            >
               <thead className="bg-muted/50 text-muted-foreground">
                 <tr>
                   <th className="px-4 py-2 text-left font-medium">Prop</th>

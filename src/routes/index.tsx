@@ -8,6 +8,7 @@ import {
   WeekDefaultDemo,
 } from "@/components/landing/demos";
 import { Button } from "@/components/ui/button";
+import { pageHead } from "@/lib/seo";
 
 const heatmaps = [
   {
@@ -72,7 +73,11 @@ function IndexPage() {
                   <p className="text-muted-foreground text-sm">{description}</p>
                 </div>
                 <Link to={router}>
-                  <Button variant="outline" size="sm">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    aria-label={`Explore ${name}`}
+                  >
                     Explore
                     <ArrowRightIcon
                       aria-hidden="true"
@@ -95,4 +100,11 @@ function IndexPage() {
 
 export const Route = createFileRoute("/")({
   component: IndexPage,
+  head: () =>
+    pageHead({
+      title: "shadcn-heatmap — composable React heatmap components",
+      description:
+        "Beautiful, accessible heatmap components for React. Calendar, Weekday, Date, and Status heatmaps built with SVG, Tailwind v4, and shadcn/ui conventions.",
+      path: "/",
+    }),
 });

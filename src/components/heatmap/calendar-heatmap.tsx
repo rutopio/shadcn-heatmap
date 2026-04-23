@@ -607,8 +607,11 @@ export const CalendarHeatmapBlock = ({
   return (
     <rect
       ref={ref}
+      role="img"
+      tabIndex={0}
+      aria-label={`${activity.date}: ${activity.value} contributions`}
       className={cn(
-        "hover:stroke-foreground transition-[stroke,stroke-width] hover:stroke-1",
+        "motion-safe:transition-opacity motion-safe:hover:opacity-70",
         className
       )}
       data-value={activity.value}
@@ -724,7 +727,6 @@ export const CalendarHeatmapBody = ({
             viewBox={`0 0 ${totalWidth} ${height + strokePadding * 2}`}
             width={totalWidth}
           >
-            <title>Contribution Graph {yearRow.year}</title>
             <g transform={`translate(0, ${strokePadding})`}>
               {!hideMonthLabels && (
                 <g className={cn("fill-current font-mono", labelTextClass)}>
@@ -839,7 +841,10 @@ export const CalendarHeatmapTotalCount = ({
   }
 
   return (
-    <div className={cn("text-muted-foreground", className)} {...props}>
+    <div
+      className={cn("text-muted-foreground tabular-nums", className)}
+      {...props}
+    >
       {labels.totalCount
         ? labels.totalCount
             .replace("{{count}}", String(totalCount))
@@ -866,6 +871,8 @@ export const CalendarHeatmapLegend = ({
 
   return (
     <div
+      role="group"
+      aria-label="Activity intensity legend"
       className={cn("ml-auto flex items-center gap-[3px]", className)}
       {...props}
     >
@@ -880,12 +887,12 @@ export const CalendarHeatmapLegend = ({
         ) : (
           <svg
             role="img"
+            aria-label={`${level} contributions`}
             height={blockSize}
             key={`legend-level-${level}`}
             width={blockWidth}
             style={{ borderRadius: blockRadius }}
           >
-            <title>{`${level} contributions`}</title>
             <rect
               data-level={level}
               height={blockSize}

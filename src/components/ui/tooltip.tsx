@@ -23,9 +23,9 @@ const TooltipContent = ({
       sideOffset={sideOffset}
       className={cn(
         "bg-popover text-popover-foreground z-50 overflow-hidden rounded-md border px-3 py-1.5 text-xs shadow-md",
-        "data-[state=delayed-open]:animate-in data-[state=closed]:animate-out",
-        "data-[state=closed]:fade-out-0 data-[state=delayed-open]:fade-in-0",
-        "data-[state=delayed-open]:zoom-in-95 data-[state=closed]:zoom-out-95",
+        "motion-safe:data-[state=delayed-open]:animate-in motion-safe:data-[state=closed]:animate-out",
+        "motion-safe:data-[state=closed]:fade-out-0 motion-safe:data-[state=delayed-open]:fade-in-0",
+        "motion-safe:data-[state=delayed-open]:zoom-in-95 motion-safe:data-[state=closed]:zoom-out-95",
         className
       )}
       {...props}

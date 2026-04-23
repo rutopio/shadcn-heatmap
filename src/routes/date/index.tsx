@@ -23,6 +23,7 @@ import {
   dateSampleData,
   dateVariants,
 } from "@/content/snippets/date";
+import { pageHead } from "@/lib/seo";
 
 function DatePage() {
   return (
@@ -96,4 +97,11 @@ function DatePage() {
 
 export const Route = createFileRoute("/date/")({
   component: DatePage,
+  head: () =>
+    pageHead({
+      title: "DateHeatmap — shadcn-heatmap",
+      description:
+        "Date × hour activity grid for React. One row per calendar date with a daily Sum column, perfect for zooming into recent 1–4 week windows.",
+      path: "/date",
+    }),
 });

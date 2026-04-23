@@ -40,7 +40,7 @@ export function DateDefaultDemo() {
         <DateHeatmapFooter>
           <DateHeatmapTotalCount>
             {() => (
-              <div className="text-muted-foreground">
+              <div className="text-muted-foreground tabular-nums">
                 {dateTotalMm.toFixed(1)} mm total
               </div>
             )}
@@ -184,7 +184,7 @@ export function DateLargeBlocksDemo() {
         <DateHeatmapFooter>
           <DateHeatmapTotalCount>
             {() => (
-              <div className="text-muted-foreground">
+              <div className="text-muted-foreground tabular-nums">
                 {dateTotalMm.toFixed(1)} mm total
               </div>
             )}
@@ -217,7 +217,7 @@ export function Date12HourDemo() {
         <DateHeatmapFooter>
           <DateHeatmapTotalCount>
             {() => (
-              <div className="text-muted-foreground">
+              <div className="text-muted-foreground tabular-nums">
                 {dateTotalMm.toFixed(1)} mm total
               </div>
             )}
@@ -257,7 +257,7 @@ export function DateSpanishDemo() {
                       ? "Total"
                       : `${String(activity.hour).padStart(2, "0")}:00`}
                   </p>
-                  <p className="text-muted-foreground">
+                  <p className="text-muted-foreground tabular-nums">
                     {activity.value.toFixed(1)} mm
                   </p>
                 </>
@@ -270,7 +270,7 @@ export function DateSpanishDemo() {
         <DateHeatmapFooter>
           <DateHeatmapTotalCount>
             {({ totalCount }) => (
-              <div className="text-muted-foreground">
+              <div className="text-muted-foreground tabular-nums">
                 {totalCount.toFixed(1)} mm total
               </div>
             )}
@@ -302,7 +302,7 @@ export function DateCustomStylingDemo() {
         <DateHeatmapFooter>
           <DateHeatmapTotalCount className="text-destructive">
             {() => (
-              <div className="text-destructive">
+              <div className="text-destructive tabular-nums">
                 {dateTotalMm.toFixed(1)} mm total
               </div>
             )}

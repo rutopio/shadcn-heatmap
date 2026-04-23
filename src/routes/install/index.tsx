@@ -9,6 +9,7 @@ import {
   themeTokensSnippet,
   utilsSnippet,
 } from "@/content/install";
+import { pageHead } from "@/lib/seo";
 
 function InstallPage() {
   return (
@@ -48,13 +49,13 @@ function InstallPage() {
 
           <TabsContent value="cli" className="mt-6 space-y-6">
             <div className="space-y-2">
-              <h3 className="text-sm font-medium">
+              <h3 className="text-sm font-medium text-balance">
                 1. Install via{" "}
                 <code className="bg-muted rounded px-1 py-0.5 font-mono text-xs">
                   shadcn@latest
                 </code>
               </h3>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground text-sm text-pretty">
                 Pick the component you need. The CLI will write it into your
                 project&rsquo;s{" "}
                 <code className="bg-muted rounded px-1 py-0.5 font-mono text-xs">
@@ -87,7 +88,7 @@ function InstallPage() {
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-sm font-medium">
+              <h3 className="text-sm font-medium text-balance">
                 2. Ensure the runtime dependencies exist
               </h3>
               <CodeBlock
@@ -98,11 +99,11 @@ function InstallPage() {
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-sm font-medium">
+              <h3 className="text-sm font-medium text-balance">
                 3. Install the shadcn tooltip component (optional but
                 recommended)
               </h3>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground text-sm text-pretty">
                 The demos use tooltips to show activity details on hover:
               </p>
               <CodeBlock
@@ -115,7 +116,7 @@ function InstallPage() {
 
           <TabsContent value="manual" className="mt-6 space-y-6">
             <div className="space-y-2">
-              <h3 className="text-sm font-medium">
+              <h3 className="text-sm font-medium text-balance">
                 1. Install peer dependencies
               </h3>
               <Tabs defaultValue="pnpm">
@@ -141,7 +142,7 @@ function InstallPage() {
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-sm font-medium">
+              <h3 className="text-sm font-medium text-balance">
                 2. Add the{" "}
                 <code className="bg-muted rounded px-1 py-0.5 font-mono text-xs">
                   cn
@@ -152,10 +153,10 @@ function InstallPage() {
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-sm font-medium">
+              <h3 className="text-sm font-medium text-balance">
                 3. Expose theme tokens used by the blocks
               </h3>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground text-sm text-pretty">
                 The heatmaps reference{" "}
                 <code className="bg-muted rounded px-1 py-0.5 font-mono text-xs">
                   --color-chart-1
@@ -181,11 +182,11 @@ function InstallPage() {
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-sm font-medium">
+              <h3 className="text-sm font-medium text-balance">
                 4. Install the shadcn tooltip component (optional but
                 recommended)
               </h3>
-              <p className="text-muted-foreground text-sm">
+              <p className="text-muted-foreground text-sm text-pretty">
                 The demos use tooltips to show activity details on hover. If you
                 want this functionality, add the tooltip component:
               </p>
@@ -197,16 +198,25 @@ function InstallPage() {
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-sm font-medium">
+              <h3 className="text-sm font-medium text-balance">
                 5. Copy the component you need
               </h3>
-              <p className="text-muted-foreground text-sm">
-                Browse the three components below — each includes a{" "}
-                <em>Code</em> tab with the full source ready to paste into{" "}
+              <p className="text-muted-foreground text-sm text-pretty">
+                Copy the files you need from{" "}
+                <a
+                  href="https://github.com/rutopio/shadcn-heatmap/tree/master/src/components/heatmap"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="hover:text-foreground underline underline-offset-4"
+                  aria-label="src/components/heatmap on GitHub (opens in new tab)"
+                >
+                  src/components/heatmap/
+                </a>{" "}
+                on GitHub and place them under{" "}
                 <code className="bg-muted rounded px-1 py-0.5 font-mono text-xs">
-                  src/components/heatmap/&lt;name&gt;.tsx
-                </code>
-                .
+                  src/components/heatmap/
+                </code>{" "}
+                in your project.
               </p>
             </div>
           </TabsContent>
@@ -218,4 +228,11 @@ function InstallPage() {
 
 export const Route = createFileRoute("/install/")({
   component: InstallPage,
+  head: () =>
+    pageHead({
+      title: "Install — shadcn-heatmap",
+      description:
+        "Install shadcn-heatmap components via the shadcn CLI or copy manually. Peer dependencies, theme tokens, and the cn helper explained in under a minute.",
+      path: "/install",
+    }),
 });

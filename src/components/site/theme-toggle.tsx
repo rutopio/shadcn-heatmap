@@ -39,9 +39,9 @@ export function ThemeToggle() {
       variant="ghost"
     >
       {theme === "dark" ? (
-        <SunIcon weight="bold" className="size-4" />
+        <SunIcon aria-hidden="true" weight="bold" className="size-4" />
       ) : (
-        <MoonIcon weight="bold" className="size-4" />
+        <MoonIcon aria-hidden="true" weight="bold" className="size-4" />
       )}
     </Button>
   );

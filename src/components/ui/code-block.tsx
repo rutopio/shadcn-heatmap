@@ -125,9 +125,9 @@ export function CodeBlock({
           variant="ghost"
           aria-label="Copy code"
           onClick={handleCopy}
-          className="absolute top-3 right-4 size-6 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100"
+          className="absolute top-3 right-4 size-6 opacity-0 group-hover:opacity-100 focus-visible:opacity-100 motion-safe:transition-opacity"
         >
-          <CopyIcon className="size-4" />
+          <CopyIcon aria-hidden="true" className="size-4" />
         </Button>
       )}
     </div>

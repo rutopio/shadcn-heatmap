@@ -23,6 +23,7 @@ import {
   weekdaySampleData,
   weekdayVariants,
 } from "@/content/snippets/weekday";
+import { pageHead } from "@/lib/seo";
 
 function WeekdayPage() {
   return (
@@ -97,4 +98,11 @@ function WeekdayPage() {
 
 export const Route = createFileRoute("/weekday/")({
   component: WeekdayPage,
+  head: () =>
+    pageHead({
+      title: "WeekdayHeatmap — shadcn-heatmap",
+      description:
+        "Weekday × hour-of-day activity grid for React. Optional Avg row and column, independent min–max scaling, tooltips, and full i18n support.",
+      path: "/weekday",
+    }),
 });

@@ -40,7 +40,7 @@ export function WeekDefaultDemo() {
         <WeekdayHeatmapFooter>
           <WeekdayHeatmapTotalCount>
             {() => (
-              <div className="text-muted-foreground">
+              <div className="text-muted-foreground tabular-nums">
                 avg. {weekAvgTemp.toFixed(1)} °C
               </div>
             )}
@@ -181,7 +181,7 @@ export function WeekJapaneseDemo() {
         <WeekdayHeatmapFooter>
           <WeekdayHeatmapTotalCount>
             {({ totalCount }) => (
-              <div className="text-muted-foreground">
+              <div className="text-muted-foreground tabular-nums">
                 平均 {totalCount.toFixed(1)} °C
               </div>
             )}

@@ -11,6 +11,7 @@ export function SiteFooter() {
             href="https://github.com/rutopio/shadcn-heatmap"
             target="_blank"
             rel="noreferrer"
+            aria-label="rutopio/shadcn-heatmap on GitHub (opens in new tab)"
           >
             <GithubLogoIcon
               aria-hidden="true"
@@ -24,8 +25,8 @@ export function SiteFooter() {
             href="https://ui.shadcn.com"
             target="_blank"
             rel="noreferrer"
+            aria-label="shadcn/ui (opens in new tab)"
           >
-            {" "}
             <GithubLogoIcon
               aria-hidden="true"
               weight="bold"

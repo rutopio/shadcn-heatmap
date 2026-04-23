@@ -29,7 +29,7 @@ export function SiteHeader() {
   const closeMenu = () => setMenuOpen(false);
 
   return (
-    <header className="bg-background/80 sticky top-0 z-40 w-full border-b backdrop-blur-lg">
+    <header className="bg-background/80 sticky top-0 z-40 w-full border-b backdrop-blur-sm">
       <div className="container flex h-14 items-center gap-4">
         <Link
           to="/"
@@ -160,7 +160,7 @@ export function SiteHeader() {
             asChild
             variant="ghost"
             className="hidden md:inline-flex"
-            aria-label="View source on GitHub"
+            aria-label="View source on GitHub (opens in new tab)"
           >
             <a href={GITHUB_URL} target="_blank" rel="noreferrer">
               <GithubLogoIcon
@@ -177,6 +177,8 @@ export function SiteHeader() {
             size="icon"
             className="md:hidden"
             aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            aria-controls="mobile-nav"
             onClick={() => setMenuOpen((v) => !v)}
           >
             {menuOpen ? (
@@ -189,7 +191,10 @@ export function SiteHeader() {
       </div>
 
       {menuOpen && (
-        <div className="bg-background border-b shadow-sm md:hidden">
+        <div
+          id="mobile-nav"
+          className="bg-background border-b shadow-sm md:hidden"
+        >
           <nav className="container flex flex-col py-3">
             <Link
               to="/install"
@@ -217,6 +222,7 @@ export function SiteHeader() {
               href={GITHUB_URL}
               target="_blank"
               rel="noreferrer"
+              aria-label="rutopio/shadcn-heatmap on GitHub (opens in new tab)"
               className="hover:bg-muted flex items-center gap-2 rounded-md px-3 py-2 text-sm"
               onClick={closeMenu}
             >

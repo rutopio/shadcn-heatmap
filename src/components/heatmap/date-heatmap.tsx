@@ -363,8 +363,11 @@ export const DateHeatmapBlock = ({
   return (
     <rect
       ref={ref}
+      role="img"
+      tabIndex={0}
+      aria-label={`${activity.date} ${activity.hour}:00: ${activity.value}`}
       className={cn(
-        "hover:stroke-foreground transition-[stroke,stroke-width] hover:stroke-1",
+        "motion-safe:transition-opacity motion-safe:hover:opacity-70",
         className
       )}
       data-value={activity.value}
@@ -649,7 +652,10 @@ export const DateHeatmapTotalCount = ({
   }
 
   return (
-    <div className={cn("text-muted-foreground", className)} {...props}>
+    <div
+      className={cn("text-muted-foreground tabular-nums", className)}
+      {...props}
+    >
       {`${totalCount} contributions`}
     </div>
   );
@@ -672,6 +678,8 @@ export const DateHeatmapLegend = ({
 
   return (
     <div
+      role="group"
+      aria-label="Activity intensity legend"
       className={cn("ml-auto flex items-center gap-[3px]", className)}
       {...props}
     >
@@ -686,11 +694,11 @@ export const DateHeatmapLegend = ({
         ) : (
           <svg
             role="img"
+            aria-label={`Level ${level}`}
             height={blockSize}
             key={`legend-level-${level}`}
             width={blockSize * blockSizeRatio}
           >
-            <title>{`Level ${level}`}</title>
             <rect
               data-level={level}
               height={blockSize}

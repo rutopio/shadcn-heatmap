@@ -14,6 +14,7 @@ import {
   binarySampleData,
   binaryWeekdayCode,
 } from "@/content/snippets/binary";
+import { pageHead } from "@/lib/seo";
 
 function BinaryPage() {
   return (
@@ -81,4 +82,11 @@ function BinaryPage() {
 
 export const Route = createFileRoute("/binary/")({
   component: BinaryPage,
+  head: () =>
+    pageHead({
+      title: "Binary Mode — shadcn-heatmap",
+      description:
+        "Collapse any heatmap to two states — active or inactive — with maxLevel={1}. Ideal for habit trackers, meeting schedules, and uptime dashboards.",
+      path: "/binary",
+    }),
 });
