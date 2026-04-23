@@ -94,7 +94,7 @@ export function CodeBlock({
         className={cn("relative overflow-auto", scrollClassName)}
         style={!scrollClassName && maxHeight ? { maxHeight } : undefined}
       >
-        <pre className="text-foreground/80 px-4 py-4 font-mono text-sm leading-relaxed">
+        <pre className="text-foreground/80 py-4 font-mono text-sm leading-relaxed">
           <code>
             {/* Static syntax highlighting - using index as key is safe here as order never changes */}
             {/* eslint-disable @eslint-react/no-array-index-key */}
@@ -103,22 +103,34 @@ export function CodeBlock({
                   const lineNumber = i + 1;
                   const isHighlighted =
                     highlightLines?.includes(lineNumber) ?? false;
-                  const isDeleted =
-                    deletedLines?.includes(lineNumber) ?? false;
+                  const isDeleted = deletedLines?.includes(lineNumber) ?? false;
+                  const marker = isDeleted ? "-" : isHighlighted ? "+" : " ";
+                  const bgClass = isDeleted
+                    ? "bg-red-500/15 dark:bg-red-500/10"
+                    : isHighlighted
+                      ? "bg-green-500/15 dark:bg-green-500/10"
+                      : "";
                   return (
                     <React.Fragment key={`line-${i}`}>
-                      {line.length === 0 ? (
-                        "\n"
-                      ) : (
+                      <span className={cn("flex", bgClass)}>
                         <span
-                          className={
+                          aria-hidden="true"
+                          className={cn(
+                            "w-16 shrink-0 pr-4 text-right text-[11px] leading-6.5 select-none",
                             isDeleted
-                              ? "block -mx-4 px-4 bg-red-500/15 dark:bg-red-500/10"
+                              ? "text-red-400"
                               : isHighlighted
-                                ? "block -mx-4 px-4 bg-amber-400/15 dark:bg-amber-400/10"
-                                : undefined
-                          }
+                                ? "text-green-500"
+                                : "text-muted-foreground/40"
+                          )}
                         >
+                          {(isHighlighted || isDeleted) ? (
+                            <strong>{lineNumber}&nbsp;{marker}</strong>
+                          ) : (
+                            <>{lineNumber}&nbsp;{marker}</>
+                          )}
+                        </span>
+                        <span className="pr-4">
                           {line.map((token, j) => (
                             <HighlightedToken
                               key={`token-${i}-${j}`}
@@ -129,9 +141,9 @@ export function CodeBlock({
                               {token.content}
                             </HighlightedToken>
                           ))}
-                          {"\n"}
                         </span>
-                      )}
+                        {"\n"}
+                      </span>
                     </React.Fragment>
                   );
                 })

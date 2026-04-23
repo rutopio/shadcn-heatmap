@@ -17,7 +17,7 @@ export const dateVariantItems = [
     description:
       "Use colors to theme the blocks, labelClassName to style axis labels, className on Stat and Legend to style the footer, and blockSize/blockMargin to adjust block dimensions.",
     preview: <DateCustomStylingDemo />,
-    highlightLines: [4, 5, 6, 7, 8, 11, 23, 30],
+    highlightLines: [4, 5, 6, 8, 12, 13],
     code: `
 <DateHeatmap
   data={data}
@@ -25,23 +25,11 @@ export const dateVariantItems = [
   blockMargin={3}
   colors={{ scale: "var(--color-destructive)" }}
 >
-  <DateHeatmapBody
-    labelClassName="text-destructive font-bold"
-  >
-    {({ activity, dateIndex }) => (
-      <Tooltip>
-        {/* ... */}
-      </Tooltip>
-    )}
+  <DateHeatmapBody labelClassName="text-destructive font-bold">
+    {({ activity, dateIndex }) => <Tooltip>{/* ... */}</Tooltip>}
   </DateHeatmapBody>
   <DateHeatmapFooter>
-    <DateHeatmapStat className="text-destructive">
-      {({ value }) => (
-        <div className="text-destructive">
-          Total Rainfall: {Number(value).toFixed(1)} mm
-        </div>
-      )}
-    </DateHeatmapStat>
+    <DateHeatmapStat className="text-destructive" />
     <DateHeatmapLegend className="text-destructive" />
   </DateHeatmapFooter>
 </DateHeatmap>
@@ -52,37 +40,78 @@ export const dateVariantItems = [
     description:
       "Omit extraRow/extraColumn for a clean grid without any aggregate rows or columns.",
     preview: <DatePlainGridDemo />,
-    code: `<DateHeatmap data={data}>
-  <DateHeatmapBody>
-    {({ activity, dateIndex }) => (
+    deletedLines: [
+      4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+      23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+      41, 42, 43, 44, 45, 46, 47, 48,
+    ],
+    code: `
+<DateHeatmap data={data}>
+  <DateHeatmapBody
+    renderExtraRow={({ activity, dateIndex }) => (
       <Tooltip>
-        {/* ... */}
+        <TooltipTrigger asChild>
+          <DateHeatmapBlock
+            activity={activity}
+            dateIndex={dateIndex}
+            extra="row"
+          />
+        </TooltipTrigger>
+        <TooltipContent
+          side="top"
+          className="pointer-events-none text-xs"
+          sideOffset={6}
+        >
+          <p className="font-medium">
+            Total {String(activity.hour).padStart(2, "0")}:00
+          </p>
+          <p className="text-muted-foreground">
+            total {activity.value.toFixed(1)} mm
+          </p>
+        </TooltipContent>
       </Tooltip>
     )}
+    renderExtraColumn={({ activity, dateIndex }) => (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <DateHeatmapBlock
+            activity={activity}
+            dateIndex={dateIndex}
+            extra="column"
+          />
+        </TooltipTrigger>
+        <TooltipContent
+          side="top"
+          className="pointer-events-none text-xs"
+          sideOffset={6}
+        >
+          <p className="font-medium">{activity.date} Total</p>
+          <p className="text-muted-foreground">
+            total {activity.value.toFixed(1)} mm
+          </p>
+        </TooltipContent>
+      </Tooltip>
+    )}
+  >
+    {({ activity, dateIndex }) => <Tooltip>{/* ... */}</Tooltip>}
   </DateHeatmapBody>
   <DateHeatmapFooter>
     <DateHeatmapStat />
     <DateHeatmapLegend />
   </DateHeatmapFooter>
-</DateHeatmap>`,
+</DateHeatmap>
+`,
   },
   {
     title: "Ten levels",
     description:
       "Expand the intensity scale to 10 levels for fine-grained differentiation of high-frequency data.",
     preview: <DateTenLevelsDemo />,
-    highlightLines: [4],
+    highlightLines: [2],
     code: `
-<DateHeatmap
-  data={data}
-  levels={10}
->
+<DateHeatmap data={data} levels={10}>
   <DateHeatmapBody>
-    {({ activity, dateIndex }) => (
-      <Tooltip>
-        {/* ... */}
-      </Tooltip>
-    )}
+    {({ activity, dateIndex }) => <Tooltip>{/* ... */}</Tooltip>}
   </DateHeatmapBody>
   <DateHeatmapFooter>
     <DateHeatmapStat />
@@ -96,26 +125,82 @@ export const dateVariantItems = [
     description:
       "Pass a date-fns locale to auto-generate localised date labels, plus custom extra column label, legend, and total value text.",
     preview: <DateSpanishDemo />,
-    highlightLines: [2, 6, 29],
+    highlightLines: [
+      2, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+      23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
+      41, 42, 43, 44, 45, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
+      60, 61, 62, 63, 64, 67, 68, 69, 70, 71, 72, 73, 74,
+    ],
     code: `
 import { es } from "date-fns/locale";
 
-<DateHeatmap
-  data={data}
-  locale={es}
->
-  <DateHeatmapBody>
+<DateHeatmap data={data} locale={es}>
+  <DateHeatmapBody
+    renderExtraRow={({ activity, dateIndex }) => (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <DateHeatmapBlock
+            activity={activity}
+            dateIndex={dateIndex}
+            extra="row"
+          />
+        </TooltipTrigger>
+        <TooltipContent
+          side="top"
+          className="pointer-events-none text-xs"
+          sideOffset={6}
+        >
+          <p className="font-medium">Total, {String(activity.hour).padStart(2, "0")}:00</p>
+          <p className="text-muted-foreground">{activity.value.toFixed(1)} mm</p>
+        </TooltipContent>
+      </Tooltip>
+    )}
+    renderExtraColumn={({ activity, dateIndex }) => (
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <DateHeatmapBlock
+            activity={activity}
+            dateIndex={dateIndex}
+            extra="column"
+          />
+        </TooltipTrigger>
+        <TooltipContent
+          side="top"
+          className="pointer-events-none text-xs"
+          sideOffset={6}
+        >
+          <p className="font-medium">
+            {format(parseISO(activity.date), "PPP", { locale: es })}, Total
+          </p>
+          <p className="text-muted-foreground">{activity.value.toFixed(1)} mm</p>
+        </TooltipContent>
+      </Tooltip>
+    )}
+  >
     {({ activity, dateIndex }) => (
       <Tooltip>
-        {/* ... */}
+        <TooltipTrigger asChild>
+          <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
+        </TooltipTrigger>
+        <TooltipContent
+          side="top"
+          className="pointer-events-none text-xs"
+          sideOffset={6}
+        >
+          <p className="font-medium">
+            {format(parseISO(activity.date), "PPP", { locale: es })},{" "}
+            {String(activity.hour).padStart(2, "0")}:00
+          </p>
+          <p className="text-muted-foreground">{activity.value.toFixed(1)} mm</p>
+        </TooltipContent>
       </Tooltip>
     )}
   </DateHeatmapBody>
   <DateHeatmapFooter>
     <DateHeatmapStat>
       {({ value }) => (
-        <div className="text-muted-foreground">
-          Total Rainfall: {Number(value).toFixed(1)} mm
+        <div className="text-muted-foreground tabular-nums">
+          Lluvia total: {Number(value).toFixed(1)} mm
         </div>
       )}
     </DateHeatmapStat>
@@ -129,15 +214,16 @@ import { es } from "date-fns/locale";
     description:
       "Omit the footer entirely for a minimal, distraction-free heatmap grid.",
     preview: <DateNoFooterDemo />,
+    deletedLines: [6, 7, 8, 9],
     code: `
 <DateHeatmap data={data}>
   <DateHeatmapBody>
-    {({ activity, dateIndex }) => (
-      <Tooltip>
-        {/* ... */}
-      </Tooltip>
-    )}
+    {({ activity, dateIndex }) => <Tooltip>{/* ... */}</Tooltip>}
   </DateHeatmapBody>
+  <DateHeatmapFooter>
+    <DateHeatmapStat />
+    <DateHeatmapLegend />
+  </DateHeatmapFooter>
 </DateHeatmap>
 `,
   },
@@ -146,23 +232,34 @@ import { es } from "date-fns/locale";
     description:
       "Strip both axis labels — great for inline cards or a hero preview.",
     preview: <DateNoLabelsDemo />,
-    highlightLines: [2],
-    code: `<DateHeatmap data={data}>
+    highlightLines: [3],
+    deletedLines: [6, 7, 8, 9],
+    code: `
+<DateHeatmap data={data}>
   <DateHeatmapBody hideDateLabels hideHourLabels>
-    {({ activity, dateIndex }) => (
-      <Tooltip>
-        {/* ... */}
-      </Tooltip>
-    )}
+    {({ activity, dateIndex }) => <Tooltip>{/* ... */}</Tooltip>}
   </DateHeatmapBody>
-</DateHeatmap>`,
+  <DateHeatmapFooter>
+    <DateHeatmapStat />
+    <DateHeatmapLegend />
+  </DateHeatmapFooter>
+</DateHeatmap>
+`,
   },
   {
     title: "Custom tooltip",
     description:
       "Replace the default tooltip with any JSX — add emoji, charts, or extra metadata without touching the heatmap internals.",
     preview: <DateCustomTooltipDemo />,
-    highlightLines: [18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109],
+    highlightLines: [
+      4, 5, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+      25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
+      43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
+      61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 79,
+      80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97,
+      98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 113, 114,
+      115, 116, 117, 118, 119,
+    ],
     code: `
 <DateHeatmap
   data={data}
@@ -292,7 +389,7 @@ import { es } from "date-fns/locale";
     description:
       "Only label every 6th hour (00 / 06 / 12 / 18) and drop the trailing tick to reduce axis noise.",
     preview: <DateSparseTicksDemo />,
-    highlightLines: [5, 6, 7, 8, 9, 10],
+    highlightLines: [4, 5, 6, 7, 8, 9],
     code: `
 <DateHeatmap
   data={data}
@@ -304,11 +401,7 @@ import { es } from "date-fns/locale";
   }}
 >
   <DateHeatmapBody>
-    {({ activity, dateIndex }) => (
-      <Tooltip>
-        {/* ... */}
-      </Tooltip>
-    )}
+    {({ activity, dateIndex }) => <Tooltip>{/* ... */}</Tooltip>}
   </DateHeatmapBody>
   <DateHeatmapFooter>
     <DateHeatmapStat />
@@ -322,18 +415,11 @@ import { es } from "date-fns/locale";
     description:
       "Switch the hour axis to 12-hour AM/PM format with a single prop.",
     preview: <Date12HourDemo />,
-    highlightLines: [4],
+    highlightLines: [2],
     code: `
-<DateHeatmap
-  data={data}
-  use12Hour
->
+<DateHeatmap data={data} use12Hour>
   <DateHeatmapBody>
-    {({ activity, dateIndex }) => (
-      <Tooltip>
-        {/* ... */}
-      </Tooltip>
-    )}
+    {({ activity, dateIndex }) => <Tooltip>{/* ... */}</Tooltip>}
   </DateHeatmapBody>
   <DateHeatmapFooter>
     <DateHeatmapStat />
@@ -347,7 +433,10 @@ import { es } from "date-fns/locale";
     description:
       "extraRow/extraColumn accept any ReactNode label and any compute function — sum, average, median, or whatever fits. Stat is updated to reflect the aggregate.",
     preview: <DateMedianDemo />,
-    highlightLines: [2, 11, 26, 27],
+    highlightLines: [
+      2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 25,
+      26, 32, 33, 34, 35, 36, 37, 38,
+    ],
     code: `
 const medianByHour = (data) => {
   const byHour = Array.from({ length: 24 }, () => []);
@@ -376,11 +465,7 @@ const medianByDate = (data, dates) => {
   extraColumn={{ label: "Median", compute: medianByDate }}
 >
   <DateHeatmapBody>
-    {({ activity, dateIndex }) => (
-      <Tooltip>
-        {/* ... */}
-      </Tooltip>
-    )}
+    {({ activity, dateIndex }) => <Tooltip>{/* ... */}</Tooltip>}
   </DateHeatmapBody>
   <DateHeatmapFooter>
     <DateHeatmapStat>

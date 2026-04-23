@@ -5,16 +5,44 @@ import {
   DateBinaryDemo,
   WeekdayBinaryDemo,
 } from "@/components/demos";
-import { DemoFrame } from "@/components/landing/demo-frame";
 import { ShowcaseSection } from "@/components/landing/showcase-section";
-import { CodeBlock } from "@/components/ui/code-block";
+import { VariantGrid } from "@/components/landing/variant-grid";
 import {
   binaryCalendarCode,
+  binaryCalendarHighlightLines,
   binaryDateCode,
-  binarySampleData,
+  binaryDateHighlightLines,
   binaryWeekdayCode,
+  binaryWeekdayHighlightLines,
 } from "@/content/snippets/binary";
 import { pageHead } from "@/lib/seo";
+
+const binaryVariants = [
+  {
+    title: "CalendarHeatmap — Habit tracker",
+    description:
+      "One year of daily habit data. Active days are filled, missed days are empty. Total count shows days completed.",
+    preview: <CalendarBinaryDemo />,
+    code: binaryCalendarCode,
+    highlightLines: binaryCalendarHighlightLines,
+  },
+  {
+    title: "WeekdayHeatmap — Meeting schedule",
+    description:
+      "7 × 24 grid showing weekly meeting blocks. Avg row and column are hidden so only the binary grid is visible.",
+    preview: <WeekdayBinaryDemo />,
+    code: binaryWeekdayCode,
+    highlightLines: binaryWeekdayHighlightLines,
+  },
+  {
+    title: "DateHeatmap — Service uptime",
+    description:
+      "Hourly uptime status across 10 days. The bottom row shows how many days each hour was up. Dec 3 shows a planned maintenance window, Dec 7 shows a partial incident.",
+    preview: <DateBinaryDemo />,
+    code: binaryDateCode,
+    highlightLines: binaryDateHighlightLines,
+  },
+];
 
 function BinaryPage() {
   return (
@@ -36,44 +64,7 @@ function BinaryPage() {
         </p>
       </div>
 
-      <div className="space-y-6 sm:space-y-10">
-        <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-balance">Sample data</h3>
-          <p className="text-muted-foreground text-sm">
-            Each component accepts the same data shape as its standard form.
-            Values must be <code className="text-xs">0</code> or{" "}
-            <code className="text-xs">1</code> — no other values.
-          </p>
-          <CodeBlock
-            code={binarySampleData}
-            lang="tsx"
-            filename="binary-data.ts"
-            maxHeight="18rem"
-          />
-        </div>
-        <DemoFrame
-          title="CalendarHeatmap — Habit tracker"
-          description="One year of daily habit data. Active days are filled, missed days are empty. Total count shows days completed."
-          preview={<CalendarBinaryDemo />}
-          code={binaryCalendarCode}
-          filename="habit-tracker.tsx"
-        />
-        <DemoFrame
-          title="WeekdayHeatmap — Meeting schedule"
-          description="7 × 24 grid showing weekly meeting blocks. Avg row and column are hidden so only the binary grid is visible."
-          preview={<WeekdayBinaryDemo />}
-          code={binaryWeekdayCode}
-          filename="meeting-schedule.tsx"
-        />
-        ㄇ
-        <DemoFrame
-          title="DateHeatmap — Service uptime"
-          description="Hourly uptime status across 10 days. The bottom row shows how many days each hour was up. Dec 3 shows a planned maintenance window, Dec 7 shows a partial incident."
-          preview={<DateBinaryDemo />}
-          code={binaryDateCode}
-          filename="service-uptime.tsx"
-        />
-      </div>
+      <VariantGrid variants={binaryVariants} />
     </ShowcaseSection>
   );
 }
