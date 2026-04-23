@@ -44,10 +44,10 @@ export const calendarProps: ComponentPropsSection[] = [
         type: "number",
         default: "12",
         description:
-          "Block height in pixels. Block width is `blockSize × blockSizeRatio`.",
+          "Block height in pixels. Block width is `blockSize × blockAspectRatio`.",
       },
       {
-        name: "blockSizeRatio",
+        name: "blockAspectRatio",
         type: "number",
         default: "1",
         description:

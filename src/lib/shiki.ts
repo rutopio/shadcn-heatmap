@@ -64,7 +64,7 @@ export async function highlightTokens(
       return lineTokens.map((tok, tokIndex) => ({
         content: tok.content,
         light: tok.color,
-        dark: darkLine[tokIndex]?.color,
+        dark: darkLine[tokIndex]?.color ?? tok.color,
         fontStyle: tok.fontStyle,
       }));
     }

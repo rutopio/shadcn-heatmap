@@ -262,12 +262,39 @@ Contributions are warmly welcome. Whether it's a bug report, a new variant idea,
 
 If you're adding a new component or changing the public API, please open an issue first so we can align on scope before you write the code.
 
-Before opening a pull request, please make sure the following commands pass locally — CI will run the same checks and block merges on failure:
+### Local setup
+
+Requires Node 20+ and pnpm 10.
 
 ```bash
-pnpm run check
-pnpm run build
+pnpm install
+pnpm dev            # start the demo site on http://localhost:5173
 ```
+
+### Project layout
+
+- `src/components/heatmap/` — the four heatmap components. Each file is self-contained so the shadcn registry can ship it as a single copy-paste unit.
+- `src/components/demos/` — demo implementations and variant grids used by the demo site.
+- `src/content/` — props tables and code snippets rendered in docs.
+- `src/data/` — sample JSON datasets.
+- `scripts/build-registry.ts` — generates `public/r/*.json` consumed by `shadcn@latest add`.
+
+### Commits and branches
+
+- Branch from `master` using a short descriptive name (`fix/status-empty-data`, `feat/binary-heatmap`).
+- Keep commits focused; prefer a series of small commits over one large one.
+- Commit messages are lowercase imperative, short (see recent history for the flavour).
+
+### Before opening a PR
+
+Run the same checks CI runs — merges are blocked if they fail:
+
+```bash
+pnpm run check      # audit + format + lint + typecheck
+pnpm run build      # build the registry + the demo site
+```
+
+If your change touches a component in `src/components/heatmap/`, open the demo site and verify the affected variant renders correctly — there is no test suite, so visual verification is the safety net.
 
 ## License
 

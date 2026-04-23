@@ -21,7 +21,7 @@ export const statusProps: ComponentPropsSection[] = [
       },
       {
         name: "colors",
-        type: "ColorConfig",
+        type: "StatusColorConfig",
         description:
           "Customize colors per status. Accepts semantic keys (`noData`, `critical`, `degraded`, `healthy`) and numeric keys for custom statuses (e.g. `{ 4: 'var(--color-chart-4)' }`). A numeric key takes precedence over its semantic alias. Defaults: `noData = 'var(--color-secondary)'`; critical/degraded/healthy use built-in red/amber/green.",
       },
@@ -44,10 +44,10 @@ export const statusProps: ComponentPropsSection[] = [
         type: "number",
         default: "40",
         description:
-          "Block height in pixels. Block width is `blockSize × blockSizeRatio`.",
+          "Block height in pixels. Block width is `blockSize × blockAspectRatio`.",
       },
       {
-        name: "blockSizeRatio",
+        name: "blockAspectRatio",
         type: "number",
         default: "0.2",
         description:

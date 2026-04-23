@@ -73,7 +73,7 @@ type WeekdayHeatmapContextType = {
   blockMargin: number;
   blockRadius: number;
   blockSize: number;
-  blockSizeRatio: number;
+  blockAspectRatio: number;
   blockWidth: number;
   fontSize: number;
   labels: WeekdayHeatmapLabels;
@@ -113,6 +113,7 @@ const calculateLevel = (
   isNormalized: boolean
 ): number => {
   const steps = colorStepCount(levels, isNormalized);
+  if (!Number.isFinite(value)) return isNormalized ? 1 : 0;
   if (isNormalized) {
     if (maxValue <= minValue) return 1;
     const percentage = (value - minValue) / (maxValue - minValue);
@@ -197,7 +198,7 @@ export type WeekdayHeatmapProps = HTMLAttributes<HTMLDivElement> & {
   blockSize?: number;
   blockMargin?: number;
   blockRadius?: number;
-  blockSizeRatio?: number;
+  blockAspectRatio?: number;
   levels?: number;
   isNormalized?: boolean;
   colors?: ColorConfig;
@@ -217,7 +218,7 @@ export type WeekdayHeatmapProps = HTMLAttributes<HTMLDivElement> & {
  * Weekday Heatmap
  *
  * A GitHub punch card style heatmap showing activity distribution by weekday (rows) and hour (columns).
- * Displays intensity levels with optional avg row and avg column for daily and hourly totals.
+ * Renders a 7 × 24 grid with optional extra row (aggregated per hour) and extra column (aggregated per weekday).
  *
  * @example
  * ```tsx
@@ -234,12 +235,15 @@ export type WeekdayHeatmapProps = HTMLAttributes<HTMLDivElement> & {
  * </WeekdayHeatmap>
  * ```
  *
- * @param data - Array of activities with weekday (0-6 for Sun-Sat, 7 for avg row), hour (0-23, 24 for avg column), and count
+ * @param data - Array of activities with weekday (0-6 for Sun-Sat), hour (0-23), and numeric value
  * @param weekStart - First day of week (0=Sunday, 1=Monday). Default: 0
  * @param use12Hour - Use 12-hour format for hour labels. Default: false
- * @param blockSizeRatio - Width/height ratio of blocks. Default: 1
+ * @param blockSize - Block height in pixels. Default: 24
+ * @param blockAspectRatio - Block width/height ratio. Default: 1 (square)
  * @param levels - Total number of legend cells (including empty when not normalized). Default: 5
  * @param isNormalized - When true, uses min-max normalization across the dataset (suitable for signed values like temperature). When false (default), treats 0 as empty and scales from 0 to max.
+ * @param extraRow - Appends an aggregated row below the grid. `compute` receives all activities and must return 24 values (one per hour). Rendered through `renderExtraRow` on the body, or falls back to `children`.
+ * @param extraColumn - Appends an aggregated column to the right of the grid. `compute` receives all activities and must return 7 values indexed by weekday 0–6. Rendered through `renderExtraColumn` on the body, or falls back to `children`.
  */
 export const WeekdayHeatmap = ({
   data,
@@ -248,7 +252,7 @@ export const WeekdayHeatmap = ({
   blockSize = 24,
   blockMargin = 4,
   blockRadius = 2,
-  blockSizeRatio = 1,
+  blockAspectRatio = 1,
   levels: levelsProp = 5,
   isNormalized = false,
   colors,
@@ -269,8 +273,10 @@ export const WeekdayHeatmap = ({
   const dataWithLevels = useMemo((): WeekdayHourlyActivityWithLevel[] => {
     if (data.length === 0) return [];
 
-    const minRegular = data.reduce((m, d) => Math.min(m, d.value), Infinity);
-    const maxRegular = data.reduce((m, d) => Math.max(m, d.value), -Infinity);
+    const maxRegular = data.reduce((m, d) => Math.max(m, d.value), 1);
+    const minRegular = isNormalized
+      ? data.reduce((m, d) => Math.min(m, d.value), Infinity)
+      : 0;
 
     return data.map((activity) => ({
       ...activity,
@@ -287,8 +293,10 @@ export const WeekdayHeatmap = ({
   const resolvedExtraRow = useMemo<ResolvedExtraRow | null>(() => {
     if (!extraRow) return null;
     const values = extraRow.compute(data);
-    const minVal = values.reduce((m, v) => Math.min(m, v), Infinity);
-    const maxVal = values.reduce((m, v) => Math.max(m, v), -Infinity);
+    const maxVal = values.reduce((m, v) => Math.max(m, v), 1);
+    const minVal = isNormalized
+      ? values.reduce((m, v) => Math.min(m, v), Infinity)
+      : 0;
     return {
       label: extraRow.label,
       values: values.map((value, hour) => ({
@@ -302,8 +310,10 @@ export const WeekdayHeatmap = ({
   const resolvedExtraColumn = useMemo<ResolvedExtraColumn | null>(() => {
     if (!extraColumn) return null;
     const values = extraColumn.compute(data);
-    const minVal = values.reduce((m, v) => Math.min(m, v), Infinity);
-    const maxVal = values.reduce((m, v) => Math.max(m, v), -Infinity);
+    const maxVal = values.reduce((m, v) => Math.max(m, v), 1);
+    const minVal = isNormalized
+      ? values.reduce((m, v) => Math.min(m, v), Infinity)
+      : 0;
     return {
       label: extraColumn.label,
       values: values.map((value, weekday) => ({
@@ -335,7 +345,7 @@ export const WeekdayHeatmap = ({
       ? totalCountProp
       : dataWithLevels.reduce((sum, a) => sum + a.value, 0);
 
-  const blockWidth = blockSize * blockSizeRatio;
+  const blockWidth = blockSize * blockAspectRatio;
   const labelHeight = fontSize + LABEL_MARGIN;
   const hasExtraColumn = resolvedExtraColumn !== null;
   const hasExtraRow = resolvedExtraRow !== null;
@@ -360,7 +370,7 @@ export const WeekdayHeatmap = ({
       blockMargin,
       blockRadius,
       blockSize,
-      blockSizeRatio,
+      blockAspectRatio,
       blockWidth,
       fontSize,
       labels,
@@ -381,7 +391,7 @@ export const WeekdayHeatmap = ({
       blockMargin,
       blockRadius,
       blockSize,
-      blockSizeRatio,
+      blockAspectRatio,
       blockWidth,
       fontSize,
       labels,

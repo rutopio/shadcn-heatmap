@@ -72,7 +72,7 @@ type DateHeatmapContextType = {
   blockMargin: number;
   blockRadius: number;
   blockSize: number;
-  blockSizeRatio: number;
+  blockAspectRatio: number;
   blockWidth: number;
   fontSize: number;
   labels: DateHeatmapLabels;
@@ -130,6 +130,7 @@ const calculateLevel = (
   isNormalized: boolean
 ): number => {
   const steps = colorStepCount(levels, isNormalized);
+  if (!Number.isFinite(value)) return isNormalized ? 1 : 0;
   if (isNormalized) {
     if (maxValue <= minValue) return 1;
     const percentage = (value - minValue) / (maxValue - minValue);
@@ -176,7 +177,7 @@ export type DateHeatmapProps = HTMLAttributes<HTMLDivElement> & {
   blockSize?: number;
   blockMargin?: number;
   blockRadius?: number;
-  blockSizeRatio?: number;
+  blockAspectRatio?: number;
   levels?: number;
   isNormalized?: boolean;
   colors?: ColorConfig;
@@ -196,7 +197,8 @@ export type DateHeatmapProps = HTMLAttributes<HTMLDivElement> & {
  * Date Heatmap
  *
  * A time-range analysis heatmap showing hourly activity across specific dates.
- * Each row represents a date, columns represent hours (0-23), with optional daily sum column and hourly sum row.
+ * Each row represents a date (rows auto-derived from unique `date` values in data),
+ * columns represent hours (0–23), with optional aggregated row (per hour) and column (per date).
  *
  * @example
  * ```tsx
@@ -216,12 +218,15 @@ export type DateHeatmapProps = HTMLAttributes<HTMLDivElement> & {
  * </DateHeatmap>
  * ```
  *
- * @param data - Array of activities with date (YYYY-MM-DD or "sum" for hourly sum row), hour (0-23, 24 for daily sum column), and count
+ * @param data - Array of activities with date (YYYY-MM-DD), hour (0–23), and numeric value
  * @param use12Hour - Use 12-hour format for hour labels. Default: false
- * @param dateFormat - Date format string for date labels. Default: "MMM dd, yyyy"
- * @param blockSizeRatio - Width/height ratio of blocks. Default: 1
+ * @param dateFormat - date-fns format string for date labels. Default: "MMM dd, yyyy"
+ * @param blockSize - Block height in pixels. Default: 24
+ * @param blockAspectRatio - Block width/height ratio. Default: 1 (square)
  * @param levels - Total number of legend cells (including empty when not normalized). Default: 5
  * @param isNormalized - When true, uses min-max normalization across the dataset (suitable for signed values). When false (default), treats 0 as empty and scales from 0 to max.
+ * @param extraRow - Appends an aggregated row below the grid. `compute` receives all activities and must return 24 values (one per hour). Rendered through `renderExtraRow` on the body, or falls back to `children`.
+ * @param extraColumn - Appends an aggregated column to the right of the grid. `compute` receives all activities plus the sorted date list and must return one value per date. Rendered through `renderExtraColumn` on the body, or falls back to `children`.
  */
 export const DateHeatmap = ({
   data,
@@ -230,7 +235,7 @@ export const DateHeatmap = ({
   blockSize = 24,
   blockMargin = 4,
   blockRadius = 2,
-  blockSizeRatio = 1,
+  blockAspectRatio = 1,
   levels: levelsProp = 5,
   isNormalized = false,
   colors,
@@ -327,7 +332,7 @@ export const DateHeatmap = ({
   const hasExtraRow = resolvedExtraRow !== null;
   const hasExtraColumn = resolvedExtraColumn !== null;
 
-  const blockWidth = blockSize * blockSizeRatio;
+  const blockWidth = blockSize * blockAspectRatio;
   const labelHeight = fontSize + LABEL_MARGIN;
   const width =
     24 * (blockWidth + blockMargin) +
@@ -351,7 +356,7 @@ export const DateHeatmap = ({
       blockMargin,
       blockRadius,
       blockSize,
-      blockSizeRatio,
+      blockAspectRatio,
       blockWidth,
       fontSize,
       labels,
@@ -374,7 +379,7 @@ export const DateHeatmap = ({
       blockMargin,
       blockRadius,
       blockSize,
-      blockSizeRatio,
+      blockAspectRatio,
       blockWidth,
       fontSize,
       labels,

@@ -12,14 +12,14 @@ export const statusVariantItems = [
   {
     title: "Colors & block size",
     description:
-      "Use colors to theme the blocks, labelClassName to style date labels, className on Stat and Legend to style the footer, and blockSize/blockSizeRatio/blockMargin to adjust block dimensions.",
+      "Use colors to theme the blocks, labelClassName to style date labels, className on Stat and Legend to style the footer, and blockSize/blockAspectRatio/blockMargin to adjust block dimensions.",
     preview: <StatusCustomStylingDemo />,
     highlightLines: [3, 4, 5, 6, 7, 8, 9, 10, 12],
     code: `
 <StatusHeatmap
   data={data}
   blockSize={60}
-  blockSizeRatio={0.1}
+  blockAspectRatio={0.1}
   blockMargin={3}
   colors={{
     critical: "#dc2626",
@@ -212,7 +212,7 @@ import { zhTW } from "date-fns/locale";
 <StatusHeatmap
   data={last30Days}
   blockSize={32}
-  blockSizeRatio={0.25}
+  blockAspectRatio={0.25}
   blockMargin={1.5}
 >
   <StatusHeatmapBody>

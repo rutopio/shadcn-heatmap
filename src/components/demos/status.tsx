@@ -56,7 +56,7 @@ export function StatusCustomStylingDemo() {
       <StatusHeatmap
         data={statusData}
         blockSize={60}
-        blockSizeRatio={0.1}
+        blockAspectRatio={0.1}
         blockMargin={3}
         colors={{
           critical: "#dc2626",
@@ -302,7 +302,7 @@ export function StatusCustomSizeDemo() {
       <StatusHeatmap
         data={statusData}
         blockSize={60}
-        blockSizeRatio={0.15}
+        blockAspectRatio={0.15}
         blockMargin={1}
       >
         <StatusHeatmapBody>
@@ -332,7 +332,7 @@ export function StatusUptimeDemo() {
       <StatusHeatmap
         data={last30Days}
         blockSize={32}
-        blockSizeRatio={0.25}
+        blockAspectRatio={0.25}
         blockMargin={1.5}
       >
         <StatusHeatmapBody>

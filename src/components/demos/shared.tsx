@@ -44,52 +44,6 @@ export const generateWeekdayNames = (locale?: Locale): string[] =>
 
 export const WEEKDAY_NAMES = generateWeekdayNames();
 
-export function MonthTooltipContent({
-  activity,
-  locale,
-}: {
-  activity: { date: string; value: number };
-  locale?: Locale;
-}) {
-  return (
-    <>
-      <p className="font-medium">
-        {format(
-          parseISO(activity.date),
-          "PPP",
-          locale ? { locale } : undefined
-        )}
-      </p>
-      <p className="text-muted-foreground">
-        {activity.value} contribution{activity.value !== 1 ? "s" : ""}
-      </p>
-    </>
-  );
-}
-
-export function MonthBinaryTooltipContent({
-  activity,
-  locale,
-  dateFormat = "PPP",
-}: {
-  activity: { date: string; value: number };
-  locale?: Locale;
-  dateFormat?: string;
-}) {
-  return (
-    <>
-      <p className="font-medium">
-        {format(
-          parseISO(activity.date),
-          dateFormat,
-          locale ? { locale } : undefined
-        )}
-      </p>
-      <p className="text-muted-foreground">{activity.value > 0 ? "1" : "0"}</p>
-    </>
-  );
-}
-
 export function WeekTooltipContent({
   activity,
   extra,

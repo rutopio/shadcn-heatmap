@@ -15,7 +15,7 @@ export function formatDate(
 ): string {
   const d = typeof date === "string" ? new Date(date) : date;
   const year = d.getFullYear();
-  const month = d.toLocaleDateString(locale ? locale.code : "en-US", {
+  const month = d.toLocaleDateString(locale?.code ?? "en-US", {
     month: "short",
   });
   const day = d.getDate();

@@ -23,7 +23,7 @@ type StatusHeatmapContextType = {
   blockMargin: number;
   blockRadius: number;
   blockSize: number;
-  blockSizeRatio: number;
+  blockAspectRatio: number;
   blockWidth: number;
   fontSize: number;
   labels: StatusHeatmapLabels;
@@ -33,7 +33,7 @@ type StatusHeatmapContextType = {
   height: number;
   dateFormat: string;
   locale?: Locale;
-  colors?: ColorConfig;
+  colors?: StatusColorConfig;
 };
 
 export type StatusHeatmapLabels = {
@@ -47,7 +47,7 @@ export type StatusHeatmapLabels = {
   cellLabel?: string; // aria-label template. Placeholders: {{date}}, {{status}}
 };
 
-export type ColorConfig = Record<number, string> & {
+export type StatusColorConfig = Record<number, string> & {
   noData?: string;
   critical?: string;
   degraded?: string;
@@ -71,7 +71,7 @@ const SEMANTIC_KEYS: Record<
   3: "healthy",
 };
 
-const resolveColor = (value: StatusValue, colors?: ColorConfig): string => {
+const resolveColor = (value: StatusValue, colors?: StatusColorConfig): string => {
   const semanticKey = SEMANTIC_KEYS[value];
   if (colors) {
     const numeric = colors[value];
@@ -113,7 +113,7 @@ const resolveStatusLabel = (
 
 const getStatusFill = (
   value: StatusValue,
-  colors?: ColorConfig,
+  colors?: StatusColorConfig,
   highlighted = false
 ): string => {
   const base = resolveColor(value, colors);
@@ -146,8 +146,8 @@ export type StatusHeatmapProps = HTMLAttributes<HTMLDivElement> & {
   blockSize?: number;
   blockMargin?: number;
   blockRadius?: number;
-  blockSizeRatio?: number;
-  colors?: ColorConfig;
+  blockAspectRatio?: number;
+  colors?: StatusColorConfig;
   locale?: Locale;
   labels?: StatusHeatmapLabels;
   fontSize?: number;
@@ -168,7 +168,7 @@ export type StatusHeatmapProps = HTMLAttributes<HTMLDivElement> & {
  *
  * @example
  * ```tsx
- * <StatusHeatmap data={data} blockSizeRatio={0.2}>
+ * <StatusHeatmap data={data} blockAspectRatio={0.2}>
  *   <StatusHeatmapBody>
  *     {({ activity, dayIndex }) => (
  *       <StatusHeatmapBlock
@@ -186,7 +186,7 @@ export type StatusHeatmapProps = HTMLAttributes<HTMLDivElement> & {
  *
  * @param data - Array of activities with date (YYYY-MM-DD) and status value (0-3)
  * @param dateFormat - Date format string for tooltips. Default: "MMM d"
- * @param blockSizeRatio - Width/height ratio of blocks. Default: 0.2 (narrow vertical bars)
+ * @param blockAspectRatio - Width/height ratio of blocks. Default: 0.2 (narrow vertical bars)
  * @param colors - Custom colors for critical, degraded, and healthy states
  */
 export const StatusHeatmap = ({
@@ -195,7 +195,7 @@ export const StatusHeatmap = ({
   blockSize = 40,
   blockMargin = 2,
   blockRadius = 2,
-  blockSizeRatio = 0.2,
+  blockAspectRatio = 0.2,
   colors,
   locale,
   labels: labelsProp,
@@ -230,7 +230,7 @@ export const StatusHeatmap = ({
     return Array.from(uniqueDates).sort();
   }, [data]);
 
-  const blockWidth = blockSize * blockSizeRatio;
+  const blockWidth = blockSize * blockAspectRatio;
   const width = dates.length * (blockWidth + blockMargin) - blockMargin;
   const height = blockSize;
 
@@ -241,7 +241,7 @@ export const StatusHeatmap = ({
       blockMargin,
       blockRadius,
       blockSize,
-      blockSizeRatio,
+      blockAspectRatio,
       blockWidth,
       fontSize,
       labels,
@@ -259,7 +259,7 @@ export const StatusHeatmap = ({
       blockMargin,
       blockRadius,
       blockSize,
-      blockSizeRatio,
+      blockAspectRatio,
       blockWidth,
       fontSize,
       labels,

@@ -15,6 +15,9 @@
   "bugs": {
     "url": "https://github.com/rutopio/shadcn-heatmap/issues"
   },
+  "engines": {
+    "node": ">=20"
+  },
   "scripts": {
     "dev": "vite",
     "build": "pnpm build:registry && tsc -b && vite build",

@@ -84,6 +84,7 @@ const calculateLevel = (
   isNormalized: boolean
 ): number => {
   const steps = colorStepCount(levels, isNormalized);
+  if (!Number.isFinite(value)) return isNormalized ? 1 : 0;
   if (isNormalized) {
     if (maxValue <= minValue) return 1;
     const percentage = (value - minValue) / (maxValue - minValue);
@@ -117,7 +118,7 @@ type CalendarHeatmapContextType = {
   blockMargin: number;
   blockRadius: number;
   blockSize: number;
-  blockSizeRatio: number;
+  blockAspectRatio: number;
   blockWidth: number;
   fontSize: number;
   labels: Labels;
@@ -404,7 +405,7 @@ export type CalendarHeatmapProps = HTMLAttributes<HTMLDivElement> & {
   blockSize?: number;
   blockMargin?: number;
   blockRadius?: number;
-  blockSizeRatio?: number;
+  blockAspectRatio?: number;
   levels?: number;
   isNormalized?: boolean;
   colors?: ColorConfig;
@@ -447,7 +448,7 @@ export type CalendarHeatmapProps = HTMLAttributes<HTMLDivElement> & {
  * @param weekStart - First day of week (0=Sunday, 1=Monday). Default: 0
  * @param continuousMonths - Display months continuously vs. grouped by year. Default: true
  * @param hasEmptyColumn - Add empty column between months. Default: false
- * @param blockSizeRatio - Width/height ratio of blocks. Default: 1
+ * @param blockAspectRatio - Width/height ratio of blocks. Default: 1
  * @param levels - Total number of legend cells (including empty when not normalized). Default: 5
  * @param isNormalized - When true, uses min-max normalization across the dataset (suitable for signed values). When false (default), treats 0 as empty and scales from 0 to max.
  */
@@ -459,7 +460,7 @@ export const CalendarHeatmap = ({
   blockSize = 12,
   blockMargin = 4,
   blockRadius = 2,
-  blockSizeRatio = 1,
+  blockAspectRatio = 1,
   levels: levelsProp = 5,
   isNormalized = false,
   colors,
@@ -525,7 +526,7 @@ export const CalendarHeatmap = ({
       ? totalCountProp
       : dataWithLevels.reduce((sum, activity) => sum + activity.value, 0);
 
-  const blockWidth = blockSize * blockSizeRatio;
+  const blockWidth = blockSize * blockAspectRatio;
   const width = weeks.length * (blockWidth + blockMargin) - blockMargin;
   const height = labelHeight + (blockSize + blockMargin) * 7 - blockMargin;
 
@@ -537,7 +538,7 @@ export const CalendarHeatmap = ({
       blockMargin,
       blockRadius,
       blockSize,
-      blockSizeRatio,
+      blockAspectRatio,
       blockWidth,
       fontSize,
       labels,
@@ -561,7 +562,7 @@ export const CalendarHeatmap = ({
       blockMargin,
       blockRadius,
       blockSize,
-      blockSizeRatio,
+      blockAspectRatio,
       blockWidth,
       fontSize,
       labels,
