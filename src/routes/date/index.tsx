@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { DateDefaultDemo } from "@/docs";
+import { DemoFrame } from "@/docs/_frame/demo-frame";
+import { PropsTable } from "@/docs/_frame/props-table";
+import { ShowcaseSection } from "@/docs/_frame/showcase-section";
+import { VariantGrid } from "@/docs/_frame/variant-grid";
+import { dateProps } from "@/docs/date/props";
+import { dateBasicCode, dateSampleData } from "@/docs/date/snippets";
+import { dateVariantItems } from "@/docs/date/variants";
 
-import { DateDefaultDemo } from "@/components/demos";
-import { dateVariantItems } from "@/components/demos/variants/date";
-import { DemoFrame } from "@/components/landing/demo-frame";
-import { PropsTable } from "@/components/landing/props-table";
-import { ShowcaseSection } from "@/components/landing/showcase-section";
-import { VariantGrid } from "@/components/landing/variant-grid";
 import { CodeBlock } from "@/components/ui/code-block";
-import { dateProps } from "@/content/props/date";
-import { dateBasicCode, dateSampleData } from "@/content/snippets/date";
 import { pageHead } from "@/lib/seo";
 
 function DatePage() {

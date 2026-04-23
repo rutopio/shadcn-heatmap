@@ -8,7 +8,7 @@ import {
   CalendarMultiYearDemo,
   CalendarNoFooterDemo,
   CalendarTenLevelsDemo,
-} from "@/components/demos/calendar";
+} from "@/docs/calendar/demos";
 
 export const calendarVariantItems = [
   {

@@ -15,7 +15,11 @@ import {
 } from "@/components/ui/tooltip";
 import dateData from "@/data/date-sample.json";
 
-import { DateTooltipContent, HeatmapTooltip, TooltipProvider } from "./shared";
+import {
+  DateTooltipContent,
+  HeatmapTooltip,
+  TooltipProvider,
+} from "../_shared/tooltips";
 
 import type { DateHourlyActivity } from "@/components/heatmap/date-heatmap";
 

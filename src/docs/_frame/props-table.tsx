@@ -1,6 +1,6 @@
 import { Badge } from "@/components/ui/badge";
 
-import type { ComponentPropsSection } from "@/content/types";
+import type { ComponentPropsSection } from "@/docs/types";
 import type { ReactNode } from "react";
 
 type PropsTableProps = {

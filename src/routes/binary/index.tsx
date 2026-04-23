@@ -1,12 +1,7 @@
 import { createFileRoute } from "@tanstack/react-router";
-
-import {
-  CalendarBinaryDemo,
-  DateBinaryDemo,
-  WeekdayBinaryDemo,
-} from "@/components/demos";
-import { ShowcaseSection } from "@/components/landing/showcase-section";
-import { VariantGrid } from "@/components/landing/variant-grid";
+import { CalendarBinaryDemo, DateBinaryDemo, WeekdayBinaryDemo } from "@/docs";
+import { ShowcaseSection } from "@/docs/_frame/showcase-section";
+import { VariantGrid } from "@/docs/_frame/variant-grid";
 import {
   binaryCalendarCode,
   binaryCalendarHighlightLines,
@@ -14,7 +9,8 @@ import {
   binaryDateHighlightLines,
   binaryWeekdayCode,
   binaryWeekdayHighlightLines,
-} from "@/content/snippets/binary";
+} from "@/docs/binary/snippets";
+
 import { pageHead } from "@/lib/seo";
 
 const binaryVariants = [

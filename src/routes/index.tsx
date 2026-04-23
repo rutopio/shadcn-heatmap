@@ -1,12 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { ArrowRightIcon, CodeIcon } from "@phosphor-icons/react";
-
 import {
   CalendarDefaultDemo,
   DateDefaultDemo,
   StatusDefaultDemo,
   WeekdayDefaultDemo,
-} from "@/components/demos";
+} from "@/docs";
+
 import { Button } from "@/components/ui/button";
 import { pageHead } from "@/lib/seo";
 

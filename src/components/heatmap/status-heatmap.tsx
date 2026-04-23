@@ -71,7 +71,10 @@ const SEMANTIC_KEYS: Record<
   3: "healthy",
 };
 
-const resolveColor = (value: StatusValue, colors?: StatusColorConfig): string => {
+const resolveColor = (
+  value: StatusValue,
+  colors?: StatusColorConfig
+): string => {
   const semanticKey = SEMANTIC_KEYS[value];
   if (colors) {
     const numeric = colors[value];

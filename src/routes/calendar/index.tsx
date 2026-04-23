@@ -1,17 +1,17 @@
 import { createFileRoute } from "@tanstack/react-router";
-
-import { CalendarDefaultDemo } from "@/components/demos";
-import { calendarVariantItems } from "@/components/demos/variants/calendar";
-import { DemoFrame } from "@/components/landing/demo-frame";
-import { PropsTable } from "@/components/landing/props-table";
-import { ShowcaseSection } from "@/components/landing/showcase-section";
-import { VariantGrid } from "@/components/landing/variant-grid";
-import { CodeBlock } from "@/components/ui/code-block";
-import { calendarProps } from "@/content/props/calendar";
+import { CalendarDefaultDemo } from "@/docs";
+import { DemoFrame } from "@/docs/_frame/demo-frame";
+import { PropsTable } from "@/docs/_frame/props-table";
+import { ShowcaseSection } from "@/docs/_frame/showcase-section";
+import { VariantGrid } from "@/docs/_frame/variant-grid";
+import { calendarProps } from "@/docs/calendar/props";
 import {
   calendarBasicCode,
   calendarSampleData,
-} from "@/content/snippets/calendar";
+} from "@/docs/calendar/snippets";
+import { calendarVariantItems } from "@/docs/calendar/variants";
+
+import { CodeBlock } from "@/components/ui/code-block";
 import { pageHead } from "@/lib/seo";
 
 function CalendarPage() {

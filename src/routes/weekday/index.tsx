@@ -1,17 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { WeekdayDefaultDemo } from "@/docs";
+import { DemoFrame } from "@/docs/_frame/demo-frame";
+import { PropsTable } from "@/docs/_frame/props-table";
+import { ShowcaseSection } from "@/docs/_frame/showcase-section";
+import { VariantGrid } from "@/docs/_frame/variant-grid";
+import { weekdayProps } from "@/docs/weekday/props";
+import { weekdayBasicCode, weekdaySampleData } from "@/docs/weekday/snippets";
+import { weekdayVariantItems } from "@/docs/weekday/variants";
 
-import { WeekdayDefaultDemo } from "@/components/demos";
-import { weekdayVariantItems } from "@/components/demos/variants/weekday";
-import { DemoFrame } from "@/components/landing/demo-frame";
-import { PropsTable } from "@/components/landing/props-table";
-import { ShowcaseSection } from "@/components/landing/showcase-section";
-import { VariantGrid } from "@/components/landing/variant-grid";
 import { CodeBlock } from "@/components/ui/code-block";
-import { weekdayProps } from "@/content/props/weekday";
-import {
-  weekdayBasicCode,
-  weekdaySampleData,
-} from "@/content/snippets/weekday";
 import { pageHead } from "@/lib/seo";
 
 function WeekdayPage() {

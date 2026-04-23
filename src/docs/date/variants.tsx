@@ -9,7 +9,7 @@ import {
   DateSpanishDemo,
   DateSparseTicksDemo,
   DateTenLevelsDemo,
-} from "@/components/demos/date";
+} from "@/docs/date/demos";
 
 export const dateVariantItems = [
   {

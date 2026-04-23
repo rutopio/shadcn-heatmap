@@ -6,7 +6,7 @@ import {
   StatusNoLabelsDemo,
   StatusUptimeDemo,
   StatusWithLabelsDemo,
-} from "@/components/demos/status";
+} from "@/docs/status/demos";
 
 export const statusVariantItems = [
   {

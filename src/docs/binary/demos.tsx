@@ -26,7 +26,11 @@ import calendarBinaryData from "@/data/calendar-binary.json";
 import dateBinaryData from "@/data/date-binary.json";
 import weekdayBinaryData from "@/data/weekday-binary.json";
 
-import { HeatmapTooltip, TooltipProvider, WEEKDAY_NAMES } from "./shared";
+import {
+  HeatmapTooltip,
+  TooltipProvider,
+  WEEKDAY_NAMES,
+} from "../_shared/tooltips";
 
 export function CalendarBinaryDemo() {
   return (

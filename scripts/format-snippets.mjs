@@ -15,16 +15,16 @@ const ROOT = resolve(import.meta.dirname, "..");
 
 const FILES = [
   // variant files — code: `...` fields
-  "src/components/demos/variants/calendar.tsx",
-  "src/components/demos/variants/date.tsx",
-  "src/components/demos/variants/status.tsx",
-  "src/components/demos/variants/weekday.tsx",
+  "src/docs/calendar/variants.tsx",
+  "src/docs/date/variants.tsx",
+  "src/docs/status/variants.tsx",
+  "src/docs/weekday/variants.tsx",
   // snippet files — export const foo = `...`
-  "src/content/snippets/calendar.ts",
-  "src/content/snippets/date.ts",
-  "src/content/snippets/status.ts",
-  "src/content/snippets/weekday.ts",
-  "src/content/snippets/binary.ts",
+  "src/docs/calendar/snippets.ts",
+  "src/docs/date/snippets.ts",
+  "src/docs/status/snippets.ts",
+  "src/docs/weekday/snippets.ts",
+  "src/docs/binary/snippets.ts",
 ];
 
 // Prettier config matching .prettierrc (plugins resolved at runtime)

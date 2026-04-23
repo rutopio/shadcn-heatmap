@@ -3,7 +3,7 @@ export {
   CalendarBinaryDemo,
   DateBinaryDemo,
   WeekdayBinaryDemo,
-} from "./binary";
+} from "./binary/demos";
 
 // Calendar demos
 export {
@@ -17,7 +17,7 @@ export {
   CalendarMultiYearDemo,
   CalendarNoFooterDemo,
   CalendarTenLevelsDemo,
-} from "./calendar";
+} from "./calendar/demos";
 
 // Weekday demos
 export {
@@ -32,7 +32,7 @@ export {
   WeekdayNoFooterDemo,
   WeekdayPlainGridDemo,
   WeekdayTenLevelsDemo,
-} from "./weekday";
+} from "./weekday/demos";
 
 // Date demos
 export {
@@ -47,7 +47,7 @@ export {
   DateSparseTicksDemo,
   DateSpanishDemo,
   DateTenLevelsDemo,
-} from "./date";
+} from "./date/demos";
 
 // Status demos
 export {
@@ -61,4 +61,4 @@ export {
   StatusNoLabelsDemo,
   StatusUptimeDemo,
   StatusWithLabelsDemo,
-} from "./status";
+} from "./status/demos";

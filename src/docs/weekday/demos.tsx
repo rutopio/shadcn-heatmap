@@ -20,7 +20,7 @@ import {
   HeatmapTooltip,
   TooltipProvider,
   WeekTooltipContent,
-} from "./shared";
+} from "../_shared/tooltips";
 
 import type { WeekdayHourlyActivity } from "@/components/heatmap/weekday-heatmap";
 

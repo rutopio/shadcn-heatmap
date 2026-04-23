@@ -1,14 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { TerminalIcon } from "@phosphor-icons/react";
-
-import { CodeBlock } from "@/components/ui/code-block";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
   cliInstallCommands,
   packageManagerCommands,
   themeTokensSnippet,
   utilsSnippet,
-} from "@/content/install";
+} from "@/docs/install";
+
+import { CodeBlock } from "@/components/ui/code-block";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { pageHead } from "@/lib/seo";
 
 function InstallPage() {

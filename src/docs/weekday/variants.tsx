@@ -10,7 +10,7 @@ import {
   WeekdayNoFooterDemo,
   WeekdayPlainGridDemo,
   WeekdayTenLevelsDemo,
-} from "@/components/demos/weekday";
+} from "@/docs/weekday/demos";
 
 export const weekdayVariantItems = [
   {
