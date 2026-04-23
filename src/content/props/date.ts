@@ -177,7 +177,8 @@ export const dateProps: ComponentPropsSection[] = [
         name: "dateIndex",
         type: "number",
         required: true,
-        description: "Row index for this date (0-based, sorted ascending). Pass the value received from the `DateHeatmapBody` render-prop.",
+        description:
+          "Row index for this date (0-based, sorted ascending). Pass the value received from the `DateHeatmapBody` render-prop.",
       },
       {
         name: "extra",

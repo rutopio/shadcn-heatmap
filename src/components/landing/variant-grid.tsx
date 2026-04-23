@@ -7,6 +7,8 @@ type Variant = {
   description: string;
   code: string;
   preview: ReactNode;
+  highlightLines?: number[];
+  deletedLines?: number[];
 };
 
 type VariantGridProps = {
@@ -36,7 +38,9 @@ export function VariantGrid({ variants }: VariantGridProps) {
           <CodeBlock
             code={variant.code}
             className="rounded-none border-0 border-t"
-            maxHeight="16rem"
+            scrollClassName="max-h-64 sm:max-h-none"
+            highlightLines={variant.highlightLines}
+            deletedLines={variant.deletedLines}
           />
         </div>
       ))}

@@ -4,10 +4,7 @@
   "type": "registry:component",
   "title": "DateHeatmap",
   "description": "Date × hour matrix for zooming into a narrow time window with daily Sum column.",
-  "dependencies": [
-    "clsx",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "tailwind-merge"],
   "registryDependencies": [],
   "files": [
     {

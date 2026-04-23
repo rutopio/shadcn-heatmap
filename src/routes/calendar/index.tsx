@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { DemoFrame } from "@/components/landing/demo-frame";
 import { CalendarDefaultDemo } from "@/components/demos";
 import { calendarVariantItems } from "@/components/demos/variants/calendar";
+import { DemoFrame } from "@/components/landing/demo-frame";
 import { PropsTable } from "@/components/landing/props-table";
 import { ShowcaseSection } from "@/components/landing/showcase-section";
 import { VariantGrid } from "@/components/landing/variant-grid";

@@ -141,7 +141,8 @@ export const statusProps: ComponentPropsSection[] = [
         name: "dayIndex",
         type: "number",
         required: true,
-        description: "Position of this day in the timeline (0-based). Pass the value received from the `StatusHeatmapBody` render-prop.",
+        description:
+          "Position of this day in the timeline (0-based). Pass the value received from the `StatusHeatmapBody` render-prop.",
       },
       {
         name: "highlighted",

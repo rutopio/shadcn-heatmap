@@ -1,16 +1,17 @@
-
-export const weekdaySampleData = `// type WeekdayHourlyActivity = { weekday: number; hour: number; value: number }
+export const weekdaySampleData = `
+// type WeekdayHourlyActivity = { weekday: number; hour: number; value: number }
 //   weekday: 0–6 (Sun–Sat)
 //   hour:    0–23
 //   value:   average temperature in °C
 
 const data: WeekdayHourlyActivity[] = [
-  { weekday: 0, hour:  0, value: 10.2 },  // Sun 00:00
-  { weekday: 1, hour:  9, value: 16.3 },  // Mon 09:00
-  { weekday: 1, hour: 14, value: 22.1 },  // Mon 14:00
-  { weekday: 5, hour: 14, value: 21.8 },  // Fri 14:00
+  { weekday: 0, hour: 0, value: 10.2 }, // Sun 00:00
+  { weekday: 1, hour: 9, value: 16.3 }, // Mon 09:00
+  { weekday: 1, hour: 14, value: 22.1 }, // Mon 14:00
+  { weekday: 5, hour: 14, value: 21.8 }, // Fri 14:00
   // ...
-];`;
+]
+`;
 
 export const weekdayBasicCode = `import {
   WeekdayHeatmap,
@@ -56,13 +57,7 @@ const avgByWeekday = (d) => {
 export function WeeklyRhythm() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <WeekdayHeatmap
-        data={data}
-        isNormalized
-        colors={{ scale: "var(--color-chart-2)" }}
-        extraRow={{ label: "Avg", compute: avgByHour }}
-        extraColumn={{ label: "Avg", compute: avgByWeekday }}
-      >
+      <WeekdayHeatmap data={data}>
         <WeekdayHeatmapBody
           renderExtraRow={({ activity }) => (
             <Tooltip>

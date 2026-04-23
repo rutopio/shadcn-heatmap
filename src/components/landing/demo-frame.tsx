@@ -58,7 +58,7 @@ export function DemoFrame({
           <CodeBlock
             code={code}
             filename={filename}
-            maxHeight="28rem"
+            scrollClassName="max-h-[28rem] sm:max-h-none"
             className="border-0 bg-transparent"
           />
         </TabsContent>

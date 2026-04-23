@@ -1,8 +1,8 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { DemoFrame } from "@/components/landing/demo-frame";
 import { WeekdayDefaultDemo } from "@/components/demos";
 import { weekdayVariantItems } from "@/components/demos/variants/weekday";
+import { DemoFrame } from "@/components/landing/demo-frame";
 import { PropsTable } from "@/components/landing/props-table";
 import { ShowcaseSection } from "@/components/landing/showcase-section";
 import { VariantGrid } from "@/components/landing/variant-grid";

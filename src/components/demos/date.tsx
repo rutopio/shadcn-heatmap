@@ -8,13 +8,13 @@ import {
   DateHeatmapLegend,
   DateHeatmapStat,
 } from "@/components/heatmap/date-heatmap";
-import dateData from "@/data/date-sample.json";
-
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import dateData from "@/data/date-sample.json";
+
 import { DateTooltipContent, HeatmapTooltip, TooltipProvider } from "./shared";
 
 import type { DateHourlyActivity } from "@/components/heatmap/date-heatmap";
@@ -89,9 +89,7 @@ export function DateDefaultDemo() {
         <DateHeatmapBody
           renderExtraRow={({ activity, dateIndex }) => (
             <HeatmapTooltip
-              content={
-                <DateTooltipContent activity={activity} extra="row" />
-              }
+              content={<DateTooltipContent activity={activity} extra="row" />}
             >
               <DateHeatmapBlock
                 activity={activity}
@@ -116,14 +114,9 @@ export function DateDefaultDemo() {
         >
           {({ activity, dateIndex }) => (
             <HeatmapTooltip
-              content={
-                <DateTooltipContent activity={activity} />
-              }
+              content={<DateTooltipContent activity={activity} />}
             >
-              <DateHeatmapBlock
-                activity={activity}
-                dateIndex={dateIndex}
-              />
+              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
@@ -155,9 +148,7 @@ export function DateTenLevelsDemo() {
         <DateHeatmapBody
           renderExtraRow={({ activity, dateIndex }) => (
             <HeatmapTooltip
-              content={
-                <DateTooltipContent activity={activity} extra="row" />
-              }
+              content={<DateTooltipContent activity={activity} extra="row" />}
             >
               <DateHeatmapBlock
                 activity={activity}
@@ -182,14 +173,9 @@ export function DateTenLevelsDemo() {
         >
           {({ activity, dateIndex }) => (
             <HeatmapTooltip
-              content={
-                <DateTooltipContent activity={activity} />
-              }
+              content={<DateTooltipContent activity={activity} />}
             >
-              <DateHeatmapBlock
-                activity={activity}
-                dateIndex={dateIndex}
-              />
+              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
@@ -221,16 +207,30 @@ export function DateCustomTooltipDemo() {
           renderExtraRow={({ activity, dateIndex }) => (
             <Tooltip>
               <TooltipTrigger asChild>
-                <DateHeatmapBlock activity={activity} dateIndex={dateIndex} extra="row" />
+                <DateHeatmapBlock
+                  activity={activity}
+                  dateIndex={dateIndex}
+                  extra="row"
+                />
               </TooltipTrigger>
-              <TooltipContent side="top" className="pointer-events-none" sideOffset={6}>
+              <TooltipContent
+                side="top"
+                className="pointer-events-none"
+                sideOffset={6}
+              >
                 <div className="flex flex-col gap-1">
                   <p className="text-xs font-semibold">
                     Total, {String(activity.hour).padStart(2, "0")}:00
                   </p>
                   <div className="flex items-center gap-1.5">
                     <span className="text-base leading-none">
-                      {activity.value === 0 ? "☀️" : activity.value < 1 ? "🌦️" : activity.value < 5 ? "🌧️" : "⛈️"}
+                      {activity.value === 0
+                        ? "☀️"
+                        : activity.value < 1
+                          ? "🌦️"
+                          : activity.value < 5
+                            ? "🌧️"
+                            : "⛈️"}
                     </span>
                     <span className="text-muted-foreground text-xs">
                       {activity.value.toFixed(1)} mm total
@@ -243,16 +243,30 @@ export function DateCustomTooltipDemo() {
           renderExtraColumn={({ activity, dateIndex }) => (
             <Tooltip>
               <TooltipTrigger asChild>
-                <DateHeatmapBlock activity={activity} dateIndex={dateIndex} extra="column" />
+                <DateHeatmapBlock
+                  activity={activity}
+                  dateIndex={dateIndex}
+                  extra="column"
+                />
               </TooltipTrigger>
-              <TooltipContent side="top" className="pointer-events-none" sideOffset={6}>
+              <TooltipContent
+                side="top"
+                className="pointer-events-none"
+                sideOffset={6}
+              >
                 <div className="flex flex-col gap-1">
                   <p className="text-xs font-semibold">
                     {activity.date}, Total
                   </p>
                   <div className="flex items-center gap-1.5">
                     <span className="text-base leading-none">
-                      {activity.value === 0 ? "☀️" : activity.value < 1 ? "🌦️" : activity.value < 5 ? "🌧️" : "⛈️"}
+                      {activity.value === 0
+                        ? "☀️"
+                        : activity.value < 1
+                          ? "🌦️"
+                          : activity.value < 5
+                            ? "🌧️"
+                            : "⛈️"}
                     </span>
                     <span className="text-muted-foreground text-xs">
                       {activity.value.toFixed(1)} mm total
@@ -268,14 +282,24 @@ export function DateCustomTooltipDemo() {
               <TooltipTrigger asChild>
                 <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
               </TooltipTrigger>
-              <TooltipContent side="top" className="pointer-events-none" sideOffset={6}>
+              <TooltipContent
+                side="top"
+                className="pointer-events-none"
+                sideOffset={6}
+              >
                 <div className="flex flex-col gap-1">
                   <p className="text-xs font-semibold">
                     {activity.date}, {String(activity.hour).padStart(2, "0")}:00
                   </p>
                   <div className="flex items-center gap-1.5">
                     <span className="text-base leading-none">
-                      {activity.value === 0 ? "☀️" : activity.value < 1 ? "🌦️" : activity.value < 5 ? "🌧️" : "⛈️"}
+                      {activity.value === 0
+                        ? "☀️"
+                        : activity.value < 1
+                          ? "🌦️"
+                          : activity.value < 5
+                            ? "🌧️"
+                            : "⛈️"}
                     </span>
                     <span className="text-muted-foreground text-xs">
                       {activity.value.toFixed(1)} mm
@@ -319,9 +343,7 @@ export function DateSparseTicksDemo() {
         <DateHeatmapBody
           renderExtraRow={({ activity, dateIndex }) => (
             <HeatmapTooltip
-              content={
-                <DateTooltipContent activity={activity} extra="row" />
-              }
+              content={<DateTooltipContent activity={activity} extra="row" />}
             >
               <DateHeatmapBlock
                 activity={activity}
@@ -346,14 +368,9 @@ export function DateSparseTicksDemo() {
         >
           {({ activity, dateIndex }) => (
             <HeatmapTooltip
-              content={
-                <DateTooltipContent activity={activity} />
-              }
+              content={<DateTooltipContent activity={activity} />}
             >
-              <DateHeatmapBlock
-                activity={activity}
-                dateIndex={dateIndex}
-              />
+              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
@@ -379,14 +396,9 @@ export function DatePlainGridDemo() {
         <DateHeatmapBody>
           {({ activity, dateIndex }) => (
             <HeatmapTooltip
-              content={
-                <DateTooltipContent activity={activity} />
-              }
+              content={<DateTooltipContent activity={activity} />}
             >
-              <DateHeatmapBlock
-                activity={activity}
-                dateIndex={dateIndex}
-              />
+              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
@@ -412,14 +424,9 @@ export function DateNoLabelsDemo() {
         <DateHeatmapBody hideDateLabels hideHourLabels>
           {({ activity, dateIndex }) => (
             <HeatmapTooltip
-              content={
-                <DateTooltipContent activity={activity} />
-              }
+              content={<DateTooltipContent activity={activity} />}
             >
-              <DateHeatmapBlock
-                activity={activity}
-                dateIndex={dateIndex}
-              />
+              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
@@ -443,11 +450,7 @@ export function Date12HourDemo() {
           renderExtraRow={({ activity, dateIndex }) => (
             <HeatmapTooltip
               content={
-                <DateTooltipContent
-                  activity={activity}
-                  extra="row"
-                  use12Hour
-                />
+                <DateTooltipContent activity={activity} extra="row" use12Hour />
               }
             >
               <DateHeatmapBlock
@@ -477,17 +480,9 @@ export function Date12HourDemo() {
         >
           {({ activity, dateIndex }) => (
             <HeatmapTooltip
-              content={
-                <DateTooltipContent
-                  activity={activity}
-                  use12Hour
-                />
-              }
+              content={<DateTooltipContent activity={activity} use12Hour />}
             >
-              <DateHeatmapBlock
-                activity={activity}
-                dateIndex={dateIndex}
-              />
+              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
@@ -555,17 +550,9 @@ export function DateSpanishDemo() {
         >
           {({ activity, dateIndex }) => (
             <HeatmapTooltip
-              content={
-                <DateTooltipContent
-                  activity={activity}
-                  locale={es}
-                />
-              }
+              content={<DateTooltipContent activity={activity} locale={es} />}
             >
-              <DateHeatmapBlock
-                activity={activity}
-                dateIndex={dateIndex}
-              />
+              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
@@ -596,9 +583,7 @@ export function DateP95Demo() {
         <DateHeatmapBody
           renderExtraRow={({ activity, dateIndex }) => (
             <HeatmapTooltip
-              content={
-                <DateTooltipContent activity={activity} extra="row" />
-              }
+              content={<DateTooltipContent activity={activity} extra="row" />}
             >
               <DateHeatmapBlock
                 activity={activity}
@@ -623,14 +608,9 @@ export function DateP95Demo() {
         >
           {({ activity, dateIndex }) => (
             <HeatmapTooltip
-              content={
-                <DateTooltipContent activity={activity} />
-              }
+              content={<DateTooltipContent activity={activity} />}
             >
-              <DateHeatmapBlock
-                activity={activity}
-                dateIndex={dateIndex}
-              />
+              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
@@ -661,9 +641,7 @@ export function DateMedianDemo() {
         <DateHeatmapBody
           renderExtraRow={({ activity, dateIndex }) => (
             <HeatmapTooltip
-              content={
-                <DateTooltipContent activity={activity} extra="row" />
-              }
+              content={<DateTooltipContent activity={activity} extra="row" />}
             >
               <DateHeatmapBlock
                 activity={activity}
@@ -688,14 +666,9 @@ export function DateMedianDemo() {
         >
           {({ activity, dateIndex }) => (
             <HeatmapTooltip
-              content={
-                <DateTooltipContent activity={activity} />
-              }
+              content={<DateTooltipContent activity={activity} />}
             >
-              <DateHeatmapBlock
-                activity={activity}
-                dateIndex={dateIndex}
-              />
+              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
@@ -726,9 +699,7 @@ export function DateNoFooterDemo() {
         <DateHeatmapBody
           renderExtraRow={({ activity, dateIndex }) => (
             <HeatmapTooltip
-              content={
-                <DateTooltipContent activity={activity} extra="row" />
-              }
+              content={<DateTooltipContent activity={activity} extra="row" />}
             >
               <DateHeatmapBlock
                 activity={activity}
@@ -753,14 +724,9 @@ export function DateNoFooterDemo() {
         >
           {({ activity, dateIndex }) => (
             <HeatmapTooltip
-              content={
-                <DateTooltipContent activity={activity} />
-              }
+              content={<DateTooltipContent activity={activity} />}
             >
-              <DateHeatmapBlock
-                activity={activity}
-                dateIndex={dateIndex}
-              />
+              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>
@@ -787,27 +753,32 @@ export function DateCustomStylingDemo() {
             <HeatmapTooltip
               content={<DateTooltipContent activity={activity} extra="row" />}
             >
-              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} extra="row" />
+              <DateHeatmapBlock
+                activity={activity}
+                dateIndex={dateIndex}
+                extra="row"
+              />
             </HeatmapTooltip>
           )}
           renderExtraColumn={({ activity, dateIndex }) => (
             <HeatmapTooltip
-              content={<DateTooltipContent activity={activity} extra="column" />}
-            >
-              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} extra="column" />
-            </HeatmapTooltip>
-          )}
-        >
-          {({ activity, dateIndex }) => (
-            <HeatmapTooltip
               content={
-                <DateTooltipContent activity={activity} />
+                <DateTooltipContent activity={activity} extra="column" />
               }
             >
               <DateHeatmapBlock
                 activity={activity}
                 dateIndex={dateIndex}
+                extra="column"
               />
+            </HeatmapTooltip>
+          )}
+        >
+          {({ activity, dateIndex }) => (
+            <HeatmapTooltip
+              content={<DateTooltipContent activity={activity} />}
+            >
+              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
             </HeatmapTooltip>
           )}
         </DateHeatmapBody>

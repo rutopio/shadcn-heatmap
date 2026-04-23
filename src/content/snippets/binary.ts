@@ -1,4 +1,5 @@
-export const binaryCalendarCode = `import {
+export const binaryCalendarCode = `
+import {
   CalendarHeatmap,
   CalendarHeatmapBlock,
   CalendarHeatmapBody,
@@ -36,7 +37,11 @@ export function HabitTracker() {
                   weekIndex={weekIndex}
                 />
               </TooltipTrigger>
-              <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
+              <TooltipContent
+                side="top"
+                className="pointer-events-none text-xs"
+                sideOffset={6}
+              >
                 <p className="font-medium">
                   {format(parseISO(activity.date), "PPP")}
                 </p>
@@ -54,7 +59,8 @@ export function HabitTracker() {
       </CalendarHeatmap>
     </TooltipProvider>
   );
-}`;
+}
+`;
 
 export const binaryWeekdayCode = `import { format } from "date-fns";
 import {
@@ -176,26 +182,28 @@ export function ServiceUptime() {
   );
 }`;
 
-export const binarySampleData = `// All three components accept the same data shapes as their regular counterparts.
+export const binarySampleData = `
+// All three components accept the same data shapes as their regular counterparts.
 // The only difference is that values are strictly 0 or 1.
 
 // CalendarHeatmap binary: { date: string; value: 0 | 1 }
 const calendarData = [
-  { date: "2025-01-01", value: 1 },  // done
-  { date: "2025-01-02", value: 0 },  // missed
+  { date: "2025-01-01", value: 1 }, // done
+  { date: "2025-01-02", value: 0 }, // missed
   // ...
 ];
 
 // WeekdayHeatmap binary: { weekday: number; hour: number; value: 0 | 1 }
 const weekdayData = [
-  { weekday: 1, hour:  9, value: 1 },  // Mon 09:00 — meeting
-  { weekday: 1, hour: 11, value: 0 },  // Mon 11:00 — free
+  { weekday: 1, hour: 9, value: 1 }, // Mon 09:00 — meeting
+  { weekday: 1, hour: 11, value: 0 }, // Mon 11:00 — free
   // ...
 ];
 
 // DateHeatmap binary: { date: string; hour: number; value: 0 | 1 }
 const dateData = [
-  { date: "2025-12-01", hour:  0, value: 1 },  // up
-  { date: "2025-12-03", hour:  2, value: 0 },  // down (maintenance)
+  { date: "2025-12-01", hour: 0, value: 1 }, // up
+  { date: "2025-12-03", hour: 2, value: 0 }, // down (maintenance)
   // ...
-];`;
+]
+`;

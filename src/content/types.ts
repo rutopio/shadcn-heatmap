@@ -11,4 +11,3 @@ export type ComponentPropsSection = {
   description: string;
   props: PropSpec[];
 };
-

@@ -128,7 +128,8 @@ export const calendarProps: ComponentPropsSection[] = [
         name: "hideMonthLabels",
         type: "boolean",
         default: "false",
-        description: "Hide the month labels (e.g. `Jan`, `Feb`) above each row.",
+        description:
+          "Hide the month labels (e.g. `Jan`, `Feb`) above each row.",
       },
       {
         name: "hideWeekdayLabels",
@@ -178,13 +179,15 @@ export const calendarProps: ComponentPropsSection[] = [
         name: "dayIndex",
         type: "number",
         required: true,
-        description: "Row index within the week (0 = first day per `weekStart`, 6 = last). Pass the value received from the `CalendarHeatmapBody` render-prop.",
+        description:
+          "Row index within the week (0 = first day per `weekStart`, 6 = last). Pass the value received from the `CalendarHeatmapBody` render-prop.",
       },
       {
         name: "weekIndex",
         type: "number",
         required: true,
-        description: "Column index within the current year row. Pass the value received from the `CalendarHeatmapBody` render-prop.",
+        description:
+          "Column index within the current year row. Pass the value received from the `CalendarHeatmapBody` render-prop.",
       },
       {
         name: "highlighted",

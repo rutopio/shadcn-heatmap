@@ -1,5 +1,5 @@
-
-export const statusSampleData = `// type StatusActivity = { date: string; value: 0 | 1 | 2 | 3 }
+export const statusSampleData = `
+// type StatusActivity = { date: string; value: 0 | 1 | 2 | 3 }
 //   date: YYYY-MM-DD format
 //   value: 0 = no-data (secondary)
 //          1 = critical (red)
@@ -7,15 +7,17 @@ export const statusSampleData = `// type StatusActivity = { date: string; value:
 //          3 = healthy (green)
 
 const data: StatusActivity[] = [
-  { date: "2025-01-01", value: 3 },  // Healthy
-  { date: "2025-01-02", value: 3 },  // Healthy
-  { date: "2025-01-03", value: 2 },  // Degraded
-  { date: "2025-01-04", value: 1 },  // Critical
-  { date: "2025-01-05", value: 0 },  // No Data
+  { date: "2025-01-01", value: 3 }, // Healthy
+  { date: "2025-01-02", value: 3 }, // Healthy
+  { date: "2025-01-03", value: 2 }, // Degraded
+  { date: "2025-01-04", value: 1 }, // Critical
+  { date: "2025-01-05", value: 0 }, // No Data
   // ... more days
-];`;
+]
+`;
 
-export const statusBasicCode = `import {
+export const statusBasicCode = `
+import {
   StatusHeatmap,
   StatusHeatmapBlock,
   StatusHeatmapBody,
@@ -40,8 +42,8 @@ const STATUS_LABELS: Record<StatusValue, string> = {
 };
 
 const data = [
-  { date: "2025-01-01", value: 3 },  // Healthy
-  { date: "2025-01-02", value: 2 },  // Degraded
+  { date: "2025-01-01", value: 3 }, // Healthy
+  { date: "2025-01-02", value: 2 }, // Degraded
   // ... 90 days
 ];
 
@@ -55,8 +57,14 @@ export function StatusTimeline() {
               <TooltipTrigger asChild>
                 <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
               </TooltipTrigger>
-              <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
-                <p className="font-medium">{format(parseISO(activity.date), "PPP")}</p>
+              <TooltipContent
+                side="top"
+                className="pointer-events-none text-xs"
+                sideOffset={6}
+              >
+                <p className="font-medium">
+                  {format(parseISO(activity.date), "PPP")}
+                </p>
                 <p className="text-muted-foreground">
                   {STATUS_LABELS[activity.value]}
                 </p>
@@ -71,4 +79,5 @@ export function StatusTimeline() {
       </StatusHeatmap>
     </TooltipProvider>
   );
-}`;
+}
+`;

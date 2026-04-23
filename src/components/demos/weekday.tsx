@@ -8,15 +8,19 @@ import {
   WeekdayHeatmapLegend,
   WeekdayHeatmapStat,
 } from "@/components/heatmap/weekday-heatmap";
-import weekData from "@/data/weekday-sample.json";
-
 import {
   Tooltip,
   TooltipContent,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
+import weekData from "@/data/weekday-sample.json";
 
-import { generateWeekdayNames, HeatmapTooltip, TooltipProvider, WeekTooltipContent } from "./shared";
+import {
+  generateWeekdayNames,
+  HeatmapTooltip,
+  TooltipProvider,
+  WeekTooltipContent,
+} from "./shared";
 
 import type { WeekdayHourlyActivity } from "@/components/heatmap/weekday-heatmap";
 
@@ -88,7 +92,9 @@ export function WeekdayDefaultDemo() {
           )}
           renderExtraColumn={({ activity }) => (
             <HeatmapTooltip
-              content={<WeekTooltipContent activity={activity} extra="column" />}
+              content={
+                <WeekTooltipContent activity={activity} extra="column" />
+              }
             >
               <WeekdayHeatmapBlock activity={activity} extra="column" />
             </HeatmapTooltip>
@@ -138,7 +144,9 @@ export function WeekdayMondayStartDemo() {
           )}
           renderExtraColumn={({ activity }) => (
             <HeatmapTooltip
-              content={<WeekTooltipContent activity={activity} extra="column" />}
+              content={
+                <WeekTooltipContent activity={activity} extra="column" />
+              }
             >
               <WeekdayHeatmapBlock activity={activity} extra="column" />
             </HeatmapTooltip>
@@ -193,7 +201,9 @@ export function WeekdayMinimalTicksDemo() {
           )}
           renderExtraColumn={({ activity }) => (
             <HeatmapTooltip
-              content={<WeekTooltipContent activity={activity} extra="column" />}
+              content={
+                <WeekTooltipContent activity={activity} extra="column" />
+              }
             >
               <WeekdayHeatmapBlock activity={activity} extra="column" />
             </HeatmapTooltip>
@@ -243,7 +253,9 @@ export function WeekdayBinaryDemo() {
           )}
           renderExtraColumn={({ activity }) => (
             <HeatmapTooltip
-              content={<WeekTooltipContent activity={activity} extra="column" />}
+              content={
+                <WeekTooltipContent activity={activity} extra="column" />
+              }
             >
               <WeekdayHeatmapBlock activity={activity} extra="column" />
             </HeatmapTooltip>
@@ -286,7 +298,9 @@ export function WeekdayTenLevelsDemo() {
           )}
           renderExtraColumn={({ activity }) => (
             <HeatmapTooltip
-              content={<WeekTooltipContent activity={activity} extra="column" />}
+              content={
+                <WeekTooltipContent activity={activity} extra="column" />
+              }
             >
               <WeekdayHeatmapBlock activity={activity} extra="column" />
             </HeatmapTooltip>
@@ -451,11 +465,7 @@ export function Weekday12HourDemo() {
           renderExtraRow={({ activity }) => (
             <HeatmapTooltip
               content={
-                <WeekTooltipContent
-                  activity={activity}
-                  extra="row"
-                  use12Hour
-                />
+                <WeekTooltipContent activity={activity} extra="row" use12Hour />
               }
             >
               <WeekdayHeatmapBlock activity={activity} extra="row" />
@@ -477,12 +487,7 @@ export function Weekday12HourDemo() {
         >
           {({ activity }) => (
             <HeatmapTooltip
-              content={
-                <WeekTooltipContent
-                  activity={activity}
-                  use12Hour
-                />
-              }
+              content={<WeekTooltipContent activity={activity} use12Hour />}
             >
               <WeekdayHeatmapBlock activity={activity} />
             </HeatmapTooltip>
@@ -719,7 +724,9 @@ export function WeekdayNoFooterDemo() {
           )}
           renderExtraColumn={({ activity }) => (
             <HeatmapTooltip
-              content={<WeekTooltipContent activity={activity} extra="column" />}
+              content={
+                <WeekTooltipContent activity={activity} extra="column" />
+              }
             >
               <WeekdayHeatmapBlock activity={activity} extra="column" />
             </HeatmapTooltip>
@@ -761,7 +768,9 @@ export function WeekdayCustomStylingDemo() {
           )}
           renderExtraColumn={({ activity }) => (
             <HeatmapTooltip
-              content={<WeekTooltipContent activity={activity} extra="column" />}
+              content={
+                <WeekTooltipContent activity={activity} extra="column" />
+              }
             >
               <WeekdayHeatmapBlock activity={activity} extra="column" />
             </HeatmapTooltip>

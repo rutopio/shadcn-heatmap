@@ -1,17 +1,14 @@
 import { createFileRoute } from "@tanstack/react-router";
 
-import { DemoFrame } from "@/components/landing/demo-frame";
 import { StatusDefaultDemo } from "@/components/demos";
 import { statusVariantItems } from "@/components/demos/variants/status";
+import { DemoFrame } from "@/components/landing/demo-frame";
 import { PropsTable } from "@/components/landing/props-table";
 import { ShowcaseSection } from "@/components/landing/showcase-section";
 import { VariantGrid } from "@/components/landing/variant-grid";
 import { CodeBlock } from "@/components/ui/code-block";
 import { statusProps } from "@/content/props/status";
-import {
-  statusBasicCode,
-  statusSampleData,
-} from "@/content/snippets/status";
+import { statusBasicCode, statusSampleData } from "@/content/snippets/status";
 import { pageHead } from "@/lib/seo";
 
 function StatusPage() {

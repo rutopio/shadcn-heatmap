@@ -1,16 +1,17 @@
-
-export const dateSampleData = `// type DateHourlyActivity = { date: string; hour: number; value: number }
+export const dateSampleData = `
+// type DateHourlyActivity = { date: string; hour: number; value: number }
 //   date:  "YYYY-MM-DD"
 //   hour:  0–23
 //   value: rainfall in mm
 
 const data: DateHourlyActivity[] = [
-  { date: "2025-12-11", hour: 13, value:  8.4 },
+  { date: "2025-12-11", hour: 13, value: 8.4 },
   { date: "2025-12-11", hour: 14, value: 22.7 },
   { date: "2025-12-11", hour: 15, value: 15.3 },
-  { date: "2025-12-12", hour: 14, value:  5.1 },
+  { date: "2025-12-12", hour: 14, value: 5.1 },
   // ...
-];`;
+]
+`;
 
 export const dateBasicCode = `import {
   DateHeatmap,
@@ -53,12 +54,7 @@ const sumByDate = (d, dates) => {
 export function DateHourlyUsage() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <DateHeatmap
-        data={data}
-        colors={{ scale: "var(--color-chart-3)" }}
-        extraRow={{ label: "Total", compute: sumByHour }}
-        extraColumn={{ label: "Total", compute: sumByDate }}
-      >
+      <DateHeatmap data={data}>
         <DateHeatmapBody
           renderExtraRow={({ activity, dateIndex }) => (
             <Tooltip>

@@ -1,7 +1,7 @@
+export const calendarSampleData = `
+// type Activity = { date: string; value: number }
 
-export const calendarSampleData = `// type Activity = { date: string; value: number }
-
-const activities: Activity[] = [
+const data: Activity[] = [
   { date: "2025-01-01", value: 3 },
   { date: "2025-01-02", value: 7 },
   { date: "2025-01-03", value: 0 },
@@ -13,9 +13,11 @@ const activities: Activity[] = [
   // Missing dates are auto-filled with value: 0
   { date: "2025-12-30", value: 8 },
   { date: "2025-12-31", value: 5 },
-];`;
+]
+`;
 
-export const calendarBasicCode = `import {
+export const calendarBasicCode = `
+import {
   CalendarHeatmap,
   CalendarHeatmapBlock,
   CalendarHeatmapBody,
@@ -31,7 +33,7 @@ import {
 } from "@/components/ui/tooltip";
 import { format, parseISO } from "date-fns";
 
-const activities = [
+const data = [
   { date: "2025-01-01", value: 3 },
   { date: "2025-01-02", value: 7 },
   { date: "2025-01-03", value: 0 },
@@ -41,7 +43,7 @@ const activities = [
 export function YearContributions() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <CalendarHeatmap data={activities}>
+      <CalendarHeatmap data={data}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
             <Tooltip>
@@ -52,8 +54,14 @@ export function YearContributions() {
                   weekIndex={weekIndex}
                 />
               </TooltipTrigger>
-              <TooltipContent side="top" className="pointer-events-none text-xs" sideOffset={6}>
-                <p className="font-medium">{format(parseISO(activity.date), "PPP")}</p>
+              <TooltipContent
+                side="top"
+                className="pointer-events-none text-xs"
+                sideOffset={6}
+              >
+                <p className="font-medium">
+                  {format(parseISO(activity.date), "PPP")}
+                </p>
                 <p className="text-muted-foreground">
                   {activity.value} contribution{activity.value !== 1 ? "s" : ""}
                 </p>
@@ -68,4 +76,5 @@ export function YearContributions() {
       </CalendarHeatmap>
     </TooltipProvider>
   );
-}`;
+}
+`;

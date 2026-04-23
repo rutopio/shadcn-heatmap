@@ -133,7 +133,8 @@ export const weekdayProps: ComponentPropsSection[] = [
         name: "hideWeekdayLabels",
         type: "boolean",
         default: "false",
-        description: "Hide weekday labels (e.g. `Mon`, `Tue`) on the left axis.",
+        description:
+          "Hide weekday labels (e.g. `Mon`, `Tue`) on the left axis.",
       },
       {
         name: "hideHourLabels",

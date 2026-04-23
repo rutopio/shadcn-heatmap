@@ -19,7 +19,7 @@
     "dev": "vite",
     "build": "pnpm build:registry && tsc -b && vite build",
     "build:registry": "tsx scripts/build-registry.ts",
-    "format": "prettier --write .",
+    "format": "prettier --write . && node scripts/format-snippets.mjs",
     "preview": "vite preview",
     "lint": "eslint .",
     "typecheck": "tsc -b --noEmit",
