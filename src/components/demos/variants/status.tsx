@@ -14,7 +14,7 @@ export const statusVariantItems = [
     description:
       "Use colors to theme the blocks, labelClassName to style date labels, className on Stat and Legend to style the footer, and blockSize/blockSizeRatio/blockMargin to adjust block dimensions.",
     preview: <StatusCustomStylingDemo />,
-    highlightLines: [4, 5, 6, 7, 8, 9, 10, 11, 13],
+    highlightLines: [3, 4, 5, 6, 7, 8, 9, 10, 12],
     code: `
 <StatusHeatmap
   data={data}
@@ -42,7 +42,7 @@ export const statusVariantItems = [
     description:
       "Omit the footer entirely for a minimal, distraction-free status timeline.",
     preview: <StatusNoFooterDemo />,
-    deletedLines: [6, 7, 8, 9],
+    deletedLines: [5, 6, 7, 8],
     code: `
 <StatusHeatmap data={data}>
   <StatusHeatmapBody>
@@ -60,8 +60,8 @@ export const statusVariantItems = [
     description:
       "Strip date labels — great for inline cards or a hero preview.",
     preview: <StatusNoLabelsDemo />,
-    highlightLines: [3],
-    deletedLines: [6, 7, 8, 9],
+    highlightLines: [2],
+    deletedLines: [5, 6, 7, 8],
     code: `
 <StatusHeatmap data={data}>
   <StatusHeatmapBody hideDateLabels>
@@ -80,8 +80,8 @@ export const statusVariantItems = [
       "Replace the default tooltip with any JSX — add emoji, charts, or extra metadata without touching the heatmap internals.",
     preview: <StatusCustomTooltipDemo />,
     highlightLines: [
-      4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
-      23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35,
+      3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+      23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
     ],
     code: `
 <StatusHeatmap data={data}>
@@ -132,8 +132,8 @@ export const statusVariantItems = [
       "Pass a date-fns locale to localise date formatting, and use labels to translate status names and the stat text.",
     preview: <StatusI18nDemo />,
     highlightLines: [
-      2, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 18, 19, 20, 21, 22, 23, 24, 25,
-      26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
+      1, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 17, 18, 19, 20, 21, 22, 23, 24, 25,
+      26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41,
     ],
     code: `
 import { zhTW } from "date-fns/locale";
@@ -190,7 +190,7 @@ import { zhTW } from "date-fns/locale";
     description:
       "Date labels are shown by default. Use `labelInterval` to control how often they appear.",
     preview: <StatusWithLabelsDemo />,
-    highlightLines: [3],
+    highlightLines: [2],
     code: `
 <StatusHeatmap data={data}>
   <StatusHeatmapBody labelInterval={15}>
@@ -207,7 +207,7 @@ import { zhTW } from "date-fns/locale";
     title: "Compact (30 days)",
     description: "Show a shorter time period with smaller blocks.",
     preview: <StatusUptimeDemo />,
-    highlightLines: [3, 4, 5, 6],
+    highlightLines: [2, 3, 4, 5],
     code: `
 <StatusHeatmap
   data={last30Days}

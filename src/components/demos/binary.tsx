@@ -31,7 +31,11 @@ import { HeatmapTooltip, TooltipProvider, WEEKDAY_NAMES } from "./shared";
 export function CalendarBinaryDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <CalendarHeatmap data={calendarBinaryData} levels={2}>
+      <CalendarHeatmap
+        data={calendarBinaryData}
+        levels={2}
+        colors={{ scale: "var(--color-chart-3)" }}
+      >
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
             <HeatmapTooltip
@@ -104,7 +108,7 @@ export function DateBinaryDemo() {
       <DateHeatmap
         data={dateBinaryData}
         levels={2}
-        colors={{ scale: "var(--color-chart-3)" }}
+        colors={{ scale: "var(--color-chart-1)" }}
       >
         <DateHeatmapBody>
           {({ activity, dateIndex }) => (
@@ -116,7 +120,7 @@ export function DateBinaryDemo() {
                     {`${String(activity.hour).padStart(2, "0")}:00`}
                   </p>
                   <p className="text-muted-foreground">
-                    {activity.value === 1 ? "Up" : "Down"}
+                    {activity.value === 1 ? "Pass" : "Failed"}
                   </p>
                 </>
               }
@@ -126,7 +130,7 @@ export function DateBinaryDemo() {
           )}
         </DateHeatmapBody>
         <DateHeatmapFooter>
-          <DateHeatmapLegend labels={{ less: "Down", more: "Up" }} />
+          <DateHeatmapLegend labels={{ less: "Failed", more: "Pass" }} />
         </DateHeatmapFooter>
       </DateHeatmap>
     </TooltipProvider>

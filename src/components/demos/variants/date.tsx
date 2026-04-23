@@ -17,7 +17,7 @@ export const dateVariantItems = [
     description:
       "Use colors to theme the blocks, labelClassName to style axis labels, className on Stat and Legend to style the footer, and blockSize/blockMargin to adjust block dimensions.",
     preview: <DateCustomStylingDemo />,
-    highlightLines: [4, 5, 6, 8, 12, 13],
+    highlightLines: [3, 4, 5, 7, 11, 12],
     code: `
 <DateHeatmap
   data={data}
@@ -41,9 +41,9 @@ export const dateVariantItems = [
       "Omit extraRow/extraColumn for a clean grid without any aggregate rows or columns.",
     preview: <DatePlainGridDemo />,
     deletedLines: [
-      4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+      3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
       23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-      41, 42, 43, 44, 45, 46, 47, 48,
+      41, 42, 43, 44, 45, 46, 47,
     ],
     code: `
 <DateHeatmap data={data}>
@@ -107,7 +107,7 @@ export const dateVariantItems = [
     description:
       "Expand the intensity scale to 10 levels for fine-grained differentiation of high-frequency data.",
     preview: <DateTenLevelsDemo />,
-    highlightLines: [2],
+    highlightLines: [1],
     code: `
 <DateHeatmap data={data} levels={10}>
   <DateHeatmapBody>
@@ -126,10 +126,11 @@ export const dateVariantItems = [
       "Pass a date-fns locale to auto-generate localised date labels, plus custom extra column label, legend, and total value text.",
     preview: <DateSpanishDemo />,
     highlightLines: [
-      2, 4, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+      1, 3, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
       23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-      41, 42, 43, 44, 45, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
-      60, 61, 62, 63, 64, 67, 68, 69, 70, 71, 72, 73, 74,
+      41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 52, 53, 54, 55, 56, 57, 58, 59,
+      60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 74, 75, 76, 77, 78, 79,
+      80, 81,
     ],
     code: `
 import { es } from "date-fns/locale";
@@ -150,8 +151,12 @@ import { es } from "date-fns/locale";
           className="pointer-events-none text-xs"
           sideOffset={6}
         >
-          <p className="font-medium">Total, {String(activity.hour).padStart(2, "0")}:00</p>
-          <p className="text-muted-foreground">{activity.value.toFixed(1)} mm</p>
+          <p className="font-medium">
+            Total, {String(activity.hour).padStart(2, "0")}:00
+          </p>
+          <p className="text-muted-foreground">
+            {activity.value.toFixed(1)} mm
+          </p>
         </TooltipContent>
       </Tooltip>
     )}
@@ -172,7 +177,9 @@ import { es } from "date-fns/locale";
           <p className="font-medium">
             {format(parseISO(activity.date), "PPP", { locale: es })}, Total
           </p>
-          <p className="text-muted-foreground">{activity.value.toFixed(1)} mm</p>
+          <p className="text-muted-foreground">
+            {activity.value.toFixed(1)} mm
+          </p>
         </TooltipContent>
       </Tooltip>
     )}
@@ -191,7 +198,9 @@ import { es } from "date-fns/locale";
             {format(parseISO(activity.date), "PPP", { locale: es })},{" "}
             {String(activity.hour).padStart(2, "0")}:00
           </p>
-          <p className="text-muted-foreground">{activity.value.toFixed(1)} mm</p>
+          <p className="text-muted-foreground">
+            {activity.value.toFixed(1)} mm
+          </p>
         </TooltipContent>
       </Tooltip>
     )}
@@ -204,7 +213,7 @@ import { es } from "date-fns/locale";
         </div>
       )}
     </DateHeatmapStat>
-    <DateHeatmapLegend labels={{ less: "Menos", more: "Más" }} />
+    <DateHeatmapLegend labels={{ less: "Seco", more: "Húmedo" }} />
   </DateHeatmapFooter>
 </DateHeatmap>
 `,
@@ -214,7 +223,7 @@ import { es } from "date-fns/locale";
     description:
       "Omit the footer entirely for a minimal, distraction-free heatmap grid.",
     preview: <DateNoFooterDemo />,
-    deletedLines: [6, 7, 8, 9],
+    deletedLines: [5, 6, 7, 8],
     code: `
 <DateHeatmap data={data}>
   <DateHeatmapBody>
@@ -232,8 +241,8 @@ import { es } from "date-fns/locale";
     description:
       "Strip both axis labels — great for inline cards or a hero preview.",
     preview: <DateNoLabelsDemo />,
-    highlightLines: [3],
-    deletedLines: [6, 7, 8, 9],
+    highlightLines: [2],
+    deletedLines: [5, 6, 7, 8],
     code: `
 <DateHeatmap data={data}>
   <DateHeatmapBody hideDateLabels hideHourLabels>
@@ -252,13 +261,13 @@ import { es } from "date-fns/locale";
       "Replace the default tooltip with any JSX — add emoji, charts, or extra metadata without touching the heatmap internals.",
     preview: <DateCustomTooltipDemo />,
     highlightLines: [
-      4, 5, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+      3, 4, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
       25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
       43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
-      61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 79,
+      61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 78, 79,
       80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97,
-      98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 113, 114,
-      115, 116, 117, 118, 119,
+      98, 99, 100, 101, 102, 103, 104, 105, 106, 107, 108, 112, 113, 114, 115,
+      116, 117, 118,
     ],
     code: `
 <DateHeatmap
@@ -389,7 +398,7 @@ import { es } from "date-fns/locale";
     description:
       "Only label every 6th hour (00 / 06 / 12 / 18) and drop the trailing tick to reduce axis noise.",
     preview: <DateSparseTicksDemo />,
-    highlightLines: [4, 5, 6, 7, 8, 9],
+    highlightLines: [3, 4, 5, 6, 7, 8],
     code: `
 <DateHeatmap
   data={data}
@@ -415,7 +424,7 @@ import { es } from "date-fns/locale";
     description:
       "Switch the hour axis to 12-hour AM/PM format with a single prop.",
     preview: <Date12HourDemo />,
-    highlightLines: [2],
+    highlightLines: [1],
     code: `
 <DateHeatmap data={data} use12Hour>
   <DateHeatmapBody>
@@ -434,8 +443,8 @@ import { es } from "date-fns/locale";
       "extraRow/extraColumn accept any ReactNode label and any compute function — sum, average, median, or whatever fits. Stat is updated to reflect the aggregate.",
     preview: <DateMedianDemo />,
     highlightLines: [
-      2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 25,
-      26, 32, 33, 34, 35, 36, 37, 38,
+      1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 24,
+      25, 31, 32, 33, 34, 35, 36, 37,
     ],
     code: `
 const medianByHour = (data) => {

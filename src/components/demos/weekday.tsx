@@ -116,7 +116,7 @@ export function WeekdayDefaultDemo() {
               </div>
             )}
           </WeekdayHeatmapStat>
-          <WeekdayHeatmapLegend />
+          <WeekdayHeatmapLegend labels={{ less: "Cold", more: "Hot" }} />
         </WeekdayHeatmapFooter>
       </WeekdayHeatmap>
     </TooltipProvider>
@@ -168,7 +168,7 @@ export function WeekdayMondayStartDemo() {
               </div>
             )}
           </WeekdayHeatmapStat>
-          <WeekdayHeatmapLegend />
+          <WeekdayHeatmapLegend labels={{ less: "Cold", more: "Hot" }} />
         </WeekdayHeatmapFooter>
       </WeekdayHeatmap>
     </TooltipProvider>
@@ -225,7 +225,7 @@ export function WeekdayMinimalTicksDemo() {
               </div>
             )}
           </WeekdayHeatmapStat>
-          <WeekdayHeatmapLegend />
+          <WeekdayHeatmapLegend labels={{ less: "Cold", more: "Hot" }} />
         </WeekdayHeatmapFooter>
       </WeekdayHeatmap>
     </TooltipProvider>
@@ -270,7 +270,7 @@ export function WeekdayBinaryDemo() {
           )}
         </WeekdayHeatmapBody>
         <WeekdayHeatmapFooter>
-          <WeekdayHeatmapLegend />
+          <WeekdayHeatmapLegend labels={{ less: "Cold", more: "Hot" }} />
         </WeekdayHeatmapFooter>
       </WeekdayHeatmap>
     </TooltipProvider>
@@ -315,7 +315,7 @@ export function WeekdayTenLevelsDemo() {
           )}
         </WeekdayHeatmapBody>
         <WeekdayHeatmapFooter>
-          <WeekdayHeatmapLegend />
+          <WeekdayHeatmapLegend labels={{ less: "Cold", more: "Hot" }} />
         </WeekdayHeatmapFooter>
       </WeekdayHeatmap>
     </TooltipProvider>
@@ -389,7 +389,7 @@ export function WeekdayJapaneseDemo() {
               </div>
             )}
           </WeekdayHeatmapStat>
-          <WeekdayHeatmapLegend labels={{ less: "少ない", more: "多い" }} />
+          <WeekdayHeatmapLegend labels={{ less: "寒い", more: "暑い" }} />
         </WeekdayHeatmapFooter>
       </WeekdayHeatmap>
     </TooltipProvider>
@@ -421,7 +421,7 @@ export function WeekdayPlainGridDemo() {
               </div>
             )}
           </WeekdayHeatmapStat>
-          <WeekdayHeatmapLegend />
+          <WeekdayHeatmapLegend labels={{ less: "Cold", more: "Hot" }} />
         </WeekdayHeatmapFooter>
       </WeekdayHeatmap>
     </TooltipProvider>
@@ -501,7 +501,7 @@ export function Weekday12HourDemo() {
               </div>
             )}
           </WeekdayHeatmapStat>
-          <WeekdayHeatmapLegend />
+          <WeekdayHeatmapLegend labels={{ less: "Cold", more: "Hot" }} />
         </WeekdayHeatmapFooter>
       </WeekdayHeatmap>
     </TooltipProvider>
@@ -570,7 +570,7 @@ export function WeekdayMedianDemo() {
               </div>
             )}
           </WeekdayHeatmapStat>
-          <WeekdayHeatmapLegend />
+          <WeekdayHeatmapLegend labels={{ less: "Cold", more: "Hot" }} />
         </WeekdayHeatmapFooter>
       </WeekdayHeatmap>
     </TooltipProvider>
@@ -697,7 +697,7 @@ export function WeekdayCustomTooltipDemo() {
               </div>
             )}
           </WeekdayHeatmapStat>
-          <WeekdayHeatmapLegend />
+          <WeekdayHeatmapLegend labels={{ less: "Cold", more: "Hot" }} />
         </WeekdayHeatmapFooter>
       </WeekdayHeatmap>
     </TooltipProvider>
@@ -792,7 +792,10 @@ export function WeekdayCustomStylingDemo() {
               </div>
             )}
           </WeekdayHeatmapStat>
-          <WeekdayHeatmapLegend className="text-destructive" />
+          <WeekdayHeatmapLegend
+            className="text-destructive"
+            labels={{ less: "Cold", more: "Hot" }}
+          />
         </WeekdayHeatmapFooter>
       </WeekdayHeatmap>
     </TooltipProvider>

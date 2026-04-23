@@ -18,7 +18,7 @@ export const weekdayVariantItems = [
     description:
       "Use colors to theme the blocks, labelClassName to style axis labels, className on Stat and Legend to style the footer, and blockSize/blockMargin to adjust block dimensions.",
     preview: <WeekdayCustomStylingDemo />,
-    highlightLines: [4, 5, 6, 8, 12, 13],
+    highlightLines: [3, 4, 5, 7, 11, 12],
     code: `
 <WeekdayHeatmap
   data={data}
@@ -42,9 +42,8 @@ export const weekdayVariantItems = [
       "Omit extraRow/extraColumn for a clean grid without any aggregate rows or columns.",
     preview: <WeekdayPlainGridDemo />,
     deletedLines: [
-      4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
+      3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
       23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40,
-      41, 42,
     ],
     code: `
 <WeekdayHeatmap data={data}>
@@ -102,7 +101,7 @@ export const weekdayVariantItems = [
     description:
       "Expand the intensity scale to 10 levels for fine-grained differentiation of high-frequency data.",
     preview: <WeekdayTenLevelsDemo />,
-    highlightLines: [2],
+    highlightLines: [1],
     code: `
 <WeekdayHeatmap data={data} levels={10}>
   <WeekdayHeatmapBody>
@@ -121,10 +120,10 @@ export const weekdayVariantItems = [
       "Pass a date-fns locale to auto-generate localised weekday labels, plus custom extra row/column label, legend, and total value text.",
     preview: <WeekdayJapaneseDemo />,
     highlightLines: [
-      2, 6, 7, 8, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-      26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43,
-      44, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62,
-      63, 66, 67, 68, 69, 70, 71, 72, 73,
+      1, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
+      25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
+      43, 44, 45, 46, 47, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61,
+      62, 63, 64, 65, 66, 67, 68, 71, 72, 73, 74, 75, 76, 77, 78,
     ],
     code: `
 import { ja } from "date-fns/locale";
@@ -149,7 +148,9 @@ import { ja } from "date-fns/locale";
           <p className="font-medium">
             平均, {String(activity.hour).padStart(2, "0")}:00
           </p>
-          <p className="text-muted-foreground">平均 {activity.value.toFixed(1)} °C</p>
+          <p className="text-muted-foreground">
+            平均 {activity.value.toFixed(1)} °C
+          </p>
         </TooltipContent>
       </Tooltip>
     )}
@@ -166,7 +167,9 @@ import { ja } from "date-fns/locale";
           <p className="font-medium">
             {generateWeekdayNames(ja)[activity.weekday]}, 平均
           </p>
-          <p className="text-muted-foreground">平均 {activity.value.toFixed(1)} °C</p>
+          <p className="text-muted-foreground">
+            平均 {activity.value.toFixed(1)} °C
+          </p>
         </TooltipContent>
       </Tooltip>
     )}
@@ -185,7 +188,9 @@ import { ja } from "date-fns/locale";
             {generateWeekdayNames(ja)[activity.weekday]},{" "}
             {String(activity.hour).padStart(2, "0")}:00
           </p>
-          <p className="text-muted-foreground">{activity.value.toFixed(1)} °C</p>
+          <p className="text-muted-foreground">
+            {activity.value.toFixed(1)} °C
+          </p>
         </TooltipContent>
       </Tooltip>
     )}
@@ -198,7 +203,7 @@ import { ja } from "date-fns/locale";
         </div>
       )}
     </WeekdayHeatmapStat>
-    <WeekdayHeatmapLegend labels={{ less: "少ない", more: "多い" }} />
+    <WeekdayHeatmapLegend labels={{ less: "寒い", more: "暑い" }} />
   </WeekdayHeatmapFooter>
 </WeekdayHeatmap>
 `,
@@ -208,7 +213,7 @@ import { ja } from "date-fns/locale";
     description:
       "Omit the footer entirely for a minimal, distraction-free heatmap grid.",
     preview: <WeekdayNoFooterDemo />,
-    deletedLines: [6, 7, 8, 9],
+    deletedLines: [5, 6, 7, 8],
     code: `
 <WeekdayHeatmap data={data}>
   <WeekdayHeatmapBody>
@@ -226,8 +231,8 @@ import { ja } from "date-fns/locale";
     description:
       "Strip both axis labels — great for inline cards or a hero preview.",
     preview: <WeekdayMiniDemo />,
-    highlightLines: [3],
-    deletedLines: [6, 7, 8, 9],
+    highlightLines: [2],
+    deletedLines: [5, 6, 7, 8],
     code: `
 <WeekdayHeatmap data={data}>
   <WeekdayHeatmapBody hideHourLabels hideWeekdayLabels>
@@ -246,12 +251,12 @@ import { ja } from "date-fns/locale";
       "Replace the default tooltip with any JSX — add emoji, charts, or extra metadata without touching the heatmap internals.",
     preview: <WeekdayCustomTooltipDemo />,
     highlightLines: [
-      2, 4, 5, 6, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-      25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
-      43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60,
-      61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 75, 76, 77, 78, 79,
-      80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97,
-      98, 99, 100, 101, 102, 103, 104, 105, 106, 107,
+      1, 3, 4, 5, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
+      24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41,
+      42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
+      60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 74, 75, 76, 77, 78,
+      79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96,
+      97, 98, 99, 100, 101, 102, 103, 104, 105, 106,
     ],
     code: `
 import { format } from "date-fns";
@@ -373,7 +378,7 @@ const WEEKDAY_NAMES = Array.from({ length: 7 }, (_, i) =>
     description:
       "Rotate the weekday axis to start on Monday instead of Sunday.",
     preview: <WeekdayMondayStartDemo />,
-    highlightLines: [2],
+    highlightLines: [1],
     code: `
 <WeekdayHeatmap data={data} weekStart={1}>
   <WeekdayHeatmapBody>
@@ -391,7 +396,7 @@ const WEEKDAY_NAMES = Array.from({ length: 7 }, (_, i) =>
     description:
       "Only label every 6th hour (00 / 06 / 12 / 18) and drop the trailing tick to reduce axis noise.",
     preview: <WeekdayMinimalTicksDemo />,
-    highlightLines: [4, 5, 6, 7, 8, 9],
+    highlightLines: [3, 4, 5, 6, 7, 8],
     code: `
 <WeekdayHeatmap
   data={data}
@@ -417,7 +422,7 @@ const WEEKDAY_NAMES = Array.from({ length: 7 }, (_, i) =>
     description:
       "Switch the hour axis to 12-hour AM/PM format with a single prop.",
     preview: <Weekday12HourDemo />,
-    highlightLines: [2],
+    highlightLines: [1],
     code: `
 <WeekdayHeatmap data={data} use12Hour>
   <WeekdayHeatmapBody>
@@ -436,8 +441,8 @@ const WEEKDAY_NAMES = Array.from({ length: 7 }, (_, i) =>
       "extraRow/extraColumn accept any ReactNode label and any compute function — sum, average, median, or whatever fits. Stat is updated to reflect the aggregate.",
     preview: <WeekdayMedianDemo />,
     highlightLines: [
-      2, 3, 4, 5, 6, 7, 8, 9, 11, 12, 13, 14, 15, 16, 17, 18, 22, 23, 29, 30,
-      31, 32, 33, 34, 35,
+      1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 21, 22, 28, 29,
+      30, 31, 32, 33, 34,
     ],
     code: `
 const medianByHour = (data) => {

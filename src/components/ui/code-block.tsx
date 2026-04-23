@@ -61,20 +61,22 @@ export function CodeBlock({
 }: CodeBlockProps) {
   const [lines, setLines] = React.useState<HighlightedLine[] | null>(null);
 
+  const trimmedCode = code.trim();
+
   React.useEffect(() => {
     let cancelled = false;
-    highlightTokens(code, lang).then((result) => {
+    highlightTokens(trimmedCode, lang).then((result) => {
       if (!cancelled) setLines(result);
     });
     return () => {
       cancelled = true;
     };
-  }, [code, lang]);
+  }, [trimmedCode, lang]);
 
   const handleCopy = React.useCallback(async () => {
-    await navigator.clipboard.writeText(code);
+    await navigator.clipboard.writeText(trimmedCode);
     toast.success("Copied to clipboard");
-  }, [code]);
+  }, [trimmedCode]);
 
   return (
     <div
@@ -124,10 +126,14 @@ export function CodeBlock({
                                 : "text-muted-foreground/40"
                           )}
                         >
-                          {(isHighlighted || isDeleted) ? (
-                            <strong>{lineNumber}&nbsp;{marker}</strong>
+                          {isHighlighted || isDeleted ? (
+                            <strong>
+                              {lineNumber}&nbsp;{marker}
+                            </strong>
                           ) : (
-                            <>{lineNumber}&nbsp;{marker}</>
+                            <>
+                              {lineNumber}&nbsp;{marker}
+                            </>
                           )}
                         </span>
                         <span className="pr-4">
@@ -147,7 +153,7 @@ export function CodeBlock({
                     </React.Fragment>
                   );
                 })
-              : code}
+              : trimmedCode}
             {/* eslint-enable @eslint-react/no-array-index-key */}
           </code>
         </pre>

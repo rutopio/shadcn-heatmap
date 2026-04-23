@@ -65,24 +65,24 @@ function InstallPage() {
               </p>
               <div className="grid gap-3">
                 <CodeBlock
-                  code={cliInstallCommands.month}
+                  code={cliInstallCommands.calendar}
                   lang="bash"
-                  filename="# Month / GitHub-style"
+                  filename="# CalendarHeatmap"
                 />
                 <CodeBlock
                   code={cliInstallCommands.weekday}
                   lang="bash"
-                  filename="# Weekday (weekday x hour)"
+                  filename="# WeekdayHeatmap"
                 />
                 <CodeBlock
                   code={cliInstallCommands.date}
                   lang="bash"
-                  filename="# Date (date x hour)"
+                  filename="# DateHeatmap"
                 />
                 <CodeBlock
                   code={cliInstallCommands.status}
                   lang="bash"
-                  filename="# Status timeline"
+                  filename="# StatusHeatmap"
                 />
               </div>
             </div>
@@ -94,7 +94,7 @@ function InstallPage() {
               <CodeBlock
                 code={packageManagerCommands.pnpm}
                 lang="bash"
-                filename="install peer deps"
+                filename="# Install peer deps"
               />
             </div>
 
@@ -109,7 +109,7 @@ function InstallPage() {
               <CodeBlock
                 code="npx shadcn@latest add tooltip"
                 lang="bash"
-                filename="install tooltip"
+                filename="# Install tooltip"
               />
             </div>
           </TabsContent>
@@ -177,6 +177,7 @@ function InstallPage() {
               </p>
               <CodeBlock
                 code={themeTokensSnippet}
+                lang="css"
                 filename="src/styles/globals.css"
               />
             </div>
@@ -193,7 +194,7 @@ function InstallPage() {
               <CodeBlock
                 code="npx shadcn@latest add tooltip"
                 lang="bash"
-                filename="install tooltip"
+                filename="# Install tooltip"
               />
             </div>
 

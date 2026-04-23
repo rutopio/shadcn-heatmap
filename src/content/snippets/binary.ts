@@ -1,10 +1,9 @@
-export const binaryCalendarHighlightLines = [2, 4, 5, 10, 20];
+export const binaryCalendarHighlightLines = [1, 2, 3, 4, 8, 14];
 export const binaryCalendarCode = `
 // Binary data: value is strictly 0 (missed) or 1 (done)
 const data = [
-  { date: "2025-01-01", value: 1 },
-  { date: "2025-01-02", value: 0 },
-  // ... one entry per day
+  { date: "2025-01-01", value: 1 }, // done
+  { date: "2025-01-02", value: 0 }, // missed
 ];
 
 <TooltipProvider delayDuration={80} skipDelayDuration={0}>
@@ -20,13 +19,12 @@ const data = [
 </TooltipProvider>
 `;
 
-export const binaryWeekdayHighlightLines = [1, 3, 4, 9, 18];
+export const binaryWeekdayHighlightLines = [1, 2, 3, 4, 8, 13];
 export const binaryWeekdayCode = `
 // Binary data: value is strictly 0 (free) or 1 (has meeting)
 const data = [
-  { weekday: 1, hour: 9, value: 1 },
-  { weekday: 1, hour: 10, value: 1 },
-  // ...
+  { weekday: 1, hour: 9, value: 1 }, // meeting
+  { weekday: 1, hour: 10, value: 0 }, // free
 ];
 
 <TooltipProvider delayDuration={80} skipDelayDuration={0}>
@@ -41,14 +39,12 @@ const data = [
 </TooltipProvider>
 `;
 
-export const binaryDateHighlightLines = [1, 3, 4, 5, 10, 19];
+export const binaryDateHighlightLines = [1, 2, 3, 4, 8, 13];
 export const binaryDateCode = `
-// Binary data: value is strictly 0 (down) or 1 (up)
+// Binary data: value is strictly 0 (failed) or 1 (pass)
 const data = [
-  { date: "2025-12-01", hour: 0, value: 1 },
-  { date: "2025-12-01", hour: 1, value: 1 },
-  { date: "2025-12-03", hour: 2, value: 0 },
-  // ...
+  { date: "2025-12-01", hour: 9, value: 1 }, // pass
+  { date: "2025-12-02", hour: 11, value: 0 }, // failed
 ];
 
 <TooltipProvider delayDuration={80} skipDelayDuration={0}>
@@ -57,7 +53,7 @@ const data = [
       {({ activity, dateIndex }) => <Tooltip>{/* ... */}</Tooltip>}
     </DateHeatmapBody>
     <DateHeatmapFooter>
-      <DateHeatmapLegend labels={{ less: "Down", more: "Up" }} />
+      <DateHeatmapLegend labels={{ less: "Failed", more: "Pass" }} />
     </DateHeatmapFooter>
   </DateHeatmap>
 </TooltipProvider>
@@ -83,8 +79,8 @@ const weekdayData = [
 
 // DateHeatmap binary: { date: string; hour: number; value: 0 | 1 }
 const dateData = [
-  { date: "2025-12-01", hour: 0, value: 1 }, // up
-  { date: "2025-12-03", hour: 2, value: 0 }, // down (maintenance)
+  { date: "2025-12-01", hour: 9, value: 1 }, // pass
+  { date: "2025-12-02", hour: 11, value: 0 }, // failed
   // ...
 ]
 `;

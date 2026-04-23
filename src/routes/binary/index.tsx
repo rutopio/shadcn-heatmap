@@ -35,9 +35,9 @@ const binaryVariants = [
     highlightLines: binaryWeekdayHighlightLines,
   },
   {
-    title: "DateHeatmap — Service uptime",
+    title: "DateHeatmap — CI/CD monitor",
     description:
-      "Hourly uptime status across 10 days. The bottom row shows how many days each hour was up. Dec 3 shows a planned maintenance window, Dec 7 shows a partial incident.",
+      "Hourly pipeline runs across 7 days. Green = Pass, empty = Failed or no run. Dec 2 and Dec 4 show failure clusters during active hours.",
     preview: <DateBinaryDemo />,
     code: binaryDateCode,
     highlightLines: binaryDateHighlightLines,

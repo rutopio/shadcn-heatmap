@@ -8,16 +8,19 @@ let highlighterPromise: Promise<HighlighterCore> | null = null;
 async function getHighlighter(): Promise<HighlighterCore> {
   if (!highlighterPromise) {
     highlighterPromise = (async () => {
-      const [githubLight, githubDark, tsx, bash, json] = await Promise.all([
-        import("@shikijs/themes/github-light"),
-        import("@shikijs/themes/github-dark"),
-        import("@shikijs/langs/tsx"),
-        import("@shikijs/langs/bash"),
-        import("@shikijs/langs/json"),
-      ]);
+      const [githubLight, githubDark, tsx, bash, json, css] = await Promise.all(
+        [
+          import("@shikijs/themes/github-light"),
+          import("@shikijs/themes/github-dark"),
+          import("@shikijs/langs/tsx"),
+          import("@shikijs/langs/bash"),
+          import("@shikijs/langs/json"),
+          import("@shikijs/langs/css"),
+        ]
+      );
       return createHighlighterCore({
         themes: [githubLight.default, githubDark.default],
-        langs: [tsx.default, bash.default, json.default],
+        langs: [tsx.default, bash.default, json.default, css.default],
         engine: createOnigurumaEngine(import("shiki/wasm")),
       });
     })();
@@ -25,7 +28,7 @@ async function getHighlighter(): Promise<HighlighterCore> {
   return highlighterPromise;
 }
 
-export type SupportedLang = "tsx" | "bash" | "json";
+export type SupportedLang = "tsx" | "bash" | "json" | "css";
 
 export type HighlightedToken = {
   content: string;

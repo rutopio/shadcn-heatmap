@@ -128,7 +128,7 @@ export function DateDefaultDemo() {
               </div>
             )}
           </DateHeatmapStat>
-          <DateHeatmapLegend />
+          <DateHeatmapLegend labels={{ less: "Dry", more: "Humid" }} />
         </DateHeatmapFooter>
       </DateHeatmap>
     </TooltipProvider>
@@ -187,7 +187,7 @@ export function DateTenLevelsDemo() {
               </div>
             )}
           </DateHeatmapStat>
-          <DateHeatmapLegend />
+          <DateHeatmapLegend labels={{ less: "Dry", more: "Humid" }} />
         </DateHeatmapFooter>
       </DateHeatmap>
     </TooltipProvider>
@@ -318,7 +318,7 @@ export function DateCustomTooltipDemo() {
               </div>
             )}
           </DateHeatmapStat>
-          <DateHeatmapLegend />
+          <DateHeatmapLegend labels={{ less: "Dry", more: "Humid" }} />
         </DateHeatmapFooter>
       </DateHeatmap>
     </TooltipProvider>
@@ -382,7 +382,7 @@ export function DateSparseTicksDemo() {
               </div>
             )}
           </DateHeatmapStat>
-          <DateHeatmapLegend />
+          <DateHeatmapLegend labels={{ less: "Dry", more: "Humid" }} />
         </DateHeatmapFooter>
       </DateHeatmap>
     </TooltipProvider>
@@ -410,7 +410,7 @@ export function DatePlainGridDemo() {
               </div>
             )}
           </DateHeatmapStat>
-          <DateHeatmapLegend />
+          <DateHeatmapLegend labels={{ less: "Dry", more: "Humid" }} />
         </DateHeatmapFooter>
       </DateHeatmap>
     </TooltipProvider>
@@ -494,7 +494,7 @@ export function Date12HourDemo() {
               </div>
             )}
           </DateHeatmapStat>
-          <DateHeatmapLegend />
+          <DateHeatmapLegend labels={{ less: "Dry", more: "Humid" }} />
         </DateHeatmapFooter>
       </DateHeatmap>
     </TooltipProvider>
@@ -560,11 +560,11 @@ export function DateSpanishDemo() {
           <DateHeatmapStat>
             {({ value }) => (
               <div className="text-muted-foreground tabular-nums">
-                Total Rainfall: {Number(value).toFixed(1)} mm
+                Lluvia total: {Number(value).toFixed(1)} mm
               </div>
             )}
           </DateHeatmapStat>
-          <DateHeatmapLegend labels={{ less: "Menos", more: "Más" }} />
+          <DateHeatmapLegend labels={{ less: "Seco", more: "Húmedo" }} />
         </DateHeatmapFooter>
       </DateHeatmap>
     </TooltipProvider>
@@ -622,7 +622,7 @@ export function DateP95Demo() {
               </div>
             )}
           </DateHeatmapStat>
-          <DateHeatmapLegend />
+          <DateHeatmapLegend labels={{ less: "Dry", more: "Humid" }} />
         </DateHeatmapFooter>
       </DateHeatmap>
     </TooltipProvider>
@@ -680,7 +680,7 @@ export function DateMedianDemo() {
               </div>
             )}
           </DateHeatmapStat>
-          <DateHeatmapLegend />
+          <DateHeatmapLegend labels={{ less: "Dry", more: "Humid" }} />
         </DateHeatmapFooter>
       </DateHeatmap>
     </TooltipProvider>
@@ -790,7 +790,10 @@ export function DateCustomStylingDemo() {
               </div>
             )}
           </DateHeatmapStat>
-          <DateHeatmapLegend className="text-destructive" />
+          <DateHeatmapLegend
+            className="text-destructive"
+            labels={{ less: "Dry", more: "Humid" }}
+          />
         </DateHeatmapFooter>
       </DateHeatmap>
     </TooltipProvider>
