@@ -2,7 +2,7 @@
 
 # shadcn-heatmap
 
-Heatmap components for React, styled like [shadcn/ui](https://ui.shadcn.com).
+Heatmap components for React, built for [shadcn/ui](https://ui.shadcn.com).
 
 **Live demo: [https://shadcn-heatmap.pages.dev](https://shadcn-heatmap.pages.dev)**
 

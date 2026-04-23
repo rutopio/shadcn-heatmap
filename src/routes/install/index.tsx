@@ -28,9 +28,9 @@ function InstallPage() {
             />{" "}
             Quick start
           </span>
-          <h2 className="text-3xl font-semibold text-balance sm:text-4xl">
+          <h1 className="text-3xl font-semibold text-balance sm:text-4xl">
             Install in under a minute
-          </h2>
+          </h1>
           <p className="text-muted-foreground max-w-2xl text-pretty">
             Use the shadcn CLI to drop a file into your project, or copy the
             source manually. Either way, you own the code afterwards.
@@ -49,12 +49,12 @@ function InstallPage() {
 
           <TabsContent value="cli" className="mt-6 space-y-6">
             <div className="space-y-2">
-              <h3 className="text-sm font-medium text-balance">
+              <h2 className="text-sm font-medium text-balance">
                 1. Install via{" "}
                 <code className="bg-muted rounded px-1 py-0.5 font-mono text-xs">
                   shadcn@latest
                 </code>
-              </h3>
+              </h2>
               <p className="text-muted-foreground text-sm text-pretty">
                 Pick the component you need. The CLI will write it into your
                 project&rsquo;s{" "}
@@ -88,9 +88,9 @@ function InstallPage() {
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-sm font-medium text-balance">
+              <h2 className="text-sm font-medium text-balance">
                 2. Ensure the runtime dependencies exist
-              </h3>
+              </h2>
               <CodeBlock
                 code={packageManagerCommands.pnpm}
                 lang="bash"
@@ -99,10 +99,10 @@ function InstallPage() {
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-sm font-medium text-balance">
+              <h2 className="text-sm font-medium text-balance">
                 3. Install the shadcn tooltip component (optional but
                 recommended)
-              </h3>
+              </h2>
               <p className="text-muted-foreground text-sm text-pretty">
                 The demos use tooltips to show activity details on hover:
               </p>
@@ -116,9 +116,9 @@ function InstallPage() {
 
           <TabsContent value="manual" className="mt-6 space-y-6">
             <div className="space-y-2">
-              <h3 className="text-sm font-medium text-balance">
+              <h2 className="text-sm font-medium text-balance">
                 1. Install peer dependencies
-              </h3>
+              </h2>
               <Tabs defaultValue="pnpm">
                 <TabsList>
                   <TabsTrigger value="pnpm">pnpm</TabsTrigger>
@@ -142,20 +142,20 @@ function InstallPage() {
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-sm font-medium text-balance">
+              <h2 className="text-sm font-medium text-balance">
                 2. Add the{" "}
                 <code className="bg-muted rounded px-1 py-0.5 font-mono text-xs">
                   cn
                 </code>{" "}
                 helper
-              </h3>
+              </h2>
               <CodeBlock code={utilsSnippet} filename="src/lib/utils.ts" />
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-sm font-medium text-balance">
+              <h2 className="text-sm font-medium text-balance">
                 3. Expose theme tokens used by the blocks
-              </h3>
+              </h2>
               <p className="text-muted-foreground text-sm text-pretty">
                 The heatmaps reference{" "}
                 <code className="bg-muted rounded px-1 py-0.5 font-mono text-xs">
@@ -183,10 +183,10 @@ function InstallPage() {
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-sm font-medium text-balance">
+              <h2 className="text-sm font-medium text-balance">
                 4. Install the shadcn tooltip component (optional but
                 recommended)
-              </h3>
+              </h2>
               <p className="text-muted-foreground text-sm text-pretty">
                 The demos use tooltips to show activity details on hover. If you
                 want this functionality, add the tooltip component:
@@ -199,9 +199,9 @@ function InstallPage() {
             </div>
 
             <div className="space-y-2">
-              <h3 className="text-sm font-medium text-balance">
+              <h2 className="text-sm font-medium text-balance">
                 5. Copy the component you need
-              </h3>
+              </h2>
               <p className="text-muted-foreground text-sm text-pretty">
                 Copy the files you need from{" "}
                 <a

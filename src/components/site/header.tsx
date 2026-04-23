@@ -198,7 +198,7 @@ export function SiteHeader() {
           <nav className="container flex flex-col py-3">
             <Link
               to="/install"
-              className="hover:bg-muted flex items-center gap-2 rounded-md px-3 py-2 text-sm"
+              className="hover:bg-muted focus-visible:ring-ring focus-visible:ring-offset-background flex items-center gap-2 rounded-md px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               onClick={closeMenu}
             >
               Install
@@ -209,7 +209,7 @@ export function SiteHeader() {
                 key={link.to}
                 to={link.to}
                 className={cn(
-                  "hover:bg-muted rounded-md px-3 py-2 text-sm",
+                  "hover:bg-muted focus-visible:ring-ring focus-visible:ring-offset-background rounded-md px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
                   pathname === link.to && "bg-muted font-medium"
                 )}
                 aria-current={pathname === link.to ? "page" : undefined}
@@ -223,7 +223,7 @@ export function SiteHeader() {
               target="_blank"
               rel="noreferrer"
               aria-label="rutopio/shadcn-heatmap on GitHub (opens in new tab)"
-              className="hover:bg-muted flex items-center gap-2 rounded-md px-3 py-2 text-sm"
+              className="hover:bg-muted focus-visible:ring-ring focus-visible:ring-offset-background flex items-center gap-2 rounded-md px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               onClick={closeMenu}
             >
               <GithubLogoIcon

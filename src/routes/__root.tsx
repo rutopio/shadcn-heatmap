@@ -11,7 +11,7 @@ import { SiteFooter } from "@/components/site/footer";
 import { SiteHeader } from "@/components/site/header";
 import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
-import { OG_IMAGE, SITE_NAME } from "@/lib/seo";
+import { OG_IMAGE, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE } from "@/lib/seo";
 
 const REDIRECT_SECONDS = 3;
 
@@ -56,8 +56,8 @@ function NotFoundPage() {
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-6 text-center">
       <p className="text-muted-foreground font-mono text-sm">404</p>
-      <h1 className="text-2xl font-semibold tracking-tight">Page not found</h1>
-      <p className="text-muted-foreground max-w-md text-sm">
+      <h1 className="text-2xl font-semibold text-balance">Page not found</h1>
+      <p className="text-muted-foreground max-w-md text-sm text-pretty">
         The page you are looking for does not exist. Redirecting home in{" "}
         <span className="text-foreground tabular-nums">{remaining}</span>
         {remaining === 1 ? " second" : " seconds"}.
@@ -75,6 +75,8 @@ export const Route = createRootRoute({
   errorComponent: NotFoundPage,
   head: () => ({
     meta: [
+      { title: SITE_TITLE },
+      { name: "description", content: SITE_DESCRIPTION },
       { property: "og:type", content: "website" },
       { property: "og:site_name", content: SITE_NAME },
       { property: "og:locale", content: "en_US" },

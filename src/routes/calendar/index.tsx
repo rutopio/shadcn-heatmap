@@ -21,9 +21,9 @@ function CalendarPage() {
         <span className="text-muted-foreground text-xs font-medium uppercase">
           Component
         </span>
-        <h2 className="text-3xl font-semibold text-balance sm:text-4xl">
+        <h1 className="text-3xl font-semibold text-balance sm:text-4xl">
           CalendarHeatmap
-        </h2>
+        </h1>
         <p className="text-muted-foreground max-w-2xl text-pretty">
           GitHub-style, 7-row × N-week grid. Handles multiple years by splitting
           into per-year rows and supports ISO week starts.
@@ -40,8 +40,8 @@ function CalendarPage() {
         />
 
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-balance">Sample data</h3>
-          <p className="text-muted-foreground text-sm">
+          <h2 className="text-lg font-semibold text-balance">Sample data</h2>
+          <p className="text-muted-foreground text-sm text-pretty">
             Each entry is one day. Missing dates are auto-filled with{" "}
             <code className="text-xs">value: 0</code>.
           </p>
@@ -54,15 +54,15 @@ function CalendarPage() {
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-balance">
+          <h2 className="text-lg font-semibold text-balance">
             Props reference
-          </h3>
+          </h2>
           <PropsTable sections={calendarProps} />
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-balance">Variants</h3>
-          <p className="text-muted-foreground text-sm">
+          <h2 className="text-lg font-semibold text-balance">Variants</h2>
+          <p className="text-muted-foreground text-sm text-pretty">
             Drop in different props and see how the layout reacts.
           </p>
           <VariantGrid variants={calendarVariantItems} />

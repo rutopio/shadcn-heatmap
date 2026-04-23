@@ -649,7 +649,7 @@ export const CalendarHeatmapBlock = ({
     <rect
       ref={ref}
       role="img"
-      tabIndex={0}
+      tabIndex={-1}
       aria-label={ariaLabel}
       className={cn(
         "motion-safe:transition-opacity motion-safe:hover:opacity-70",
@@ -779,8 +779,9 @@ export const CalendarHeatmapBody = ({
           )}
           <svg
             role="img"
+            tabIndex={0}
             aria-label={`Contribution heatmap for ${yearRow.year}`}
-            className="block overflow-visible"
+            className="focus-visible:ring-ring block overflow-visible rounded-sm focus-visible:ring-2 focus-visible:outline-none"
             height={height + strokePadding * 2}
             viewBox={`0 0 ${totalWidth} ${height + strokePadding * 2}`}
             width={totalWidth}

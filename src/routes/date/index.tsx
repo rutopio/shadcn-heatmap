@@ -18,9 +18,9 @@ function DatePage() {
         <span className="text-muted-foreground text-xs font-medium uppercase">
           Component
         </span>
-        <h2 className="text-3xl font-semibold text-balance sm:text-4xl">
+        <h1 className="text-3xl font-semibold text-balance sm:text-4xl">
           DateHeatmap
-        </h2>
+        </h1>
         <p className="text-muted-foreground max-w-2xl text-pretty">
           One row per calendar date × 24 hours + a daily Sum column. Perfect for
           zooming into a narrow window (recent 1–4 weeks).
@@ -36,8 +36,8 @@ function DatePage() {
         />
 
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-balance">Sample data</h3>
-          <p className="text-muted-foreground text-sm">
+          <h2 className="text-lg font-semibold text-balance">Sample data</h2>
+          <p className="text-muted-foreground text-sm text-pretty">
             Each entry is one date × hour slot. Use{" "}
             <code className="text-xs">hour = 24</code> for the daily Sum column.
             Dates are sorted automatically.
@@ -51,15 +51,15 @@ function DatePage() {
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-balance">
+          <h2 className="text-lg font-semibold text-balance">
             Props reference
-          </h3>
+          </h2>
           <PropsTable sections={dateProps} />
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-balance">Variants</h3>
-          <p className="text-muted-foreground text-sm">
+          <h2 className="text-lg font-semibold text-balance">Variants</h2>
+          <p className="text-muted-foreground text-sm text-pretty">
             Drop in different props and see how the layout reacts.
           </p>
           <VariantGrid variants={dateVariantItems} />

@@ -486,7 +486,7 @@ export const DateHeatmapBlock = ({
     <rect
       ref={ref}
       role="img"
-      tabIndex={0}
+      tabIndex={-1}
       aria-label={ariaLabel}
       className={cn(
         "motion-safe:transition-opacity motion-safe:hover:opacity-70",
@@ -663,8 +663,9 @@ export const DateHeatmapBody = ({
     >
       <svg
         role="img"
+        tabIndex={0}
         aria-label="Activity heatmap by date and hour"
-        className="block overflow-visible"
+        className="focus-visible:ring-ring block overflow-visible rounded-sm focus-visible:ring-2 focus-visible:outline-none"
         height={svgHeight + PADDING * 2}
         viewBox={`${-PADDING} ${-PADDING} ${svgWidth + PADDING * 2} ${svgHeight + PADDING * 2}`}
         width={svgWidth + PADDING * 2}

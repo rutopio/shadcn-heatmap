@@ -18,9 +18,9 @@ function StatusPage() {
         <span className="text-muted-foreground text-xs font-medium uppercase">
           Component
         </span>
-        <h2 className="text-3xl font-semibold text-balance sm:text-4xl">
+        <h1 className="text-3xl font-semibold text-balance sm:text-4xl">
           StatusHeatmap
-        </h2>
+        </h1>
         <p className="text-muted-foreground max-w-2xl text-pretty">
           Timeline status indicator showing daily activity over a period (e.g.,
           90 days). Similar to Atlassian Statuspage – each day is represented by
@@ -38,8 +38,8 @@ function StatusPage() {
         />
 
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-balance">Sample data</h3>
-          <p className="text-muted-foreground text-sm">
+          <h2 className="text-lg font-semibold text-balance">Sample data</h2>
+          <p className="text-muted-foreground text-sm text-pretty">
             Each entry represents one day with a status value. Missing dates are
             auto-filled with <code className="text-xs">value: 0</code>.
           </p>
@@ -52,15 +52,15 @@ function StatusPage() {
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-balance">
+          <h2 className="text-lg font-semibold text-balance">
             Props reference
-          </h3>
+          </h2>
           <PropsTable sections={statusProps} />
         </div>
 
         <div className="space-y-4">
-          <h3 className="text-lg font-semibold text-balance">Variants</h3>
-          <p className="text-muted-foreground text-sm">
+          <h2 className="text-lg font-semibold text-balance">Variants</h2>
+          <p className="text-muted-foreground text-sm text-pretty">
             Drop in different props and see how the layout reacts.
           </p>
           <VariantGrid variants={statusVariantItems} />

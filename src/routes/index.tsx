@@ -8,7 +8,7 @@ import {
 } from "@/docs";
 
 import { Button } from "@/components/ui/button";
-import { pageHead } from "@/lib/seo";
+import { pageHead, SITE_DESCRIPTION, SITE_TITLE } from "@/lib/seo";
 
 const heatmaps = [
   {
@@ -45,7 +45,7 @@ function IndexPage() {
           <h1 className="max-w-6xl text-center text-4xl leading-[1.05] font-semibold text-balance sm:text-5xl md:text-6xl">
             Heatmap components for React,
             <br />
-            styled like <span className="text-muted-foreground">shadcn/ui</span>
+            built for <span className="text-muted-foreground">shadcn/ui</span>
           </h1>
           <p className="text-muted-foreground max-w-2xl text-base text-pretty sm:text-lg">
             Calendar, Weekday, Date, and Status heatmaps built with SVG,
@@ -69,23 +69,26 @@ function IndexPage() {
             >
               <div className="flex items-center">
                 <div className="mr-auto">
-                  <h3 className="text-lg font-semibold text-balance">{name}</h3>
-                  <p className="text-muted-foreground text-sm">{description}</p>
+                  <h2 className="text-lg font-semibold text-balance">{name}</h2>
+                  <p className="text-muted-foreground text-sm text-pretty">
+                    {description}
+                  </p>
                 </div>
-                <Link to={router}>
-                  <Button
-                    variant="outline"
-                    size="sm"
-                    aria-label={`Explore ${name}`}
-                  >
+                <Button
+                  asChild
+                  variant="outline"
+                  size="sm"
+                  aria-label={`Explore ${name}`}
+                >
+                  <Link to={router}>
                     Explore
                     <ArrowRightIcon
                       aria-hidden="true"
                       weight="bold"
                       className="size-4"
                     />
-                  </Button>
-                </Link>
+                  </Link>
+                </Button>
               </div>
               <div className="mx-auto overflow-x-auto">
                 <Demo />
@@ -102,9 +105,8 @@ export const Route = createFileRoute("/")({
   component: IndexPage,
   head: () =>
     pageHead({
-      title: "shadcn-heatmap — composable React heatmap components",
-      description:
-        "Beautiful, accessible heatmap components for React. Calendar, Weekday, Date, and Status heatmaps built with SVG, Tailwind v4, and shadcn/ui conventions.",
+      title: SITE_TITLE,
+      description: SITE_DESCRIPTION,
       path: "/",
     }),
 });

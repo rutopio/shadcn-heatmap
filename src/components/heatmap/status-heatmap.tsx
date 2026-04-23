@@ -333,7 +333,7 @@ export const StatusHeatmapBlock = ({
     <rect
       ref={ref}
       role="img"
-      tabIndex={0}
+      tabIndex={-1}
       aria-label={ariaLabel}
       className={cn(
         "motion-safe:transition-opacity motion-safe:hover:opacity-70",
@@ -434,8 +434,9 @@ export const StatusHeatmapBody = ({
     >
       <svg
         role="img"
+        tabIndex={0}
         aria-label="Status heatmap"
-        className="block overflow-visible"
+        className="focus-visible:ring-ring block overflow-visible rounded-sm focus-visible:ring-2 focus-visible:outline-none"
         height={height + labelHeight + PADDING * 2}
         viewBox={`${-PADDING} ${-PADDING} ${width + PADDING * 2} ${height + labelHeight + PADDING * 2}`}
         width={width + PADDING * 2}

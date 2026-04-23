@@ -25,7 +25,7 @@ export function DemoFrame({
     <div className="bg-background rounded-xl border">
       {(title || description) && (
         <div className="flex flex-col gap-1 border-b px-6 py-4">
-          {title && <h4 className="font-medium text-balance">{title}</h4>}
+          {title && <h3 className="font-medium text-balance">{title}</h3>}
           {description && (
             <p className="text-muted-foreground text-sm text-pretty">
               {description}
