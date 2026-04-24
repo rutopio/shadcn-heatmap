@@ -22,16 +22,16 @@ function StatusPage() {
           StatusHeatmap
         </h1>
         <p className="text-muted-foreground max-w-2xl text-pretty">
-          Timeline status indicator showing daily activity over a period (e.g.,
-          90 days). Similar to Atlassian Statuspage – each day is represented by
-          a vertical bar.
+          Daily status timeline for uptime or incident history. Four status
+          levels (healthy / degraded / critical / no data), custom colors, i18n,
+          and adjustable label intervals.
         </p>
       </div>
 
       <div className="space-y-6 sm:space-y-10">
         <DemoFrame
           title="Default usage"
-          description="90 days of status data with narrow vertical bars, healthy days count and legend."
+          description="90 days of status data with healthy days count and legend."
           preview={<StatusDefaultDemo />}
           code={statusBasicCode}
           filename="status-timeline.tsx"

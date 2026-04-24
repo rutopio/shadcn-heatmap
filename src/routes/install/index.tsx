@@ -38,7 +38,7 @@ function InstallPage() {
         </div>
 
         <Tabs defaultValue="cli" className="w-full">
-          <TabsList className="w-full max-w-sm">
+          <TabsList className="w-full max-w-xs">
             <TabsTrigger value="cli" className="flex-1">
               shadcn CLI
             </TabsTrigger>

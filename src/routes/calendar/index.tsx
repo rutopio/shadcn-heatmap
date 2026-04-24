@@ -25,15 +25,15 @@ function CalendarPage() {
           CalendarHeatmap
         </h1>
         <p className="text-muted-foreground max-w-2xl text-pretty">
-          GitHub-style, 7-row × N-week grid. Handles multiple years by splitting
-          into per-year rows and supports ISO week starts.
+          GitHub-style yearly contribution grid. Supports multiple years, ISO
+          Monday start, custom colors, i18n labels, and full tooltip control.
         </p>
       </div>
 
       <div className="space-y-6 sm:space-y-10">
         <DemoFrame
           title="Default usage"
-          description="One year of deterministic sample data with weekday labels, month headers, total and legend."
+          description="One year of activity data with weekday labels, month headers, contribution total, and legend."
           preview={<CalendarDefaultDemo />}
           code={calendarBasicCode}
           filename="year-contributions.tsx"

@@ -37,6 +37,7 @@ export function ThemeToggle() {
       onClick={toggle}
       size="icon"
       variant="ghost"
+      className="size-10 sm:size-9"
     >
       {theme === "dark" ? (
         <SunIcon aria-hidden="true" weight="bold" className="size-4" />

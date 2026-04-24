@@ -15,6 +15,7 @@ import {
 export const weekdayVariantItems = [
   {
     title: "Colors & block size",
+    slug: "colors",
     description:
       "Use colors to theme the blocks, labelClassName to style axis labels, className on Stat and Legend to style the footer, and blockSize/blockMargin to adjust block dimensions.",
     preview: <WeekdayCustomStylingDemo />,
@@ -116,6 +117,7 @@ export const weekdayVariantItems = [
   },
   {
     title: "i18n labels (e.g., Japanese)",
+    slug: "i18n",
     description:
       "Pass a date-fns locale to auto-generate localised weekday labels, plus custom extra row/column label, legend, and total value text.",
     preview: <WeekdayJapaneseDemo />,
@@ -375,6 +377,7 @@ const WEEKDAY_NAMES = Array.from({ length: 7 }, (_, i) =>
   },
   {
     title: "Monday-start week (ISO)",
+    slug: "monday-start",
     description:
       "Rotate the weekday axis to start on Monday instead of Sunday.",
     preview: <WeekdayMondayStartDemo />,
@@ -393,6 +396,7 @@ const WEEKDAY_NAMES = Array.from({ length: 7 }, (_, i) =>
   },
   {
     title: "Sparse axis labels",
+    slug: "sparse-axis",
     description:
       "Only label every 6th hour (00 / 06 / 12 / 18) and drop the trailing tick to reduce axis noise.",
     preview: <WeekdayMinimalTicksDemo />,
@@ -419,6 +423,7 @@ const WEEKDAY_NAMES = Array.from({ length: 7 }, (_, i) =>
   },
   {
     title: "12-hour axis labels",
+    slug: "12-hour",
     description:
       "Switch the hour axis to 12-hour AM/PM format with a single prop.",
     preview: <Weekday12HourDemo />,
@@ -437,6 +442,7 @@ const WEEKDAY_NAMES = Array.from({ length: 7 }, (_, i) =>
   },
   {
     title: "Aggregate row/column",
+    slug: "aggregate",
     description:
       "extraRow/extraColumn accept any ReactNode label and any compute function — sum, average, median, or whatever fits. Stat is updated to reflect the aggregate.",
     preview: <WeekdayMedianDemo />,

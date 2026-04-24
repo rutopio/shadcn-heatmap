@@ -23,10 +23,15 @@ const navLinks = [
 ];
 
 export function SiteHeader() {
-  const [menuOpen, setMenuOpen] = useState(false);
+  const [menuState, setMenuState] = useState<"closed" | "open" | "closing">(
+    "closed"
+  );
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
-  const closeMenu = () => setMenuOpen(false);
+  const openMenu = () => setMenuState("open");
+  const closeMenu = () => setMenuState((s) => (s === "open" ? "closing" : s));
+  const handleAnimationEnd = () =>
+    setMenuState((s) => (s === "closing" ? "closed" : s));
 
   return (
     <header className="bg-background/80 sticky top-0 z-40 w-full border-b backdrop-blur-sm">
@@ -35,7 +40,9 @@ export function SiteHeader() {
           to="/"
           className="flex items-center gap-2 font-semibold"
           aria-label="shadcn-heatmap home"
-          onClick={closeMenu}
+          onClick={() => {
+            if (menuState !== "closed") closeMenu();
+          }}
         >
           <span className="flex size-7 items-center justify-center rounded-md">
             <svg
@@ -127,7 +134,7 @@ export function SiteHeader() {
               />
             </svg>
           </span>
-          <span className="hidden lg:inline">shadcn-heatmap</span>
+          <span>shadcn-heatmap</span>
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
@@ -175,13 +182,16 @@ export function SiteHeader() {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
-            aria-label={menuOpen ? "Close menu" : "Open menu"}
-            aria-expanded={menuOpen}
+            className="size-10 md:hidden"
+            aria-label={menuState === "open" ? "Close menu" : "Open menu"}
+            aria-expanded={menuState === "open"}
             aria-controls="mobile-nav"
-            onClick={() => setMenuOpen((v) => !v)}
+            onClick={() => {
+              if (menuState === "open") closeMenu();
+              else if (menuState === "closed") openMenu();
+            }}
           >
-            {menuOpen ? (
+            {menuState !== "closed" ? (
               <XIcon aria-hidden="true" weight="bold" className="size-5" />
             ) : (
               <ListIcon aria-hidden="true" weight="bold" className="size-5" />
@@ -190,10 +200,16 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {menuOpen && (
+      {menuState !== "closed" && (
         <div
           id="mobile-nav"
-          className="bg-background border-b shadow-sm md:hidden"
+          onAnimationEnd={handleAnimationEnd}
+          className={cn(
+            "bg-background absolute top-full right-0 left-0 z-50 border-b shadow-sm md:hidden",
+            menuState === "closing"
+              ? "animate-out fade-out slide-out-to-top-2 fill-mode-forwards duration-150"
+              : "animate-in fade-in slide-in-from-top-2 duration-200"
+          )}
         >
           <nav className="container flex flex-col py-3">
             <Link

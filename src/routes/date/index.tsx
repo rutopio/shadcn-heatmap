@@ -22,8 +22,9 @@ function DatePage() {
           DateHeatmap
         </h1>
         <p className="text-muted-foreground max-w-2xl text-pretty">
-          One row per calendar date × 24 hours + a daily Sum column. Perfect for
-          zooming into a narrow window (recent 1–4 weeks).
+          Date × hour grid for zoomed time windows (1–4 weeks). Supports
+          optional aggregate rows and columns with custom compute functions,
+          i18n, and custom colors.
         </p>
       </div>
 

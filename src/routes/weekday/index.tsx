@@ -22,9 +22,9 @@ function WeekdayPage() {
           WeekdayHeatmap
         </h1>
         <p className="text-muted-foreground max-w-2xl text-pretty">
-          Weekday × hour-of-day matrix with optional Avg row and Avg column.
-          Each Avg axis is independently min–max scaled so it visually stands
-          apart from the regular cells.
+          Weekday × hour-of-day matrix for recurring weekly patterns. Supports
+          optional aggregate rows and columns with custom compute functions,
+          i18n, and custom colors.
         </p>
       </div>
 

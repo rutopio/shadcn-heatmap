@@ -40,12 +40,15 @@ const heatmaps = [
 function IndexPage() {
   return (
     <section className="relative overflow-hidden border-b">
-      <div className="relative container py-20 sm:py-28">
+      <div className="relative container py-12 sm:py-28">
         <div className="flex flex-col items-center gap-6">
           <h1 className="max-w-6xl text-center text-4xl leading-[1.05] font-semibold text-balance sm:text-5xl md:text-6xl">
-            Heatmap components for React,
-            <br />
-            built for <span className="text-muted-foreground">shadcn/ui</span>
+            <span className="block sm:inline">
+              Heatmap components for React,
+            </span>{" "}
+            <span className="block sm:inline">
+              built for <span className="text-muted-foreground">shadcn/ui</span>
+            </span>
           </h1>
           <p className="text-muted-foreground max-w-2xl text-base text-pretty sm:text-lg">
             Calendar, Weekday, Date, and Status heatmaps built with SVG,
@@ -65,10 +68,10 @@ function IndexPage() {
           {heatmaps.map(({ name, description, Demo, router }) => (
             <div
               key={name}
-              className="bg-background flex flex-col gap-8 rounded-lg border p-4"
+              className="bg-background flex flex-col gap-6 rounded-lg border p-4 sm:gap-8"
             >
-              <div className="flex items-center">
-                <div className="mr-auto">
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+                <div className="sm:mr-auto">
                   <h2 className="text-lg font-semibold text-balance">{name}</h2>
                   <p className="text-muted-foreground text-sm text-pretty">
                     {description}
@@ -78,6 +81,7 @@ function IndexPage() {
                   asChild
                   variant="outline"
                   size="sm"
+                  className="self-start sm:self-auto"
                   aria-label={`Explore ${name}`}
                 >
                   <Link to={router}>
@@ -90,7 +94,7 @@ function IndexPage() {
                   </Link>
                 </Button>
               </div>
-              <div className="flex w-full justify-center overflow-x-auto">
+              <div className="-mx-4 flex w-[calc(100%+2rem)] justify-center overflow-x-auto px-4 sm:mx-0 sm:w-full sm:px-0">
                 <Demo />
               </div>
             </div>

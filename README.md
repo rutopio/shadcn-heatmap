@@ -16,25 +16,25 @@ All four are single-file, zero-config components.
 
 ### CalendarHeatmap
 
-GitHub-style yearly contribution calendar.
+GitHub-style yearly contribution grid. Supports multiple years, ISO Monday start, custom colors, i18n labels, and full tooltip control.
 
 ![CalendarHeatmap](assets/calendar-heatmap.png)
 
 ### WeekdayHeatmap
 
-Weekday × hour-of-day matrix with optional Avg row and Avg column.
+Weekday × hour-of-day matrix for recurring weekly patterns. Supports optional aggregate rows and columns with custom compute functions, i18n, and custom colors.
 
 ![WeekdayHeatmap](assets/weekday-heatmap.png)
 
 ### DateHeatmap
 
-One row per calendar date × 24 hours + a daily Sum column.
+Date × hour grid for zoomed time windows (1–4 weeks). Supports optional aggregate rows and columns with custom compute functions, i18n, and custom colors.
 
 ![DateHeatmap](assets/date-heatmap.png)
 
 ### StatusHeatmap
 
-Timeline status indicator showing daily activity over a period.
+Daily status timeline for uptime or incident history. Four status levels (healthy / degraded / critical / no data), custom colors, i18n, and adjustable label intervals.
 
 ![StatusHeatmap](assets/status-heatmap.png)
 

@@ -47,7 +47,7 @@ export function DemoFrame({
         >
           <div
             className={cn(
-              "bg-background flex min-h-[120px] items-center justify-center overflow-x-auto rounded-lg border sm:min-h-[160px] sm:p-6",
+              "bg-background flex min-h-[120px] items-center justify-center overflow-x-auto rounded-lg border p-4 sm:min-h-[160px] sm:p-6",
               previewClassName
             )}
           >

@@ -11,6 +11,7 @@ import {
 export const statusVariantItems = [
   {
     title: "Colors & block size",
+    slug: "colors",
     description:
       "Use colors to theme the blocks, labelClassName to style date labels, className on Stat and Legend to style the footer, and blockSize/blockAspectRatio/blockMargin to adjust block dimensions.",
     preview: <StatusCustomStylingDemo />,
@@ -128,6 +129,7 @@ export const statusVariantItems = [
   },
   {
     title: "i18n labels (e.g., Traditional Chinese)",
+    slug: "i18n",
     description:
       "Pass a date-fns locale to localise date formatting, and use labels to translate status names and the stat text.",
     preview: <StatusI18nDemo />,
@@ -187,6 +189,7 @@ import { zhTW } from "date-fns/locale";
   },
   {
     title: "Custom date label interval",
+    slug: "date-interval",
     description:
       "Date labels are shown by default. Use `labelInterval` to control how often they appear.",
     preview: <StatusWithLabelsDemo />,
@@ -205,6 +208,7 @@ import { zhTW } from "date-fns/locale";
   },
   {
     title: "Compact (30 days)",
+    slug: "compact",
     description: "Show a shorter time period with smaller blocks.",
     preview: <StatusUptimeDemo />,
     highlightLines: [2, 3, 4, 5],

@@ -19,13 +19,9 @@ function RootLayout() {
   return (
     <>
       <HeadContent />
-      <div className="bg-background text-foreground relative flex min-h-dvh flex-col">
+      <div className="bg-background text-foreground relative flex min-h-svh flex-col">
         <SiteHeader />
-        <main className="relative isolate flex-1">
-          <div
-            aria-hidden="true"
-            className="bg-background absolute inset-0 -z-10 h-full w-full bg-[radial-gradient(var(--color-border)_1px,transparent_1px)] [background-size:16px_16px]"
-          />
+        <main className="bg-background relative flex-1 bg-[radial-gradient(var(--color-border)_1px,transparent_1px)] [background-size:16px_16px]">
           <Outlet />
         </main>
         <SiteFooter />

@@ -13,6 +13,7 @@ import {
 export const calendarVariantItems = [
   {
     title: "Colors & block size",
+    slug: "colors",
     description:
       "Use colors to theme the blocks, labelClassName and yearClassName to style axis labels, className on Stat and Legend to style the footer, and blockSize/blockMargin to adjust block dimensions.",
     preview: <CalendarCustomStylingDemo />,
@@ -57,6 +58,7 @@ export const calendarVariantItems = [
   },
   {
     title: "i18n labels (e.g., German)",
+    slug: "i18n",
     description:
       "Pass a date-fns locale to auto-generate localised month and weekday labels. Structural text (months/weekdays/legend) goes in the root labels; the footer stat text goes on `<CalendarHeatmapStat label=…>`.",
     preview: <CalendarGermanDemo />,
@@ -196,6 +198,7 @@ import { de } from "date-fns/locale";
   },
   {
     title: "Monday-start week (ISO)",
+    slug: "monday-start",
     description:
       "Switch the left-hand weekday axis and grid alignment to start on Monday.",
     preview: <CalendarMondayStartDemo />,
@@ -214,6 +217,7 @@ import { de } from "date-fns/locale";
   },
   {
     title: "Month-aligned columns",
+    slug: "month-aligned",
     description:
       "Each month starts at its own weekday-aligned column instead of flowing continuously — gives a traditional calendar feel.",
     preview: <CalendarChunkyDemo />,
@@ -232,6 +236,7 @@ import { de } from "date-fns/locale";
   },
   {
     title: "Multi-year timeline",
+    slug: "multi-year",
     description:
       "Feed activity spanning multiple years — each year auto-splits into its own row with separate statistics. Legend shown only on the last year.",
     preview: <CalendarMultiYearDemo />,
