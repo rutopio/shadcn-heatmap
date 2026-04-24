@@ -1,5 +1,4 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { TerminalIcon } from "@phosphor-icons/react";
 import {
   cliInstallCommands,
   packageManagerCommands,
@@ -21,12 +20,7 @@ function InstallPage() {
       <div className="container">
         <div className="mb-10 flex flex-col gap-2">
           <span className="text-muted-foreground inline-flex items-center gap-1.5 text-xs font-medium uppercase">
-            <TerminalIcon
-              aria-hidden="true"
-              weight="bold"
-              className="size-3.5"
-            />{" "}
-            Quick start
+            Get Started
           </span>
           <h1 className="text-3xl font-semibold text-balance sm:text-4xl">
             Install in under a minute

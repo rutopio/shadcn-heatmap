@@ -2,9 +2,11 @@
 
 # shadcn-heatmap
 
+**Live demo: [https://shadcn-heatmap.pages.dev](https://shadcn-heatmap.pages.dev)**
+
 Heatmap components for React, built for [shadcn/ui](https://ui.shadcn.com).
 
-**Live demo: [https://shadcn-heatmap.pages.dev](https://shadcn-heatmap.pages.dev)**
+Built on SVG and Tailwind v4 tokens. Copy the source, own it entirely.
 
 </div>
 
@@ -320,26 +322,6 @@ Requires Node 20+ and pnpm 10.
 pnpm install
 pnpm dev            # start the demo site on http://localhost:5173
 ```
-
-### Project layout
-
-- `src/components/heatmap/` — the four heatmap components. Each file is self-contained so the shadcn registry can ship it as a single copy-paste unit. **Do not reach into shared modules from here.**
-- `src/components/ui/` — shadcn/ui primitives (button, tabs, tooltip, …).
-- `src/components/site/` — demo site chrome (header, footer, theme toggle).
-- `src/docs/` — everything that powers the demo site for a component:
-  - `<name>/demos.tsx` — concrete demo variants shown on the page
-  - `<name>/variants.tsx` — the variant-grid config for `/routes/<name>`
-  - `<name>/props.ts` — props-table data
-  - `<name>/snippets.ts` — code snippets displayed inline
-  - `_frame/` — page-layout building blocks (`DemoFrame`, `PropsTable`, `ShowcaseSection`, `VariantGrid`)
-  - `_shared/tooltips.tsx` — tooltip helpers reused by demos
-  - `install.ts`, `types.ts` — docs-wide content
-- `src/data/` — JSON sample datasets imported by demos.
-- `src/routes/` — TanStack Router pages (`routeTree.gen.ts` is auto-generated).
-- `src/lib/` — small utilities (`cn`, `shiki`, `time`, `seo`).
-- `scripts/build-registry.ts` — generates `public/r/*.json` consumed by `shadcn@latest add`. **Only reads `src/components/heatmap/`** — `src/docs/` is never shipped to consumers.
-
-**Rule of thumb**: if it ships to a user's project via the registry, it lives in `src/components/heatmap/`; if it only runs on the demo site, it lives in `src/docs/`.
 
 ### Commits and branches
 

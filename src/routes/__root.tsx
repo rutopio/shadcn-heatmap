@@ -25,7 +25,7 @@ function RootLayout() {
           <Outlet />
         </main>
         <SiteFooter />
-        <Toaster position="top-center" />
+        <Toaster position="top-center" expand closeButton />
       </div>
     </>
   );
