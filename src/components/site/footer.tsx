@@ -2,7 +2,7 @@ import { GithubLogoIcon } from "@phosphor-icons/react";
 
 export function SiteFooter() {
   return (
-    <footer className="border-t py-10">
+    <footer className="border-t py-6 sm:py-10">
       <div className="text-muted-foreground container flex flex-col items-center justify-center gap-4 text-sm sm:flex-row sm:justify-end">
         <span>MIT License</span>
         <div className="flex items-center gap-4">

@@ -24,7 +24,7 @@ export function DemoFrame({
   return (
     <div className="bg-background rounded-xl border">
       {(title || description) && (
-        <div className="flex flex-col gap-1 border-b px-6 py-4">
+        <div className="flex flex-col gap-1 border-b px-4 py-4">
           {title && <h3 className="font-medium text-balance">{title}</h3>}
           {description && (
             <p className="text-muted-foreground text-sm text-pretty">
@@ -43,11 +43,11 @@ export function DemoFrame({
         <TabsContent
           value="preview"
           aria-label={title ? `${title} preview` : "Component preview"}
-          className="mt-0 px-6 pt-4 pb-6"
+          className="mt-0 px-4 pt-4 pb-4"
         >
           <div
             className={cn(
-              "bg-background flex min-h-[120px] items-center justify-center overflow-x-auto rounded-lg border p-3 sm:min-h-[160px] sm:p-6",
+              "bg-background flex min-h-[120px] items-center justify-center overflow-x-auto rounded-lg border sm:min-h-[160px] sm:p-6",
               previewClassName
             )}
           >

@@ -90,7 +90,7 @@ function IndexPage() {
                   </Link>
                 </Button>
               </div>
-              <div className="mx-auto overflow-x-auto">
+              <div className="flex w-full justify-center overflow-x-auto">
                 <Demo />
               </div>
             </div>

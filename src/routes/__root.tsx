@@ -54,7 +54,7 @@ function NotFoundPage() {
   }, [navigate]);
 
   return (
-    <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-6 text-center">
+    <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-4 text-center">
       <p className="text-muted-foreground font-mono text-sm">404</p>
       <h1 className="text-2xl font-semibold text-balance">Page not found</h1>
       <p className="text-muted-foreground max-w-md text-sm text-pretty">

@@ -93,7 +93,10 @@ export function CodeBlock({
         </div>
       )}
       <div
-        className={cn("relative overflow-auto", scrollClassName)}
+        className={cn(
+          "scrollbar-hidden relative overflow-auto",
+          scrollClassName
+        )}
         style={!scrollClassName && maxHeight ? { maxHeight } : undefined}
       >
         <pre className="text-foreground/80 py-4 font-mono text-sm leading-relaxed">

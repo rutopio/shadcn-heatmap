@@ -588,7 +588,7 @@ export const CalendarHeatmap = ({
   return (
     <CalendarHeatmapContext value={contextValue}>
       <div
-        className={cn("flex w-max max-w-full flex-col gap-2 px-4", className)}
+        className={cn("flex w-max max-w-full flex-col gap-2 p-4", className)}
         style={{ fontSize, ...style }}
         {...props}
       >
