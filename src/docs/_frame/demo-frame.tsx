@@ -22,10 +22,12 @@ export function DemoFrame({
   previewClassName,
 }: DemoFrameProps) {
   return (
-    <div className="bg-background rounded-xl border">
+    <div className="space-y-4">
       {(title || description) && (
-        <div className="flex flex-col gap-1 border-b px-4 py-4">
-          {title && <h3 className="font-medium text-balance">{title}</h3>}
+        <div className="flex flex-col gap-1">
+          {title && (
+            <h2 className="text-lg font-semibold text-balance">{title}</h2>
+          )}
           {description && (
             <p className="text-muted-foreground text-sm text-pretty">
               {description}
@@ -34,32 +36,29 @@ export function DemoFrame({
         </div>
       )}
       <Tabs defaultValue="preview" className="w-full">
-        <div className="flex items-center justify-between px-4 pt-4">
-          <TabsList>
-            <TabsTrigger value="preview">Preview</TabsTrigger>
-            <TabsTrigger value="code">Code</TabsTrigger>
-          </TabsList>
-        </div>
+        <TabsList>
+          <TabsTrigger value="preview">Preview</TabsTrigger>
+          <TabsTrigger value="code">Code</TabsTrigger>
+        </TabsList>
         <TabsContent
           value="preview"
           aria-label={title ? `${title} preview` : "Component preview"}
-          className="mt-0 px-4 pt-4 pb-4"
+          className="mt-3"
         >
           <div
             className={cn(
-              "bg-background flex min-h-[120px] items-center justify-center overflow-x-auto rounded-lg border p-4 sm:min-h-[160px] sm:p-6",
+              "bg-background flex min-h-30 items-center justify-center overflow-x-auto rounded-lg border p-4 sm:min-h-40 sm:p-6",
               previewClassName
             )}
           >
             {preview}
           </div>
         </TabsContent>
-        <TabsContent value="code" className="mt-0 px-4 pt-4 pb-4">
+        <TabsContent value="code" className="mt-3">
           <CodeBlock
             code={code}
             filename={filename}
-            scrollClassName="max-h-[28rem] sm:max-h-none"
-            className="border-0 bg-transparent"
+            scrollClassName="max-h-96"
           />
         </TabsContent>
       </Tabs>

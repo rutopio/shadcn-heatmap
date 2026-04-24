@@ -40,7 +40,7 @@ export function VariantGrid({ variants }: VariantGridProps) {
         <div
           key={variant.title}
           id={variant.slug ?? toSlug(variant.title)}
-          className="bg-card/40 flex flex-col overflow-hidden rounded-xl border"
+          className="bg-background flex flex-col overflow-hidden rounded-xl border"
         >
           <div className="border-b px-4 py-4">
             <div className="flex items-center gap-1">
@@ -63,7 +63,7 @@ export function VariantGrid({ variants }: VariantGridProps) {
           </div>
           <div
             aria-label={`Preview: ${variant.title}`}
-            className="flex min-h-[120px] flex-1 items-center justify-center overflow-auto p-4 sm:min-h-[180px] sm:p-6"
+            className="flex min-h-30 flex-1 items-center justify-center overflow-auto p-4 sm:min-h-48 sm:p-6"
           >
             {variant.preview}
           </div>

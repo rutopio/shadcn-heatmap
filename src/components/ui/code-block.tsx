@@ -121,7 +121,7 @@ export function CodeBlock({
                         <span
                           aria-hidden="true"
                           className={cn(
-                            "w-10 shrink-0 pr-3 text-right text-[11px] leading-6.5 select-none sm:w-16 sm:pr-4",
+                            "w-10 shrink-0 pr-3 text-right text-xs leading-6.5 select-none sm:w-16 sm:pr-4",
                             isDeleted
                               ? "text-red-400"
                               : isHighlighted
@@ -167,7 +167,7 @@ export function CodeBlock({
           variant="ghost"
           aria-label="Copy code"
           onClick={handleCopy}
-          className="absolute top-3 right-4 size-6 opacity-100 motion-safe:transition-opacity sm:opacity-0 sm:group-hover:opacity-100 sm:focus-visible:opacity-100"
+          className="absolute top-3 right-4 size-6 opacity-100 motion-safe:transition-opacity"
         >
           <CopyIcon aria-hidden="true" className="size-4" />
         </Button>

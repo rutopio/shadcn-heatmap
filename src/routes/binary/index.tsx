@@ -40,9 +40,23 @@ const binaryVariants = [
   },
 ];
 
+const toc = [
+  {
+    id: "variants",
+    label: "Variants",
+    children: binaryVariants.map((v) => ({
+      id: v.title
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, ""),
+      label: v.title,
+    })),
+  },
+];
+
 function BinaryPage() {
   return (
-    <ShowcaseSection label="Binary Mode">
+    <ShowcaseSection label="Binary Mode" toc={toc}>
       <div className="mb-6 flex flex-col gap-2 sm:mb-10">
         <span className="text-muted-foreground text-xs font-medium uppercase">
           Feature
@@ -60,7 +74,9 @@ function BinaryPage() {
         </p>
       </div>
 
-      <VariantGrid variants={binaryVariants} />
+      <div id="variants" className="scroll-mt-24">
+        <VariantGrid variants={binaryVariants} />
+      </div>
     </ShowcaseSection>
   );
 }

@@ -7,25 +7,25 @@
       "name": "calendar-heatmap",
       "type": "registry:component",
       "title": "CalendarHeatmap",
-      "description": "GitHub-style yearly contribution grid. Supports multiple years, ISO Monday start, custom colors, i18n labels, and full tooltip control."
+      "description": "GitHub-style yearly contribution heatmap with multi-year, weekStart, and i18n support."
     },
     {
       "name": "weekday-heatmap",
       "type": "registry:component",
       "title": "WeekdayHeatmap",
-      "description": "Weekday × hour-of-day matrix for recurring weekly patterns. Supports optional aggregate rows and columns with custom compute functions, i18n, and custom colors."
+      "description": "Weekday × hour-of-day matrix with Sum row/column and independent colour scales."
     },
     {
       "name": "date-heatmap",
       "type": "registry:component",
       "title": "DateHeatmap",
-      "description": "Date × hour grid for zoomed time windows (1–4 weeks). Supports optional aggregate rows and columns with custom compute functions, i18n, and custom colors."
+      "description": "Date × hour matrix for zooming into a narrow time window with daily Sum column."
     },
     {
       "name": "status-heatmap",
       "type": "registry:component",
       "title": "StatusHeatmap",
-      "description": "Daily status timeline for uptime or incident history. Four status levels (healthy / degraded / critical / no data), custom colors, i18n, and adjustable label intervals."
+      "description": "Timeline status indicator showing daily activity over a period (e.g. 90 days). Similar to Atlassian Statuspage."
     }
   ]
 }

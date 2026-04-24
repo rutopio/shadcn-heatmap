@@ -64,7 +64,7 @@ export function PropsTable({ sections }: PropsTableProps) {
               aria-labelledby={`props-heading-${section.componentName}`}
               className="w-full text-sm"
             >
-              <thead className="bg-muted/50 text-muted-foreground">
+              <thead className="bg-muted text-muted-foreground">
                 <tr>
                   <th className="px-4 py-2 text-left font-medium">Prop</th>
                   <th className="px-4 py-2 text-left font-medium">Type</th>

@@ -3,7 +3,7 @@ export const SITE_NAME = "shadcn-heatmap";
 export const SITE_TITLE =
   "shadcn-heatmap — Heatmap components for React, built for shadcn/ui";
 export const SITE_DESCRIPTION =
-  "Beautiful, accessible heatmap components for React. Calendar, Weekday, Date, and Status heatmaps built with SVG, Tailwind v4, and shadcn/ui conventions.";
+  "Four heatmap components for React: calendar, weekday, date, and status. Built on SVG and Tailwind v4 tokens. Copy the source, own it entirely.";
 export const OG_IMAGE = `${SITE_URL}/og-image.png`;
 
 type PageMeta = {
