@@ -51,7 +51,9 @@ const avgByWeekday = (data: WeekdayHourlyActivity[]) => {
 
 const medianByHour = (data: WeekdayHourlyActivity[]) => {
   const byHour = Array.from({ length: 24 }, () => [] as number[]);
-  data.forEach((a) => byHour[a.hour].push(a.value));
+  data.forEach((a) => {
+    byHour[a.hour].push(a.value);
+  });
   return byHour.map((arr) => {
     const s = [...arr].sort((x, y) => x - y);
     return s.length ? s[Math.floor(s.length / 2)] : 0;
@@ -60,7 +62,9 @@ const medianByHour = (data: WeekdayHourlyActivity[]) => {
 
 const medianByWeekday = (data: WeekdayHourlyActivity[]) => {
   const byWeekday = Array.from({ length: 7 }, () => [] as number[]);
-  data.forEach((a) => byWeekday[a.weekday].push(a.value));
+  data.forEach((a) => {
+    byWeekday[a.weekday].push(a.value);
+  });
   return byWeekday.map((arr) => {
     const s = [...arr].sort((x, y) => x - y);
     return s.length ? s[Math.floor(s.length / 2)] : 0;

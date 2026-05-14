@@ -101,8 +101,7 @@ export function CodeBlock({
       >
         <pre className="text-foreground/80 py-4 font-mono text-sm leading-relaxed">
           <code>
-            {/* Static syntax highlighting - using index as key is safe here as order never changes */}
-            {/* eslint-disable @eslint-react/no-array-index-key */}
+            {/* Static syntax highlighting - line order is stable, index keys are safe */}
             {lines
               ? lines.map((line, i) => {
                   const lineNumber = i + 1;

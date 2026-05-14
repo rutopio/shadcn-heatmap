@@ -408,7 +408,7 @@ export const WeekdayHeatmap = ({
   );
 
   if (data.length === 0) {
-    return emptyState ? <>{emptyState}</> : null;
+    return emptyState ? emptyState : null;
   }
 
   return (
@@ -498,7 +498,7 @@ export const WeekdayHeatmapBlock = ({
   return (
     <rect
       ref={ref}
-      role="img"
+      role="button"
       tabIndex={-1}
       aria-label={ariaLabel}
       className={cn(
@@ -601,7 +601,9 @@ export const WeekdayHeatmapBody = ({
       number,
       { weekday: number; value: number; level: number }
     >();
-    extraColumn.values.forEach((v) => map.set(v.weekday, v));
+    extraColumn.values.forEach((v) => {
+      map.set(v.weekday, v);
+    });
     return map;
   }, [extraColumn]);
 
@@ -689,7 +691,6 @@ export const WeekdayHeatmapBody = ({
     >
       <svg
         role="img"
-        tabIndex={0}
         aria-label="Activity heatmap by weekday and hour"
         className="focus-visible:ring-ring block overflow-visible rounded-sm focus-visible:ring-2 focus-visible:outline-none"
         height={svgHeight + PADDING * 2}
@@ -862,7 +863,7 @@ export const WeekdayHeatmapStat = ({
 };
 
 export type WeekdayHeatmapLegendProps = Omit<
-  HTMLAttributes<HTMLDivElement>,
+  HTMLAttributes<HTMLFieldSetElement>,
   "children"
 > & {
   labels?: { less?: string; more?: string };
@@ -886,8 +887,7 @@ export const WeekdayHeatmapLegend = ({
   );
 
   return (
-    <div
-      role="group"
+    <fieldset
       aria-label="Activity intensity legend"
       className={cn(
         "text-muted-foreground ml-auto flex items-center gap-1",
@@ -923,6 +923,6 @@ export const WeekdayHeatmapLegend = ({
         )
       )}
       <span className="ml-1 text-xs font-medium">{moreLabel}</span>
-    </div>
+    </fieldset>
   );
 };

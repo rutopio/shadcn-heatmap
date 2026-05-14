@@ -215,7 +215,7 @@ const groupByYearAndMonth = (
     if (!activitiesByYearMonth.has(key)) {
       activitiesByYearMonth.set(key, []);
     }
-    activitiesByYearMonth.get(key)!.push(activity);
+    activitiesByYearMonth.get(key)?.push(activity);
   }
 
   const sortedKeys = Array.from(activitiesByYearMonth.keys()).sort();
@@ -338,7 +338,7 @@ const groupContinuous = (
       : undefined;
     if (year !== undefined) {
       if (!yearMap.has(year)) yearMap.set(year, []);
-      yearMap.get(year)!.push(week);
+      yearMap.get(year)?.push(week);
     }
   }
 
@@ -582,7 +582,7 @@ export const CalendarHeatmap = ({
   );
 
   if (data.length === 0) {
-    return emptyState ? <>{emptyState}</> : null;
+    return emptyState ? emptyState : null;
   }
 
   return (
@@ -648,7 +648,7 @@ export const CalendarHeatmapBlock = ({
   return (
     <rect
       ref={ref}
-      role="img"
+      role="button"
       tabIndex={-1}
       aria-label={ariaLabel}
       className={cn(
@@ -779,7 +779,6 @@ export const CalendarHeatmapBody = ({
           )}
           <svg
             role="img"
-            tabIndex={0}
             aria-label={`Contribution heatmap for ${yearRow.year}`}
             className="focus-visible:ring-ring block overflow-visible rounded-sm focus-visible:ring-2 focus-visible:outline-none"
             height={height + strokePadding * 2}
@@ -855,11 +854,10 @@ export const CalendarHeatmapBody = ({
               </g>
             </g>
           </svg>
-          {renderYearFooter &&
-            renderYearFooter({
-              year: yearRow.year,
-              totalCount: yearTotalCount,
-            })}
+          {renderYearFooter?.({
+            year: yearRow.year,
+            totalCount: yearTotalCount,
+          })}
         </div>
       ))}
     </div>
@@ -925,7 +923,7 @@ export const CalendarHeatmapStat = ({
 };
 
 export type CalendarHeatmapLegendProps = Omit<
-  HTMLAttributes<HTMLDivElement>,
+  HTMLAttributes<HTMLFieldSetElement>,
   "children"
 > & {
   labels?: { less?: string; more?: string };
@@ -949,8 +947,7 @@ export const CalendarHeatmapLegend = ({
   );
 
   return (
-    <div
-      role="group"
+    <fieldset
       aria-label="Activity intensity legend"
       className={cn(
         "text-muted-foreground ml-auto flex items-center gap-1",
@@ -986,6 +983,6 @@ export const CalendarHeatmapLegend = ({
         )
       )}
       <span className="ml-1 text-xs font-medium">{moreLabel}</span>
-    </div>
+    </fieldset>
   );
 };

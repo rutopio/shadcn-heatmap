@@ -13,9 +13,9 @@ function parseDescription(text: string): ReactNode {
 
   // Match `code` blocks
   const codeRegex = /`([^`]+)`/g;
-  let match;
+  let match = codeRegex.exec(text);
 
-  while ((match = codeRegex.exec(text)) !== null) {
+  while (match !== null) {
     // Add text before the code block
     if (match.index > lastIndex) {
       parts.push(text.slice(lastIndex, match.index));
@@ -32,6 +32,7 @@ function parseDescription(text: string): ReactNode {
     );
 
     lastIndex = match.index + match[0].length;
+    match = codeRegex.exec(text);
   }
 
   // Add remaining text
@@ -39,7 +40,7 @@ function parseDescription(text: string): ReactNode {
     parts.push(text.slice(lastIndex));
   }
 
-  return parts.length > 0 ? <>{parts}</> : text;
+  return parts.length > 0 ? parts : text;
 }
 
 export function PropsTable({ sections }: PropsTableProps) {

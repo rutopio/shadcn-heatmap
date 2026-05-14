@@ -277,7 +277,7 @@ export const StatusHeatmap = ({
   );
 
   if (data.length === 0 || dates.length === 0) {
-    return emptyState ? <>{emptyState}</> : null;
+    return emptyState ? emptyState : null;
   }
 
   return (
@@ -332,7 +332,7 @@ export const StatusHeatmapBlock = ({
   return (
     <rect
       ref={ref}
-      role="img"
+      role="button"
       tabIndex={-1}
       aria-label={ariaLabel}
       className={cn(
@@ -434,7 +434,6 @@ export const StatusHeatmapBody = ({
     >
       <svg
         role="img"
-        tabIndex={0}
         aria-label="Status heatmap"
         className="focus-visible:ring-ring block overflow-visible rounded-sm focus-visible:ring-2 focus-visible:outline-none"
         height={height + labelHeight + PADDING * 2}
@@ -540,7 +539,7 @@ export const StatusHeatmapStat = ({
 };
 
 export type StatusHeatmapLegendProps = Omit<
-  HTMLAttributes<HTMLDivElement>,
+  HTMLAttributes<HTMLFieldSetElement>,
   "children"
 > & {
   labels?: StatusHeatmapLabels["statuses"];
@@ -562,8 +561,7 @@ export const StatusHeatmapLegend = ({
   }));
 
   return (
-    <div
-      role="group"
+    <fieldset
       aria-label="Status legend"
       className={cn("ml-auto flex items-center gap-1", className)}
       {...props}
@@ -594,6 +592,6 @@ export const StatusHeatmapLegend = ({
           </div>
         )
       )}
-    </div>
+    </fieldset>
   );
 };

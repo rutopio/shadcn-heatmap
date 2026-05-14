@@ -21,7 +21,7 @@
           const stored = localStorage.getItem("theme");
           const isDark = stored ? stored === "dark" : false;
           if (isDark) document.documentElement.classList.add("dark");
-        } catch (e) {
+        } catch (_e) {
           // ignore
         }
       })();

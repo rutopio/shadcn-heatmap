@@ -286,7 +286,9 @@ export const DateHeatmap = ({
 
   const dates = useMemo(() => {
     const uniqueDates = new Set<string>();
-    dataWithLevels.forEach((activity) => uniqueDates.add(activity.date));
+    dataWithLevels.forEach((activity) => {
+      uniqueDates.add(activity.date);
+    });
     return Array.from(uniqueDates).sort();
   }, [dataWithLevels]);
 
@@ -397,7 +399,7 @@ export const DateHeatmap = ({
   );
 
   if (data.length === 0 || dates.length === 0) {
-    return emptyState ? <>{emptyState}</> : null;
+    return emptyState ? emptyState : null;
   }
 
   return (
@@ -485,7 +487,7 @@ export const DateHeatmapBlock = ({
   return (
     <rect
       ref={ref}
-      role="img"
+      role="button"
       tabIndex={-1}
       aria-label={ariaLabel}
       className={cn(
@@ -598,7 +600,9 @@ export const DateHeatmapBody = ({
       string,
       { date: string; value: number; level: number }
     >();
-    extraColumn.values.forEach((v) => map.set(v.date, v));
+    extraColumn.values.forEach((v) => {
+      map.set(v.date, v);
+    });
     return map;
   }, [extraColumn]);
 
@@ -663,7 +667,6 @@ export const DateHeatmapBody = ({
     >
       <svg
         role="img"
-        tabIndex={0}
         aria-label="Activity heatmap by date and hour"
         className="focus-visible:ring-ring block overflow-visible rounded-sm focus-visible:ring-2 focus-visible:outline-none"
         height={svgHeight + PADDING * 2}
@@ -841,7 +844,7 @@ export const DateHeatmapStat = ({
 };
 
 export type DateHeatmapLegendProps = Omit<
-  HTMLAttributes<HTMLDivElement>,
+  HTMLAttributes<HTMLFieldSetElement>,
   "children"
 > & {
   labels?: { less?: string; more?: string };
@@ -865,8 +868,7 @@ export const DateHeatmapLegend = ({
   );
 
   return (
-    <div
-      role="group"
+    <fieldset
       aria-label="Activity intensity legend"
       className={cn(
         "text-muted-foreground ml-auto flex items-center gap-1",
@@ -902,6 +904,6 @@ export const DateHeatmapLegend = ({
         )
       )}
       <span className="ml-1 text-xs font-medium">{moreLabel}</span>
-    </div>
+    </fieldset>
   );
 };

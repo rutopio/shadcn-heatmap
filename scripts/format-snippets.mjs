@@ -7,8 +7,8 @@
  * is written back into the source file.
  */
 
-import { readFileSync, writeFileSync } from "fs";
-import { resolve } from "path";
+import { readFileSync, writeFileSync } from "node:fs";
+import { resolve } from "node:path";
 import * as prettier from "prettier";
 
 const ROOT = resolve(import.meta.dirname, "..");
@@ -115,7 +115,7 @@ async function processFile(src) {
         const formatted = await formatSnippet(inner);
         if (formatted !== inner.trim()) {
           changed++;
-          result += "`" + "\n" + formatted + "\n" + "`";
+          result += `\`\n${formatted}\n\``;
           i = j + 1;
           continue;
         }

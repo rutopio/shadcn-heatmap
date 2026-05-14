@@ -27,7 +27,7 @@ function useActiveId(ids: string[]) {
           found = id;
         }
       }
-      setActiveId(found); // eslint-disable-line @eslint-react/hooks-extra/no-direct-set-state-in-use-effect
+      setActiveId(found);
     }
 
     update();
@@ -66,6 +66,7 @@ export function TocSidebar({ items }: TocSidebarProps) {
             {items.map((item) => (
               <li key={item.id}>
                 <button
+                  type="button"
                   onClick={() => scrollTo(item.id)}
                   className={cn(
                     "hover:text-foreground w-full rounded px-2 py-1 text-left text-sm transition-colors",
@@ -81,6 +82,7 @@ export function TocSidebar({ items }: TocSidebarProps) {
                     {item.children.map((child) => (
                       <li key={child.id}>
                         <button
+                          type="button"
                           onClick={() => scrollTo(child.id)}
                           className={cn(
                             "hover:text-foreground w-full rounded px-2 py-0.5 text-left text-xs transition-colors",
@@ -101,6 +103,7 @@ export function TocSidebar({ items }: TocSidebarProps) {
         </nav>
         <div className="border-border/60 mt-3 border-t p-3">
           <button
+            type="button"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
             className="text-muted-foreground hover:text-foreground w-full rounded px-2 py-1 text-left text-sm transition-colors"
           >

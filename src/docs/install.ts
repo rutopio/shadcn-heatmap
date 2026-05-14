@@ -22,7 +22,7 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }`;
 
-export const themeTokensSnippet = `/* src/styles/globals.css (Tailwind v4) */
+export const themeTokensSnippet = `/* src/styles.css (Tailwind v4) */
 @import "tailwindcss";
 
 @theme {

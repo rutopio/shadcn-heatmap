@@ -50,3 +50,6 @@ vite.config.ts.timestamp-*
 task/
 TODO.md
 /docs
+
+# design source files
+assets/*.ai

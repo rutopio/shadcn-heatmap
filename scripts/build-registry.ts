@@ -107,7 +107,7 @@ for (const comp of components) {
   };
 
   const outPath = path.join(outDir, `${comp.name}.json`);
-  fs.writeFileSync(outPath, JSON.stringify(item, null, 2) + "\n");
+  fs.writeFileSync(outPath, `${JSON.stringify(item, null, 2)}\n`);
 
   indexItems.push({
     name: comp.name,
@@ -126,7 +126,7 @@ const index = {
 
 fs.writeFileSync(
   path.join(outDir, "index.json"),
-  JSON.stringify(index, null, 2) + "\n"
+  `${JSON.stringify(index, null, 2)}\n`
 );
 
 console.log(`Registry built: ${indexItems.length} items → ${outDir}`);

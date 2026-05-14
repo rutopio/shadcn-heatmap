@@ -172,7 +172,7 @@ function InstallPage() {
               <CodeBlock
                 code={themeTokensSnippet}
                 lang="css"
-                filename="src/styles/globals.css"
+                filename="src/styles.css"
               />
             </div>
 

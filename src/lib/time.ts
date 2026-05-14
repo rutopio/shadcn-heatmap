@@ -25,7 +25,6 @@ export function formatDate(
       return `${year} ${month} ${day}`;
     case "dd-MMM-yyyy":
       return `${day} ${month} ${year}`;
-    case "MMM-dd-yyyy":
     default:
       return `${month} ${day}, ${year}`;
   }

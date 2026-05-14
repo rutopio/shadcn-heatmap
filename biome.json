@@ -1,0 +1,71 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.4.15/schema.json",
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true
+  },
+  "files": {
+    "includes": [
+      "**",
+      "!dist",
+      "!.wrangler",
+      "!.vercel",
+      "!.netlify",
+      "!.output",
+      "!build",
+      "!deprecated",
+      "!pnpm-lock.yaml",
+      "!**/routeTree.gen.ts",
+      "!.tanstack",
+      "!**/*.css"
+    ]
+  },
+  "formatter": {
+    "enabled": false
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "correctness": {
+        "useExhaustiveDependencies": "warn",
+        "useHookAtTopLevel": "error"
+      },
+      "suspicious": {
+        "noArrayIndexKey": "error",
+        "useIterableCallbackReturn": "warn"
+      },
+      "a11y": {
+        "noStaticElementInteractions": "warn",
+        "noNoninteractiveTabindex": "warn",
+        "noInteractiveElementToNoninteractiveRole": "warn",
+        "useSemanticElements": "warn",
+        "useButtonType": "warn",
+        "useAriaPropsSupportedByRole": "warn"
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["src/components/ui/code-block.tsx"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noArrayIndexKey": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["src/components/heatmap/*.tsx"],
+      "linter": {
+        "rules": {
+          "a11y": {
+            "useSemanticElements": "off"
+          }
+        }
+      }
+    }
+  ]
+}

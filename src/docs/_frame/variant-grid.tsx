@@ -61,12 +61,12 @@ export function VariantGrid({ variants }: VariantGridProps) {
               {variant.description}
             </p>
           </div>
-          <div
+          <section
             aria-label={`Preview: ${variant.title}`}
             className="flex min-h-30 flex-1 items-center justify-center overflow-auto p-4 sm:min-h-48 sm:p-6"
           >
             {variant.preview}
-          </div>
+          </section>
           <CodeBlock
             code={variant.code}
             className="rounded-none border-0 border-t"

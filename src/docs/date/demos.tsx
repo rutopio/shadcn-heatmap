@@ -44,7 +44,9 @@ const sumByDate = (data: DateHourlyActivity[], dates: string[]) => {
 
 const medianByHour = (data: DateHourlyActivity[]) => {
   const byHour = Array.from({ length: 24 }, () => [] as number[]);
-  data.forEach((a) => byHour[a.hour].push(a.value));
+  data.forEach((a) => {
+    byHour[a.hour].push(a.value);
+  });
   return byHour.map((arr) => {
     const s = [...arr].sort((x, y) => x - y);
     return s.length ? s[Math.floor(s.length / 2)] : 0;
@@ -55,7 +57,7 @@ const medianByDate = (data: DateHourlyActivity[], dates: string[]) => {
   const byDate = new Map<string, number[]>();
   data.forEach((a) => {
     if (!byDate.has(a.date)) byDate.set(a.date, []);
-    byDate.get(a.date)!.push(a.value);
+    byDate.get(a.date)?.push(a.value);
   });
   return dates.map((date) => {
     const arr = [...(byDate.get(date) ?? [])].sort((x, y) => x - y);
@@ -67,7 +69,7 @@ const p95ByDate = (data: DateHourlyActivity[], dates: string[]) => {
   const byDate = new Map<string, number[]>();
   data.forEach((a) => {
     if (!byDate.has(a.date)) byDate.set(a.date, []);
-    byDate.get(a.date)!.push(a.value);
+    byDate.get(a.date)?.push(a.value);
   });
   return dates.map((date) => {
     const arr = [...(byDate.get(date) ?? [])].sort((x, y) => x - y);
