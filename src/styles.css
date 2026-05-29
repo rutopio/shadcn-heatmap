@@ -109,6 +109,14 @@
 
   html {
     scroll-behavior: smooth;
+    background-color: var(--color-background);
+  }
+
+  html,
+  body {
+    /* Prevent iOS Chrome's collapsing toolbar from exposing a strip of
+       body background below the footer when rubber-band scrolling. */
+    overscroll-behavior-y: contain;
   }
 
   body {

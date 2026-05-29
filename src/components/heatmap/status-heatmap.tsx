@@ -45,6 +45,8 @@ export type StatusHeatmapLabels = {
   };
   stat?: string; // Stat text template. Placeholder: {{value}}
   cellLabel?: string; // aria-label template. Placeholders: {{date}}, {{status}}
+  heatmapLabel?: string; // aria-label for the heatmap SVG
+  legendLabel?: string; // aria-label for the legend fieldset
 };
 
 export type StatusColorConfig = Record<number, string> & {
@@ -220,6 +222,8 @@ export const StatusHeatmap = ({
         healthy: "Healthy",
       },
       cellLabel: "{{date}}: {{status}}",
+      heatmapLabel: "Status heatmap",
+      legendLabel: "Status legend",
       ...labelsProp,
     }),
     [labelsProp]
@@ -283,6 +287,7 @@ export const StatusHeatmap = ({
   return (
     <StatusHeatmapContext value={contextValue}>
       <div
+        data-slot="status-heatmap"
         className={cn("flex w-max max-w-full flex-col gap-2 p-4", className)}
         style={{ fontSize, ...style }}
         {...props}
@@ -310,6 +315,7 @@ export const StatusHeatmapBlock = ({
   onCellClick,
   onCellHover,
   onClick,
+  onKeyDown,
   onMouseEnter,
   onMouseLeave,
   className,
@@ -332,11 +338,14 @@ export const StatusHeatmapBlock = ({
   return (
     <rect
       ref={ref}
-      role="button"
-      tabIndex={-1}
+      data-slot="status-heatmap-block"
+      role={onCellClick ? "button" : "img"}
+      tabIndex={onCellClick ? 0 : -1}
       aria-label={ariaLabel}
       className={cn(
         "motion-safe:transition-opacity motion-safe:hover:opacity-70",
+        onCellClick &&
+          "focus-visible:ring-ring cursor-pointer focus-visible:ring-2 focus-visible:outline-none",
         className
       )}
       data-value={activity.value}
@@ -355,6 +364,13 @@ export const StatusHeatmapBlock = ({
       onClick={(event) => {
         onCellClick?.(activity);
         onClick?.(event);
+      }}
+      onKeyDown={(event) => {
+        if (onCellClick && (event.key === "Enter" || event.key === " ")) {
+          event.preventDefault();
+          onCellClick(activity);
+        }
+        onKeyDown?.(event);
       }}
       onMouseEnter={(event) => {
         onCellHover?.(activity);
@@ -402,6 +418,7 @@ export const StatusHeatmapBody = ({
     fontSize,
     dateFormat,
     locale,
+    labels,
   } = useStatusHeatmap();
 
   const activityMap = useMemo(() => {
@@ -429,12 +446,13 @@ export const StatusHeatmapBody = ({
 
   return (
     <div
+      data-slot="status-heatmap-body"
       className={cn("max-w-full overflow-x-auto overflow-y-hidden", className)}
       {...props}
     >
       <svg
         role="img"
-        aria-label="Status heatmap"
+        aria-label={labels.heatmapLabel ?? "Status heatmap"}
         className="focus-visible:ring-ring block overflow-visible rounded-sm focus-visible:ring-2 focus-visible:outline-none"
         height={height + labelHeight + PADDING * 2}
         viewBox={`${-PADDING} ${-PADDING} ${width + PADDING * 2} ${height + labelHeight + PADDING * 2}`}
@@ -489,6 +507,7 @@ export const StatusHeatmapFooter = ({
   ...props
 }: StatusHeatmapFooterProps) => (
   <div
+    data-slot="status-heatmap-footer"
     className={cn(
       "flex flex-wrap gap-1 whitespace-nowrap sm:gap-x-4",
       className
@@ -530,6 +549,7 @@ export const StatusHeatmapStat = ({
 
   return (
     <div
+      data-slot="status-heatmap-stat"
       className={cn("text-muted-foreground tabular-nums", className)}
       {...props}
     >
@@ -562,7 +582,8 @@ export const StatusHeatmapLegend = ({
 
   return (
     <fieldset
-      aria-label="Status legend"
+      data-slot="status-heatmap-legend"
+      aria-label={labels.legendLabel ?? "Status legend"}
       className={cn("ml-auto flex items-center gap-1", className)}
       {...props}
     >

@@ -94,6 +94,9 @@ export type WeekdayHeatmapLabels = {
   weekdays?: string[];
   stat?: string; // Stat text template. Placeholder: {{value}}
   cellLabel?: string; // aria-label template. Placeholders: {{weekday}}, {{hour}}, {{value}}
+  heatmapLabel?: string; // aria-label for the heatmap SVG
+  legendLabel?: string; // aria-label for the legend fieldset
+  legendLevelLabel?: string; // aria-label template for legend swatches. Placeholder: {{level}}
 };
 
 export type ColorConfig = {
@@ -334,6 +337,9 @@ export const WeekdayHeatmap = ({
       endHour: use12Hour ? "12" : "00",
       weekdays: weekdayLabels,
       cellLabel: "{{weekday}} {{hour}}: {{value}}",
+      heatmapLabel: "Activity heatmap by weekday and hour",
+      legendLabel: "Activity intensity legend",
+      legendLevelLabel: "{{level}} contributions",
       ...labelsProp,
     };
   }, [locale, use12Hour, labelsProp]);
@@ -414,6 +420,7 @@ export const WeekdayHeatmap = ({
   return (
     <WeekdayHeatmapContext value={contextValue}>
       <div
+        data-slot="weekday-heatmap"
         className={cn("flex w-max max-w-full flex-col gap-2 p-4", className)}
         style={{ fontSize, ...style }}
         {...props}
@@ -441,6 +448,7 @@ export const WeekdayHeatmapBlock = ({
   onCellClick,
   onCellHover,
   onClick,
+  onKeyDown,
   onMouseEnter,
   onMouseLeave,
   className,
@@ -498,11 +506,14 @@ export const WeekdayHeatmapBlock = ({
   return (
     <rect
       ref={ref}
-      role="button"
-      tabIndex={-1}
+      data-slot="weekday-heatmap-block"
+      role={onCellClick ? "button" : "img"}
+      tabIndex={onCellClick ? 0 : -1}
       aria-label={ariaLabel}
       className={cn(
         "motion-safe:transition-opacity motion-safe:hover:opacity-70",
+        onCellClick &&
+          "focus-visible:ring-ring cursor-pointer focus-visible:ring-2 focus-visible:outline-none",
         className
       )}
       data-value={activity.value}
@@ -523,6 +534,13 @@ export const WeekdayHeatmapBlock = ({
       onClick={(event) => {
         onCellClick?.(activity);
         onClick?.(event);
+      }}
+      onKeyDown={(event) => {
+        if (onCellClick && (event.key === "Enter" || event.key === " ")) {
+          event.preventDefault();
+          onCellClick(activity);
+        }
+        onKeyDown?.(event);
       }}
       onMouseEnter={(event) => {
         onCellHover?.(activity);
@@ -686,12 +704,15 @@ export const WeekdayHeatmapBody = ({
 
   return (
     <div
+      data-slot="weekday-heatmap-body"
       className={cn("max-w-full overflow-x-auto overflow-y-hidden", className)}
       {...props}
     >
       <svg
         role="img"
-        aria-label="Activity heatmap by weekday and hour"
+        aria-label={
+          labels.heatmapLabel ?? "Activity heatmap by weekday and hour"
+        }
         className="focus-visible:ring-ring block overflow-visible rounded-sm focus-visible:ring-2 focus-visible:outline-none"
         height={svgHeight + PADDING * 2}
         viewBox={`${-PADDING} ${-PADDING} ${svgWidth + PADDING * 2} ${svgHeight + PADDING * 2}`}
@@ -815,6 +836,7 @@ export const WeekdayHeatmapFooter = ({
   ...props
 }: WeekdayHeatmapFooterProps) => (
   <div
+    data-slot="weekday-heatmap-footer"
     className={cn(
       "flex flex-wrap gap-1 whitespace-nowrap sm:gap-x-4",
       className
@@ -854,6 +876,7 @@ export const WeekdayHeatmapStat = ({
 
   return (
     <div
+      data-slot="weekday-heatmap-stat"
       className={cn("text-muted-foreground tabular-nums", className)}
       {...props}
     >
@@ -876,8 +899,15 @@ export const WeekdayHeatmapLegend = ({
   children,
   ...props
 }: WeekdayHeatmapLegendProps) => {
-  const { levels, isNormalized, blockSize, blockWidth, blockRadius, colors } =
-    useWeekdayHeatmap();
+  const {
+    levels,
+    isNormalized,
+    blockSize,
+    blockWidth,
+    blockRadius,
+    colors,
+    labels,
+  } = useWeekdayHeatmap();
 
   const lessLabel = labelsProp?.less ?? "Less";
   const moreLabel = labelsProp?.more ?? "More";
@@ -888,7 +918,8 @@ export const WeekdayHeatmapLegend = ({
 
   return (
     <fieldset
-      aria-label="Activity intensity legend"
+      data-slot="weekday-heatmap-legend"
+      aria-label={labels.legendLabel ?? "Activity intensity legend"}
       className={cn(
         "text-muted-foreground ml-auto flex items-center gap-1",
         className
@@ -904,7 +935,9 @@ export const WeekdayHeatmapLegend = ({
         ) : (
           <svg
             role="img"
-            aria-label={`${level} contributions`}
+            aria-label={(
+              labels.legendLevelLabel ?? "{{level}} contributions"
+            ).replace("{{level}}", String(level))}
             height={blockSize}
             key={`legend-level-${level}`}
             width={blockWidth}

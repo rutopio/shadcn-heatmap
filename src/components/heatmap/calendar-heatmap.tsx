@@ -41,6 +41,9 @@ export type Labels = {
   weekdays?: string[];
   stat?: string; // Stat text template. Placeholders: {{value}}, {{year}}
   cellLabel?: string; // aria-label template. Placeholders: {{date}}, {{value}}
+  heatmapLabel?: string; // aria-label for the heatmap SVG. Placeholder: {{year}}
+  legendLabel?: string; // aria-label for the legend fieldset
+  legendLevelLabel?: string; // aria-label template for legend swatches. Placeholder: {{level}}
 };
 
 export type ColorConfig = {
@@ -510,6 +513,9 @@ export const CalendarHeatmap = ({
       months: generateMonthLabels(locale),
       weekdays: generateWeekdayLabels(locale),
       cellLabel: "{{date}}: {{value}} contributions",
+      heatmapLabel: "Contribution heatmap for {{year}}",
+      legendLabel: "Activity intensity legend",
+      legendLevelLabel: "{{level}} contributions",
       ...labelsProp,
     }),
     [locale, labelsProp]
@@ -588,6 +594,7 @@ export const CalendarHeatmap = ({
   return (
     <CalendarHeatmapContext value={contextValue}>
       <div
+        data-slot="calendar-heatmap"
         className={cn("flex w-max max-w-full flex-col gap-2 p-4", className)}
         style={{ fontSize, ...style }}
         {...props}
@@ -616,6 +623,7 @@ export const CalendarHeatmapBlock = ({
   onCellClick,
   onCellHover,
   onClick,
+  onKeyDown,
   onMouseEnter,
   onMouseLeave,
   className,
@@ -648,11 +656,14 @@ export const CalendarHeatmapBlock = ({
   return (
     <rect
       ref={ref}
-      role="button"
-      tabIndex={-1}
+      data-slot="calendar-heatmap-block"
+      role={onCellClick ? "button" : "img"}
+      tabIndex={onCellClick ? 0 : -1}
       aria-label={ariaLabel}
       className={cn(
         "motion-safe:transition-opacity motion-safe:hover:opacity-70",
+        onCellClick &&
+          "focus-visible:ring-ring cursor-pointer focus-visible:ring-2 focus-visible:outline-none",
         className
       )}
       data-value={activity.value}
@@ -672,6 +683,13 @@ export const CalendarHeatmapBlock = ({
       onClick={(event) => {
         onCellClick?.(activity);
         onClick?.(event);
+      }}
+      onKeyDown={(event) => {
+        if (onCellClick && (event.key === "Enter" || event.key === " ")) {
+          event.preventDefault();
+          onCellClick(activity);
+        }
+        onKeyDown?.(event);
       }}
       onMouseEnter={(event) => {
         onCellHover?.(activity);
@@ -764,6 +782,7 @@ export const CalendarHeatmapBody = ({
 
   return (
     <div
+      data-slot="calendar-heatmap-body"
       className={cn(
         "flex max-w-full flex-col gap-6 overflow-x-auto overflow-y-hidden py-4",
         className
@@ -779,7 +798,9 @@ export const CalendarHeatmapBody = ({
           )}
           <svg
             role="img"
-            aria-label={`Contribution heatmap for ${yearRow.year}`}
+            aria-label={(
+              labels.heatmapLabel ?? "Contribution heatmap for {{year}}"
+            ).replace("{{year}}", String(yearRow.year))}
             className="focus-visible:ring-ring block overflow-visible rounded-sm focus-visible:ring-2 focus-visible:outline-none"
             height={height + strokePadding * 2}
             viewBox={`0 0 ${totalWidth} ${height + strokePadding * 2}`}
@@ -871,6 +892,7 @@ export const CalendarHeatmapFooter = ({
   ...props
 }: CalendarHeatmapFooterProps) => (
   <div
+    data-slot="calendar-heatmap-footer"
     className={cn(
       "flex flex-wrap gap-1 whitespace-nowrap sm:gap-x-4",
       className
@@ -912,6 +934,7 @@ export const CalendarHeatmapStat = ({
 
   return (
     <div
+      data-slot="calendar-heatmap-stat"
       className={cn("text-muted-foreground tabular-nums", className)}
       {...props}
     >
@@ -936,8 +959,15 @@ export const CalendarHeatmapLegend = ({
   children,
   ...props
 }: CalendarHeatmapLegendProps) => {
-  const { levels, isNormalized, blockSize, blockWidth, blockRadius, colors } =
-    useCalendarHeatmap();
+  const {
+    levels,
+    isNormalized,
+    blockSize,
+    blockWidth,
+    blockRadius,
+    colors,
+    labels,
+  } = useCalendarHeatmap();
 
   const lessLabel = labelsProp?.less ?? "Less";
   const moreLabel = labelsProp?.more ?? "More";
@@ -948,7 +978,8 @@ export const CalendarHeatmapLegend = ({
 
   return (
     <fieldset
-      aria-label="Activity intensity legend"
+      data-slot="calendar-heatmap-legend"
+      aria-label={labels.legendLabel ?? "Activity intensity legend"}
       className={cn(
         "text-muted-foreground ml-auto flex items-center gap-1",
         className
@@ -964,7 +995,9 @@ export const CalendarHeatmapLegend = ({
         ) : (
           <svg
             role="img"
-            aria-label={`${level} contributions`}
+            aria-label={(
+              labels.legendLevelLabel ?? "{{level}} contributions"
+            ).replace("{{level}}", String(level))}
             height={blockSize}
             key={`legend-level-${level}`}
             width={blockWidth}

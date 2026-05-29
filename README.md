@@ -56,17 +56,19 @@ See the [/install page](https://shadcn-heatmap.pages.dev/install) for the intera
 
    ```bash
    # CalendarHeatmap
-   npx shadcn@latest add https://shadcn-heatmap.pages.dev/r/calendar-heatmap.json
+   npx shadcn@latest add @heatmap/calendar-heatmap
 
    # WeekdayHeatmap
-   npx shadcn@latest add https://shadcn-heatmap.pages.dev/r/weekday-heatmap.json
+   npx shadcn@latest add @heatmap/weekday-heatmap
 
    # DateHeatmap
-   npx shadcn@latest add https://shadcn-heatmap.pages.dev/r/date-heatmap.json
+   npx shadcn@latest add @heatmap/date-heatmap
 
    # StatusHeatmap
-   npx shadcn@latest add https://shadcn-heatmap.pages.dev/r/status-heatmap.json
+   npx shadcn@latest add @heatmap/status-heatmap
    ```
+
+   The `@heatmap` namespace works once the registry is listed in the [shadcn directory](https://ui.shadcn.com/docs/directory). Until then, install from the full URL, e.g. `npx shadcn@latest add https://shadcn-heatmap.pages.dev/r/calendar-heatmap.json`.
 
 2. **Ensure the runtime dependencies exist.**
 

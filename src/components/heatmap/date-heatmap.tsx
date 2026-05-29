@@ -1,12 +1,21 @@
 "use client";
 
 import { createContext, Fragment, use, useMemo } from "react";
+import { format } from "date-fns";
 
-import { formatDateWithWeekday } from "@/lib/time";
 import { cn } from "@/lib/utils";
 
 import type { Locale } from "date-fns";
 import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
+
+function formatDateWithWeekday(
+  date: Date | string,
+  dateFormat: string = "EEE, MMM dd, yyyy",
+  locale?: Locale
+): string {
+  const d = typeof date === "string" ? new Date(date) : date;
+  return format(d, dateFormat, locale ? { locale } : undefined);
+}
 
 export type DateHour =
   | 0
@@ -93,6 +102,9 @@ export type DateHeatmapLabels = {
   endHour?: string | null; // null = hide the end hour label
   stat?: string; // Stat text template. Placeholder: {{value}}
   cellLabel?: string; // aria-label template. Placeholders: {{date}}, {{hour}}, {{value}}
+  heatmapLabel?: string; // aria-label for the heatmap SVG
+  legendLabel?: string; // aria-label for the legend fieldset
+  legendLevelLabel?: string; // aria-label template for legend swatches. Placeholder: {{level}}
 };
 
 export type ColorConfig = {
@@ -278,6 +290,9 @@ export const DateHeatmap = ({
       hours: use12Hour ? TWELVE_HOUR_LABELS : DEFAULT_HOUR_LABELS,
       endHour: use12Hour ? "12" : "00",
       cellLabel: "{{date}} {{hour}}: {{value}}",
+      heatmapLabel: "Activity heatmap by date and hour",
+      legendLabel: "Activity intensity legend",
+      legendLevelLabel: "{{level}} contributions",
       ...labelsProp,
     }),
     [use12Hour, labelsProp]
@@ -405,6 +420,7 @@ export const DateHeatmap = ({
   return (
     <DateHeatmapContext value={contextValue}>
       <div
+        data-slot="date-heatmap"
         className={cn("flex w-max max-w-full flex-col gap-2 p-4", className)}
         style={{ fontSize, ...style }}
         {...props}
@@ -434,6 +450,7 @@ export const DateHeatmapBlock = ({
   onCellClick,
   onCellHover,
   onClick,
+  onKeyDown,
   onMouseEnter,
   onMouseLeave,
   className,
@@ -487,11 +504,14 @@ export const DateHeatmapBlock = ({
   return (
     <rect
       ref={ref}
-      role="button"
-      tabIndex={-1}
+      data-slot="date-heatmap-block"
+      role={onCellClick ? "button" : "img"}
+      tabIndex={onCellClick ? 0 : -1}
       aria-label={ariaLabel}
       className={cn(
         "motion-safe:transition-opacity motion-safe:hover:opacity-70",
+        onCellClick &&
+          "focus-visible:ring-ring cursor-pointer focus-visible:ring-2 focus-visible:outline-none",
         className
       )}
       data-value={activity.value}
@@ -512,6 +532,13 @@ export const DateHeatmapBlock = ({
       onClick={(event) => {
         onCellClick?.(activity);
         onClick?.(event);
+      }}
+      onKeyDown={(event) => {
+        if (onCellClick && (event.key === "Enter" || event.key === " ")) {
+          event.preventDefault();
+          onCellClick(activity);
+        }
+        onKeyDown?.(event);
       }}
       onMouseEnter={(event) => {
         onCellHover?.(activity);
@@ -662,12 +689,13 @@ export const DateHeatmapBody = ({
 
   return (
     <div
+      data-slot="date-heatmap-body"
       className={cn("max-w-full overflow-x-auto overflow-y-hidden", className)}
       {...props}
     >
       <svg
         role="img"
-        aria-label="Activity heatmap by date and hour"
+        aria-label={labels.heatmapLabel ?? "Activity heatmap by date and hour"}
         className="focus-visible:ring-ring block overflow-visible rounded-sm focus-visible:ring-2 focus-visible:outline-none"
         height={svgHeight + PADDING * 2}
         viewBox={`${-PADDING} ${-PADDING} ${svgWidth + PADDING * 2} ${svgHeight + PADDING * 2}`}
@@ -796,6 +824,7 @@ export const DateHeatmapFooter = ({
   ...props
 }: DateHeatmapFooterProps) => (
   <div
+    data-slot="date-heatmap-footer"
     className={cn(
       "flex flex-wrap gap-1 whitespace-nowrap sm:gap-x-4",
       className
@@ -835,6 +864,7 @@ export const DateHeatmapStat = ({
 
   return (
     <div
+      data-slot="date-heatmap-stat"
       className={cn("text-muted-foreground tabular-nums", className)}
       {...props}
     >
@@ -857,8 +887,15 @@ export const DateHeatmapLegend = ({
   children,
   ...props
 }: DateHeatmapLegendProps) => {
-  const { levels, isNormalized, blockSize, blockWidth, blockRadius, colors } =
-    useDateHeatmap();
+  const {
+    levels,
+    isNormalized,
+    blockSize,
+    blockWidth,
+    blockRadius,
+    colors,
+    labels,
+  } = useDateHeatmap();
 
   const lessLabel = labelsProp?.less ?? "Less";
   const moreLabel = labelsProp?.more ?? "More";
@@ -869,7 +906,8 @@ export const DateHeatmapLegend = ({
 
   return (
     <fieldset
-      aria-label="Activity intensity legend"
+      data-slot="date-heatmap-legend"
+      aria-label={labels.legendLabel ?? "Activity intensity legend"}
       className={cn(
         "text-muted-foreground ml-auto flex items-center gap-1",
         className
@@ -885,7 +923,9 @@ export const DateHeatmapLegend = ({
         ) : (
           <svg
             role="img"
-            aria-label={`${level} contributions`}
+            aria-label={(
+              labels.legendLevelLabel ?? "{{level}} contributions"
+            ).replace("{{level}}", String(level))}
             height={blockSize}
             key={`legend-level-${level}`}
             width={blockWidth}

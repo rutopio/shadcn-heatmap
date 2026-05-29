@@ -1,6 +1,6 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
-  "name": "shadcn-heatmap",
+  "name": "@heatmap",
   "homepage": "https://shadcn-heatmap.pages.dev",
   "items": [
     {

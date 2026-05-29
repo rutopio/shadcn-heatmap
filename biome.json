@@ -62,7 +62,8 @@
       "linter": {
         "rules": {
           "a11y": {
-            "useSemanticElements": "off"
+            "useSemanticElements": "off",
+            "noStaticElementInteractions": "off"
           }
         }
       }

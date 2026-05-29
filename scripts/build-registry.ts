@@ -7,10 +7,13 @@ const root = path.resolve(__dirname, "..");
 const heatmapDir = path.join(root, "src/components/heatmap");
 const outDir = path.join(root, "public/r");
 
+const REGISTRY_NAME = "@heatmap";
+const HOMEPAGE = "https://shadcn-heatmap.pages.dev";
+
 type RegistryFile = {
   path: string;
   type: string;
-  content: string;
+  content?: string;
 };
 
 type RegistryItem = {
@@ -54,7 +57,7 @@ const components: {
     title: "DateHeatmap",
     description:
       "Date × hour matrix for zooming into a narrow time window with daily Sum column.",
-    extraDeps: [],
+    extraDeps: ["date-fns"],
   },
   {
     filename: "status-heatmap.tsx",
@@ -68,60 +71,82 @@ const components: {
 
 const cssVars = {
   theme: {
-    "--color-accent": "oklch(96.7% 0.001 286.4)",
+    "--color-secondary": "oklch(96.7% 0.001 286.4)",
     "--color-chart-1": "oklch(64.6% 0.222 41.1)",
-    "--color-chart-2": "oklch(60% 0.118 184.7)",
     "--color-muted-foreground": "oklch(55.2% 0.014 285.9)",
   },
 };
 
 fs.mkdirSync(outDir, { recursive: true });
 
-const indexItems: {
-  name: string;
-  type: string;
-  title: string;
-  description: string;
-}[] = [];
+// Full item entries for the source registry.json (no file content).
+const sourceItems: Omit<RegistryItem, "$schema">[] = [];
 
 for (const comp of components) {
   const filePath = path.join(heatmapDir, comp.filename);
   const content = fs.readFileSync(filePath, "utf-8");
 
-  const item: RegistryItem = {
-    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+  const files: RegistryFile[] = [
+    {
+      path: `components/heatmap/${comp.filename}`,
+      type: "registry:component",
+    },
+  ];
+
+  const baseItem: Omit<RegistryItem, "$schema"> = {
     name: comp.name,
     type: "registry:component",
     title: comp.title,
     description: comp.description,
     dependencies: ["clsx", "tailwind-merge", ...comp.extraDeps],
     registryDependencies: [],
-    files: [
-      {
-        path: `components/heatmap/${comp.filename}`,
-        type: "registry:component",
-        content,
-      },
-    ],
+    files,
     cssVars,
   };
 
-  const outPath = path.join(outDir, `${comp.name}.json`);
-  fs.writeFileSync(outPath, `${JSON.stringify(item, null, 2)}\n`);
+  // Served item: CLI installs from this, so it keeps file content.
+  const servedItem: RegistryItem = {
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    ...baseItem,
+    files: [{ ...files[0], content }],
+  };
 
-  indexItems.push({
-    name: comp.name,
-    type: "registry:component",
-    title: comp.title,
-    description: comp.description,
-  });
+  fs.writeFileSync(
+    path.join(outDir, `${comp.name}.json`),
+    `${JSON.stringify(servedItem, null, 2)}\n`
+  );
+
+  sourceItems.push(baseItem);
 }
 
+// Source registry.json at repo root: flat, no file content. Required for the
+// shadcn directory submission.
+const sourceRegistry = {
+  $schema: "https://ui.shadcn.com/schema/registry.json",
+  name: REGISTRY_NAME,
+  homepage: HOMEPAGE,
+  items: sourceItems.map((item) => ({
+    $schema: "https://ui.shadcn.com/schema/registry-item.json",
+    ...item,
+  })),
+};
+
+fs.writeFileSync(
+  path.join(root, "registry.json"),
+  `${JSON.stringify(sourceRegistry, null, 2)}\n`
+);
+
+// Served index for the public registry endpoint (slim listing).
 const index = {
   $schema: "https://ui.shadcn.com/schema/registry.json",
-  name: "shadcn-heatmap",
-  homepage: "https://shadcn-heatmap.pages.dev",
-  items: indexItems,
+  name: REGISTRY_NAME,
+  homepage: HOMEPAGE,
+  items: sourceItems.map(({ name, type, title, description }) => ({
+    name,
+    type,
+    title,
+    description,
+  })),
 };
 
 fs.writeFileSync(
@@ -129,4 +154,6 @@ fs.writeFileSync(
   `${JSON.stringify(index, null, 2)}\n`
 );
 
-console.log(`Registry built: ${indexItems.length} items → ${outDir}`);
+console.log(
+  `Registry built: ${sourceItems.length} items → ${outDir} + registry.json`
+);
