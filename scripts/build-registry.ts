@@ -131,9 +131,14 @@ const sourceRegistry = {
   })),
 };
 
+const sourceRegistryJson = `${JSON.stringify(sourceRegistry, null, 2)}\n`;
+// Repo root: flat structure for the directory submission.
+fs.writeFileSync(path.join(root, "registry.json"), sourceRegistryJson);
+// public/: so the deployed site serves it at /registry.json (Pages serves the
+// build output, not the repo root).
 fs.writeFileSync(
-  path.join(root, "registry.json"),
-  `${JSON.stringify(sourceRegistry, null, 2)}\n`
+  path.join(root, "public/registry.json"),
+  sourceRegistryJson
 );
 
 // Served index for the public registry endpoint (slim listing).
