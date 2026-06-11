@@ -1,11 +1,11 @@
-import { useState } from "react";
-import { Link, useRouterState } from "@tanstack/react-router";
 import {
   CodeIcon,
   GithubLogoIcon,
   ListIcon,
   XIcon,
 } from "@phosphor-icons/react";
+import { Link, useRouterState } from "@tanstack/react-router";
+import { useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -24,7 +24,7 @@ const navLinks = [
 
 export function SiteHeader() {
   const [menuState, setMenuState] = useState<"closed" | "open" | "closing">(
-    "closed"
+    "closed",
   );
   const pathname = useRouterState({ select: (s) => s.location.pathname });
 
@@ -34,7 +34,7 @@ export function SiteHeader() {
     setMenuState((s) => (s === "closing" ? "closed" : s));
 
   return (
-    <header className="bg-background/80 sticky top-0 z-40 w-full border-b backdrop-blur-sm">
+    <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-sm">
       <div className="container flex h-14 items-center gap-4">
         <Link
           to="/"
@@ -205,16 +205,16 @@ export function SiteHeader() {
           id="mobile-nav"
           onAnimationEnd={handleAnimationEnd}
           className={cn(
-            "bg-background absolute top-full right-0 left-0 z-50 border-b shadow-sm md:hidden",
+            "absolute top-full right-0 left-0 z-50 border-b bg-background shadow-sm md:hidden",
             menuState === "closing"
-              ? "animate-out fade-out slide-out-to-top-2 fill-mode-forwards duration-150"
-              : "animate-in fade-in slide-in-from-top-2 duration-200"
+              ? "fade-out slide-out-to-top-2 animate-out fill-mode-forwards duration-150"
+              : "fade-in slide-in-from-top-2 animate-in duration-200",
           )}
         >
           <nav className="container flex flex-col py-3">
             <Link
               to="/install"
-              className="hover:bg-muted focus-visible:ring-ring focus-visible:ring-offset-background flex items-center gap-2 rounded-md px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               onClick={closeMenu}
             >
               Install
@@ -225,8 +225,8 @@ export function SiteHeader() {
                 key={link.to}
                 to={link.to}
                 className={cn(
-                  "hover:bg-muted focus-visible:ring-ring focus-visible:ring-offset-background rounded-md px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
-                  pathname === link.to && "bg-muted font-medium"
+                  "rounded-md px-3 py-2 text-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                  pathname === link.to && "bg-muted font-medium",
                 )}
                 aria-current={pathname === link.to ? "page" : undefined}
                 onClick={closeMenu}
@@ -239,7 +239,7 @@ export function SiteHeader() {
               target="_blank"
               rel="noreferrer"
               aria-label="rutopio/shadcn-heatmap on GitHub (opens in new tab)"
-              className="hover:bg-muted focus-visible:ring-ring focus-visible:ring-offset-background flex items-center gap-2 rounded-md px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
+              className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
               onClick={closeMenu}
             >
               <GithubLogoIcon

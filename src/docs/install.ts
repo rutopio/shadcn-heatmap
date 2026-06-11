@@ -1,10 +1,14 @@
 export const REGISTRY_BASE_URL = "https://shadcn-heatmap.pages.dev/r"; // update to your deployment URL
 
+// GitHub registry form: <owner>/<repo>/<item> installs straight from the repo.
+// See https://ui.shadcn.com/docs/registry/github
+const GITHUB_REGISTRY = "rutopio/shadcn-heatmap";
+
 export const cliInstallCommands = {
-  calendar: `npx shadcn@latest add ${REGISTRY_BASE_URL}/calendar-heatmap.json`,
-  weekday: `npx shadcn@latest add ${REGISTRY_BASE_URL}/weekday-heatmap.json`,
-  date: `npx shadcn@latest add ${REGISTRY_BASE_URL}/date-heatmap.json`,
-  status: `npx shadcn@latest add ${REGISTRY_BASE_URL}/status-heatmap.json`,
+  calendar: `npx shadcn@latest add ${GITHUB_REGISTRY}/calendar-heatmap`,
+  weekday: `npx shadcn@latest add ${GITHUB_REGISTRY}/weekday-heatmap`,
+  date: `npx shadcn@latest add ${GITHUB_REGISTRY}/date-heatmap`,
+  status: `npx shadcn@latest add ${GITHUB_REGISTRY}/status-heatmap`,
 } as const;
 
 export const packageManagerCommands = {

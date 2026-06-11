@@ -1,7 +1,6 @@
-import { Toaster as Sonner } from "sonner";
-
 import type * as React from "react";
 import type { ToasterProps } from "sonner";
+import { Toaster as Sonner } from "sonner";
 
 export function Toaster(props: ToasterProps) {
   return (

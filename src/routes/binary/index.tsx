@@ -58,13 +58,13 @@ function BinaryPage() {
   return (
     <ShowcaseSection label="Binary Mode" toc={toc}>
       <div className="mb-6 flex flex-col gap-2 sm:mb-10">
-        <span className="text-muted-foreground text-xs font-medium uppercase">
+        <span className="font-medium text-muted-foreground text-xs uppercase">
           Feature
         </span>
-        <h1 className="text-3xl font-semibold text-balance sm:text-4xl">
+        <h1 className="text-balance font-semibold text-3xl sm:text-4xl">
           Binary Mode
         </h1>
-        <p className="text-muted-foreground max-w-2xl text-pretty">
+        <p className="max-w-2xl text-pretty text-muted-foreground">
           Set <code className="text-xs">levels={"{1}"}</code> on any heatmap to
           collapse the colour scale to two states — active or inactive. Data
           values must be <code className="text-xs">0</code> (off) or{" "}

@@ -26,6 +26,19 @@
         }
       })();
     </script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-BVTE4PJMST"></script>
+    <script>
+      window.dataLayer = window.dataLayer || [];
+      function gtag() {
+        // biome-ignore lint/complexity/noArguments: required by Google's official gtag.js snippet
+        dataLayer.push(arguments);
+      }
+      gtag("js", new Date());
+
+      // page_view is sent manually on each route resolve (see src/main.tsx).
+      gtag("config", "G-BVTE4PJMST", { send_page_view: false });
+    </script>
   </head>
   <body>
     <div id="root"></div>

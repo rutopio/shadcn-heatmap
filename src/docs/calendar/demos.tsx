@@ -328,7 +328,7 @@ export function CalendarCustomTooltipDemo() {
                 sideOffset={6}
               >
                 <div className="flex flex-col gap-1">
-                  <p className="text-xs font-semibold">
+                  <p className="font-semibold text-xs">
                     {format(parseISO(activity.date), "EEEE, MMM d")}
                   </p>
                   <div className="flex items-center gap-1.5">

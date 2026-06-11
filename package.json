@@ -22,11 +22,11 @@
     "dev": "vite",
     "build": "pnpm build:registry && tsc -b && vite build",
     "build:registry": "tsx scripts/build-registry.ts",
-    "format": "prettier --write . && node scripts/format-snippets.mjs",
+    "format": "biome format --write . && node scripts/format-snippets.mjs",
     "preview": "vite preview",
     "lint": "biome lint .",
-    "typecheck": "tsc -b --noEmit",
-    "check": "pnpm audit && pnpm format && pnpm lint && pnpm typecheck"
+    "check-types": "tsc -b --noEmit",
+    "check": "biome check --write . && pnpm lint && pnpm check-types"
   },
   "dependencies": {
     "@phosphor-icons/react": "2.1.10",

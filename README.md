@@ -56,19 +56,19 @@ See the [/install page](https://shadcn-heatmap.pages.dev/install) for the intera
 
    ```bash
    # CalendarHeatmap
-   npx shadcn@latest add @heatmap/calendar-heatmap
+   npx shadcn@latest add rutopio/shadcn-heatmap/calendar-heatmap
 
    # WeekdayHeatmap
-   npx shadcn@latest add @heatmap/weekday-heatmap
+   npx shadcn@latest add rutopio/shadcn-heatmap/weekday-heatmap
 
    # DateHeatmap
-   npx shadcn@latest add @heatmap/date-heatmap
+   npx shadcn@latest add rutopio/shadcn-heatmap/date-heatmap
 
    # StatusHeatmap
-   npx shadcn@latest add @heatmap/status-heatmap
+   npx shadcn@latest add rutopio/shadcn-heatmap/status-heatmap
    ```
 
-   The `@heatmap` namespace works once the registry is listed in the [shadcn directory](https://ui.shadcn.com/docs/directory). Until then, install from the full URL, e.g. `npx shadcn@latest add https://shadcn-heatmap.pages.dev/r/calendar-heatmap.json`.
+   The `<owner>/<repo>/<item>` form installs straight from this GitHub repository — see [GitHub registries](https://ui.shadcn.com/docs/registry/github). You can pin a version with a ref, e.g. `npx shadcn@latest add rutopio/shadcn-heatmap/calendar-heatmap#v1.0.0`. Alternatively, install from the full URL: `npx shadcn@latest add https://shadcn-heatmap.pages.dev/r/calendar-heatmap.json`.
 
 2. **Ensure the runtime dependencies exist.**
 
@@ -336,7 +336,7 @@ pnpm dev            # start the demo site on http://localhost:5173
 Run the same checks CI runs — merges are blocked if they fail:
 
 ```bash
-pnpm run check      # audit + format + lint + typecheck
+pnpm run check      # format + lint + check-types
 pnpm run build      # build the registry + the demo site
 ```
 

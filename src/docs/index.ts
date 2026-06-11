@@ -8,8 +8,8 @@ export {
 // Calendar demos
 export {
   CalendarChunkyDemo,
-  CalendarCustomTooltipDemo,
   CalendarCustomStylingDemo,
+  CalendarCustomTooltipDemo,
   CalendarDefaultDemo,
   CalendarGermanDemo,
   CalendarMiniDemo,
@@ -18,22 +18,6 @@ export {
   CalendarNoFooterDemo,
   CalendarTenLevelsDemo,
 } from "./calendar/demos";
-
-// Weekday demos
-export {
-  Weekday12HourDemo,
-  WeekdayCustomStylingDemo,
-  WeekdayDefaultDemo,
-  WeekdayJapaneseDemo,
-  WeekdayMedianDemo,
-  WeekdayMinimalTicksDemo,
-  WeekdayMiniDemo,
-  WeekdayMondayStartDemo,
-  WeekdayNoFooterDemo,
-  WeekdayPlainGridDemo,
-  WeekdayTenLevelsDemo,
-} from "./weekday/demos";
-
 // Date demos
 export {
   Date12HourDemo,
@@ -44,11 +28,10 @@ export {
   DateNoFooterDemo,
   DateNoLabelsDemo,
   DatePlainGridDemo,
-  DateSparseTicksDemo,
   DateSpanishDemo,
+  DateSparseTicksDemo,
   DateTenLevelsDemo,
 } from "./date/demos";
-
 // Status demos
 export {
   StatusCustomColorDemo,
@@ -62,3 +45,17 @@ export {
   StatusUptimeDemo,
   StatusWithLabelsDemo,
 } from "./status/demos";
+// Weekday demos
+export {
+  Weekday12HourDemo,
+  WeekdayCustomStylingDemo,
+  WeekdayDefaultDemo,
+  WeekdayJapaneseDemo,
+  WeekdayMedianDemo,
+  WeekdayMiniDemo,
+  WeekdayMinimalTicksDemo,
+  WeekdayMondayStartDemo,
+  WeekdayNoFooterDemo,
+  WeekdayPlainGridDemo,
+  WeekdayTenLevelsDemo,
+} from "./weekday/demos";

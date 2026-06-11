@@ -4,10 +4,7 @@
   "type": "registry:component",
   "title": "WeekdayHeatmap",
   "description": "Weekday × hour-of-day matrix with Sum row/column and independent colour scales.",
-  "dependencies": [
-    "clsx",
-    "tailwind-merge"
-  ],
+  "dependencies": ["clsx", "tailwind-merge"],
   "registryDependencies": [],
   "files": [
     {

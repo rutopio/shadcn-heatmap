@@ -1,10 +1,8 @@
 import { LinkSimpleBreakIcon } from "@phosphor-icons/react";
+import type { ReactNode } from "react";
 import { toast } from "sonner";
-
 import { Button } from "@/components/ui/button";
 import { CodeBlock } from "@/components/ui/code-block";
-
-import type { ReactNode } from "react";
 
 type Variant = {
   title: string;
@@ -35,12 +33,12 @@ function copyVariantLink(slug: string) {
 
 export function VariantGrid({ variants }: VariantGridProps) {
   return (
-    <div className="bg-background grid grid-cols-1 gap-6">
+    <div className="grid grid-cols-1 gap-6 bg-background">
       {variants.map((variant) => (
         <div
           key={variant.title}
           id={variant.slug ?? toSlug(variant.title)}
-          className="bg-background flex flex-col overflow-hidden rounded-xl border"
+          className="flex flex-col overflow-hidden rounded-xl border bg-background"
         >
           <div className="border-b px-4 py-4">
             <div className="flex items-center gap-1">
@@ -55,9 +53,9 @@ export function VariantGrid({ variants }: VariantGridProps) {
               >
                 <LinkSimpleBreakIcon aria-hidden="true" className="size-4" />
               </Button>
-              <h3 className="font-medium text-balance">{variant.title}</h3>
+              <h3 className="text-balance font-medium">{variant.title}</h3>
             </div>
-            <p className="text-muted-foreground mt-1 text-xs text-pretty">
+            <p className="mt-1 text-pretty text-muted-foreground text-xs">
               {variant.description}
             </p>
           </div>

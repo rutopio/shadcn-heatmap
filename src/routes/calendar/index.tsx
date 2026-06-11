@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { CodeBlock } from "@/components/ui/code-block";
 import { CalendarDefaultDemo } from "@/docs";
 import { DemoFrame } from "@/docs/_frame/demo-frame";
 import { PropsTable } from "@/docs/_frame/props-table";
@@ -10,8 +11,6 @@ import {
   calendarSampleData,
 } from "@/docs/calendar/snippets";
 import { calendarVariantItems } from "@/docs/calendar/variants";
-
-import { CodeBlock } from "@/components/ui/code-block";
 import { pageHead } from "@/lib/seo";
 
 const toc = [
@@ -44,13 +43,13 @@ function CalendarPage() {
   return (
     <ShowcaseSection label="CalendarHeatmap" toc={toc}>
       <div className="mb-6 flex flex-col gap-2 sm:mb-10">
-        <span className="text-muted-foreground text-xs font-medium uppercase">
+        <span className="font-medium text-muted-foreground text-xs uppercase">
           Component
         </span>
-        <h1 className="text-3xl font-semibold text-balance sm:text-4xl">
+        <h1 className="text-balance font-semibold text-3xl sm:text-4xl">
           CalendarHeatmap
         </h1>
-        <p className="text-muted-foreground max-w-2xl text-pretty">
+        <p className="max-w-2xl text-pretty text-muted-foreground">
           GitHub-style yearly contribution grid. Supports multiple years, ISO
           Monday start, custom colors, i18n labels, and full tooltip control.
         </p>
@@ -68,8 +67,8 @@ function CalendarPage() {
         </div>
 
         <div id="sample-data" className="scroll-mt-24 space-y-4">
-          <h2 className="text-lg font-semibold text-balance">Sample data</h2>
-          <p className="text-muted-foreground text-sm text-pretty">
+          <h2 className="text-balance font-semibold text-lg">Sample data</h2>
+          <p className="text-pretty text-muted-foreground text-sm">
             Each entry is one day. Missing dates are auto-filled with{" "}
             <code className="text-xs">value: 0</code>.
           </p>
@@ -82,15 +81,15 @@ function CalendarPage() {
         </div>
 
         <div id="props-reference" className="scroll-mt-24 space-y-4">
-          <h2 className="text-lg font-semibold text-balance">
+          <h2 className="text-balance font-semibold text-lg">
             Props reference
           </h2>
           <PropsTable sections={calendarProps} />
         </div>
 
         <div id="variants" className="scroll-mt-24 space-y-4">
-          <h2 className="text-lg font-semibold text-balance">Variants</h2>
-          <p className="text-muted-foreground text-sm text-pretty">
+          <h2 className="text-balance font-semibold text-lg">Variants</h2>
+          <p className="text-pretty text-muted-foreground text-sm">
             Drop in different props and see how the layout reacts.
           </p>
           <VariantGrid variants={calendarVariantItems} />

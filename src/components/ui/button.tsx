@@ -1,8 +1,6 @@
 import { Slot } from "@radix-ui/react-slot";
-
-import { cn } from "@/lib/utils";
-
 import type * as React from "react";
+import { cn } from "@/lib/utils";
 
 type ButtonVariant =
   | "default"
@@ -52,10 +50,10 @@ export const Button = ({
     <Comp
       ref={ref}
       className={cn(
-        "focus-visible:ring-ring inline-flex items-center justify-center gap-2 rounded-md text-sm font-medium whitespace-nowrap transition-colors focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:shrink-0 [&_svg:not([class*='size-'])]:size-4",
+        "inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-md font-medium text-sm transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:pointer-events-none disabled:opacity-50 [&_svg:not([class*='size-'])]:size-4 [&_svg]:pointer-events-none [&_svg]:shrink-0",
         variantClasses[variant],
         sizeClasses[size],
-        className
+        className,
       )}
       {...props}
     />

@@ -1,5 +1,6 @@
+import type { Locale } from "date-fns";
 import { format, parseISO } from "date-fns";
-
+import type { ReactNode } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -7,9 +8,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import { formatHourRange } from "@/lib/time";
-
-import type { Locale } from "date-fns";
-import type { ReactNode } from "react";
 
 export { TooltipProvider };
 
@@ -39,7 +37,7 @@ export function HeatmapTooltip({
 
 export const generateWeekdayNames = (locale?: Locale): string[] =>
   Array.from({ length: 7 }, (_, i) =>
-    format(new Date(2000, 0, 2 + i), "EEEE", locale ? { locale } : undefined)
+    format(new Date(2000, 0, 2 + i), "EEEE", locale ? { locale } : undefined),
   );
 
 export const WEEKDAY_NAMES = generateWeekdayNames();
@@ -99,7 +97,7 @@ export function DateTooltipContent({
       : format(
           parseISO(activity.date),
           dateFormat,
-          locale ? { locale } : undefined
+          locale ? { locale } : undefined,
         );
 
   return (

@@ -1,12 +1,10 @@
 "use client";
 
-import { createContext, Fragment, use, useMemo } from "react";
-import { format } from "date-fns";
-
-import { cn } from "@/lib/utils";
-
 import type { Locale } from "date-fns";
+import { format } from "date-fns";
 import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
+import { createContext, Fragment, use, useMemo } from "react";
+import { cn } from "@/lib/utils";
 
 // Status values. 0 is reserved for no-data. Defaults: 1=critical, 2=degraded, 3=healthy.
 // Extend by passing `colors` / `labels.statuses` keyed by the numeric value.
@@ -75,7 +73,7 @@ const SEMANTIC_KEYS: Record<
 
 const resolveColor = (
   value: StatusValue,
-  colors?: StatusColorConfig
+  colors?: StatusColorConfig,
 ): string => {
   const semanticKey = SEMANTIC_KEYS[value];
   if (colors) {
@@ -91,7 +89,7 @@ const resolveColor = (
 
 const resolveStatusLabel = (
   value: StatusValue,
-  labels?: StatusHeatmapLabels["statuses"]
+  labels?: StatusHeatmapLabels["statuses"],
 ): string => {
   if (labels) {
     const numeric = labels[value];
@@ -119,7 +117,7 @@ const resolveStatusLabel = (
 const getStatusFill = (
   value: StatusValue,
   colors?: StatusColorConfig,
-  highlighted = false
+  highlighted = false,
 ): string => {
   const base = resolveColor(value, colors);
   if (!highlighted) return base;
@@ -130,7 +128,7 @@ const EMPTY_STYLE: CSSProperties = {};
 const PADDING = 20;
 
 const StatusHeatmapContext = createContext<StatusHeatmapContextType | null>(
-  null
+  null,
 );
 
 const useStatusHeatmap = () => {
@@ -138,7 +136,7 @@ const useStatusHeatmap = () => {
 
   if (!context) {
     throw new Error(
-      "StatusHeatmap components must be used within a StatusHeatmap"
+      "StatusHeatmap components must be used within a StatusHeatmap",
     );
   }
 
@@ -226,7 +224,7 @@ export const StatusHeatmap = ({
       legendLabel: "Status legend",
       ...labelsProp,
     }),
-    [labelsProp]
+    [labelsProp],
   );
 
   const dates = useMemo(() => {
@@ -277,7 +275,7 @@ export const StatusHeatmap = ({
       dateFormat,
       locale,
       colors,
-    ]
+    ],
   );
 
   if (data.length === 0 || dates.length === 0) {
@@ -345,8 +343,8 @@ export const StatusHeatmapBlock = ({
       className={cn(
         "motion-safe:transition-opacity motion-safe:hover:opacity-70",
         onCellClick &&
-          "focus-visible:ring-ring cursor-pointer focus-visible:ring-2 focus-visible:outline-none",
-        className
+          "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        className,
       )}
       data-value={activity.value}
       data-date={activity.date}
@@ -453,7 +451,7 @@ export const StatusHeatmapBody = ({
       <svg
         role="img"
         aria-label={labels.heatmapLabel ?? "Status heatmap"}
-        className="focus-visible:ring-ring block overflow-visible rounded-sm focus-visible:ring-2 focus-visible:outline-none"
+        className="block overflow-visible rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         height={height + labelHeight + PADDING * 2}
         viewBox={`${-PADDING} ${-PADDING} ${width + PADDING * 2} ${height + labelHeight + PADDING * 2}`}
         width={width + PADDING * 2}
@@ -510,7 +508,7 @@ export const StatusHeatmapFooter = ({
     data-slot="status-heatmap-footer"
     className={cn(
       "flex flex-wrap gap-1 whitespace-nowrap sm:gap-x-4",
-      className
+      className,
     )}
     {...props}
   />
@@ -607,11 +605,11 @@ export const StatusHeatmapLegend = ({
                 style={{ fill: getStatusFill(status.value, colors) }}
               />
             </svg>
-            <span className="text-muted-foreground text-xs font-medium">
+            <span className="font-medium text-muted-foreground text-xs">
               {status.label}
             </span>
           </div>
-        )
+        ),
       )}
     </fieldset>
   );

@@ -1,18 +1,17 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
 import {
   ArrowRightIcon,
   CodeIcon,
   LinkSimpleBreakIcon,
 } from "@phosphor-icons/react";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import { toast } from "sonner";
+import { Button } from "@/components/ui/button";
 import {
   CalendarDefaultDemo,
   DateDefaultDemo,
   StatusDefaultDemo,
   WeekdayDefaultDemo,
 } from "@/docs";
-import { toast } from "sonner";
-
-import { Button } from "@/components/ui/button";
 import { pageHead, SITE_DESCRIPTION, SITE_TITLE } from "@/lib/seo";
 
 const heatmaps = [
@@ -45,14 +44,14 @@ const heatmaps = [
 function IndexPage() {
   return (
     <section className="relative overflow-hidden border-b">
-      <div className="relative container py-12 sm:py-28">
+      <div className="container relative py-12 sm:py-28">
         <div className="flex flex-col items-center gap-6">
-          <h1 className="max-w-6xl text-center text-4xl leading-tight font-semibold sm:text-5xl md:text-6xl">
+          <h1 className="max-w-6xl text-center font-semibold text-4xl leading-tight sm:text-5xl md:text-6xl">
             Heatmap components for React,
             <br className="hidden sm:block" /> built for{" "}
             <span className="text-muted-foreground">shadcn/ui</span>
           </h1>
-          <p className="text-muted-foreground max-w-2xl text-base text-pretty sm:text-center sm:text-lg">
+          <p className="max-w-2xl text-pretty text-base text-muted-foreground sm:text-center sm:text-lg">
             Four heatmap components for React: calendar, weekday, date, and
             status.
             <br />
@@ -74,7 +73,7 @@ function IndexPage() {
             <div
               key={name}
               id={router}
-              className="bg-background flex flex-col overflow-hidden rounded-xl border"
+              className="flex flex-col overflow-hidden rounded-xl border bg-background"
             >
               <div className="flex items-stretch justify-between border-b">
                 <div className="px-4 py-4">
@@ -97,16 +96,16 @@ function IndexPage() {
                         className="size-4"
                       />
                     </Button>
-                    <h2 className="font-medium text-balance">{name}</h2>
+                    <h2 className="text-balance font-medium">{name}</h2>
                   </div>
-                  <p className="text-muted-foreground mt-1 text-xs text-pretty">
+                  <p className="mt-1 text-pretty text-muted-foreground text-xs">
                     {description}
                   </p>
                 </div>
                 <Link
                   to={router}
                   aria-label={`Explore ${name}`}
-                  className="hover:bg-muted flex shrink-0 items-center gap-1.5 border-l px-4 text-sm font-medium transition-colors"
+                  className="flex shrink-0 items-center gap-1.5 border-l px-4 font-medium text-sm transition-colors hover:bg-muted"
                 >
                   Explore
                   <ArrowRightIcon

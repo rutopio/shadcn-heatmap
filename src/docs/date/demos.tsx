@@ -1,5 +1,5 @@
 import { es } from "date-fns/locale";
-
+import type { DateHourlyActivity } from "@/components/heatmap/date-heatmap";
 import {
   DateHeatmap,
   DateHeatmapBlock,
@@ -14,14 +14,11 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import dateData from "@/data/date-sample.json";
-
 import {
   DateTooltipContent,
   HeatmapTooltip,
   TooltipProvider,
 } from "../_shared/tooltips";
-
-import type { DateHourlyActivity } from "@/components/heatmap/date-heatmap";
 
 const dateTotalMm =
   Math.round(dateData.reduce((s, a) => s + a.value, 0) * 10) / 10;
@@ -225,7 +222,7 @@ export function DateCustomTooltipDemo() {
                 sideOffset={6}
               >
                 <div className="flex flex-col gap-1">
-                  <p className="text-xs font-semibold">
+                  <p className="font-semibold text-xs">
                     Total, {String(activity.hour).padStart(2, "0")}:00
                   </p>
                   <div className="flex items-center gap-1.5">
@@ -261,7 +258,7 @@ export function DateCustomTooltipDemo() {
                 sideOffset={6}
               >
                 <div className="flex flex-col gap-1">
-                  <p className="text-xs font-semibold">
+                  <p className="font-semibold text-xs">
                     {activity.date}, Total
                   </p>
                   <div className="flex items-center gap-1.5">
@@ -294,7 +291,7 @@ export function DateCustomTooltipDemo() {
                 sideOffset={6}
               >
                 <div className="flex flex-col gap-1">
-                  <p className="text-xs font-semibold">
+                  <p className="font-semibold text-xs">
                     {activity.date}, {String(activity.hour).padStart(2, "0")}:00
                   </p>
                   <div className="flex items-center gap-1.5">
@@ -339,7 +336,7 @@ export function DateSparseTicksDemo() {
         colors={{ scale: "var(--color-chart-3)" }}
         labels={{
           hours: Array.from({ length: 24 }, (_, i) =>
-            i % 6 === 0 ? String(i).padStart(2, "0") : ""
+            i % 6 === 0 ? String(i).padStart(2, "0") : "",
           ),
           endHour: null,
         }}

@@ -1,5 +1,5 @@
 import { ja } from "date-fns/locale";
-
+import type { WeekdayHourlyActivity } from "@/components/heatmap/weekday-heatmap";
 import {
   WeekdayHeatmap,
   WeekdayHeatmapBlock,
@@ -14,7 +14,6 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import weekData from "@/data/weekday-sample.json";
-
 import {
   generateWeekdayNames,
   HeatmapTooltip,
@@ -22,11 +21,9 @@ import {
   WeekTooltipContent,
 } from "../_shared/tooltips";
 
-import type { WeekdayHourlyActivity } from "@/components/heatmap/weekday-heatmap";
-
 const weekAvgTemp =
   Math.round(
-    (weekData.reduce((s, a) => s + a.value, 0) / weekData.length) * 10
+    (weekData.reduce((s, a) => s + a.value, 0) / weekData.length) * 10,
   ) / 10;
 
 const avgByHour = (data: WeekdayHourlyActivity[]) => {
@@ -188,7 +185,7 @@ export function WeekdayMinimalTicksDemo() {
         colors={{ scale: "var(--color-chart-2)" }}
         labels={{
           hours: Array.from({ length: 24 }, (_, i) =>
-            i % 6 === 0 ? String(i).padStart(2, "0") : ""
+            i % 6 === 0 ? String(i).padStart(2, "0") : "",
           ),
           endHour: null,
         }}
@@ -605,7 +602,7 @@ export function WeekdayCustomTooltipDemo() {
                 sideOffset={6}
               >
                 <div className="flex flex-col gap-1">
-                  <p className="text-xs font-semibold">
+                  <p className="font-semibold text-xs">
                     Avg, {`${String(activity.hour).padStart(2, "0")}:00`}
                   </p>
                   <div className="flex items-center gap-1.5">
@@ -637,7 +634,7 @@ export function WeekdayCustomTooltipDemo() {
                 sideOffset={6}
               >
                 <div className="flex flex-col gap-1">
-                  <p className="text-xs font-semibold">
+                  <p className="font-semibold text-xs">
                     {WEEKDAY_NAMES[activity.weekday]}, Avg
                   </p>
                   <div className="flex items-center gap-1.5">
@@ -670,7 +667,7 @@ export function WeekdayCustomTooltipDemo() {
                 sideOffset={6}
               >
                 <div className="flex flex-col gap-1">
-                  <p className="text-xs font-semibold">
+                  <p className="font-semibold text-xs">
                     {WEEKDAY_NAMES[activity.weekday]},{" "}
                     {`${String(activity.hour).padStart(2, "0")}:00`}
                   </p>

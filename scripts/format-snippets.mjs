@@ -140,7 +140,7 @@ async function main() {
     if (changed > 0) {
       writeFileSync(path, result, "utf8");
       console.log(
-        `✓ ${rel} (${changed} snippet${changed > 1 ? "s" : ""} formatted)`
+        `✓ ${rel} (${changed} snippet${changed > 1 ? "s" : ""} formatted)`,
       );
     } else {
       console.log(`· ${rel} (no changes)`);

@@ -60,7 +60,7 @@ export function TocSidebar({ items }: TocSidebarProps) {
 
   return (
     <aside className="sticky top-20 hidden w-52 shrink-0 self-start xl:block">
-      <div className="bg-background rounded-lg border backdrop-blur-sm">
+      <div className="rounded-lg border bg-background backdrop-blur-sm">
         <nav aria-label="Table of contents" className="p-3">
           <ul className="space-y-0.5">
             {items.map((item) => (
@@ -69,26 +69,26 @@ export function TocSidebar({ items }: TocSidebarProps) {
                   type="button"
                   onClick={() => scrollTo(item.id)}
                   className={cn(
-                    "hover:text-foreground w-full rounded px-2 py-1 text-left text-sm transition-colors",
+                    "w-full rounded px-2 py-1 text-left text-sm transition-colors hover:text-foreground",
                     isParentActive(item)
-                      ? "text-foreground font-medium"
-                      : "text-muted-foreground"
+                      ? "font-medium text-foreground"
+                      : "text-muted-foreground",
                   )}
                 >
                   {item.label}
                 </button>
                 {item.children && item.children.length > 0 && (
-                  <ul className="border-border/60 mt-0.5 ml-2 space-y-0.5 border-l pl-2">
+                  <ul className="mt-0.5 ml-2 space-y-0.5 border-border/60 border-l pl-2">
                     {item.children.map((child) => (
                       <li key={child.id}>
                         <button
                           type="button"
                           onClick={() => scrollTo(child.id)}
                           className={cn(
-                            "hover:text-foreground w-full rounded px-2 py-0.5 text-left text-xs transition-colors",
+                            "w-full rounded px-2 py-0.5 text-left text-xs transition-colors hover:text-foreground",
                             activeId === child.id
-                              ? "text-foreground font-medium"
-                              : "text-muted-foreground/80"
+                              ? "font-medium text-foreground"
+                              : "text-muted-foreground/80",
                           )}
                         >
                           {child.label}
@@ -101,11 +101,11 @@ export function TocSidebar({ items }: TocSidebarProps) {
             ))}
           </ul>
         </nav>
-        <div className="border-border/60 mt-3 border-t p-3">
+        <div className="mt-3 border-border/60 border-t p-3">
           <button
             type="button"
             onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="text-muted-foreground hover:text-foreground w-full rounded px-2 py-1 text-left text-sm transition-colors"
+            className="w-full rounded px-2 py-1 text-left text-muted-foreground text-sm transition-colors hover:text-foreground"
           >
             Back to top
           </button>

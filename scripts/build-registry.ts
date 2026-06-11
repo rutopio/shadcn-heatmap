@@ -113,7 +113,7 @@ for (const comp of components) {
 
   fs.writeFileSync(
     path.join(outDir, `${comp.name}.json`),
-    `${JSON.stringify(servedItem, null, 2)}\n`
+    `${JSON.stringify(servedItem, null, 2)}\n`,
   );
 
   sourceItems.push(baseItem);
@@ -136,10 +136,7 @@ const sourceRegistryJson = `${JSON.stringify(sourceRegistry, null, 2)}\n`;
 fs.writeFileSync(path.join(root, "registry.json"), sourceRegistryJson);
 // public/: so the deployed site serves it at /registry.json (Pages serves the
 // build output, not the repo root).
-fs.writeFileSync(
-  path.join(root, "public/registry.json"),
-  sourceRegistryJson
-);
+fs.writeFileSync(path.join(root, "public/registry.json"), sourceRegistryJson);
 
 // Served index for the public registry endpoint (slim listing).
 const index = {
@@ -156,9 +153,9 @@ const index = {
 
 fs.writeFileSync(
   path.join(outDir, "index.json"),
-  `${JSON.stringify(index, null, 2)}\n`
+  `${JSON.stringify(index, null, 2)}\n`,
 );
 
 console.log(
-  `Registry built: ${sourceItems.length} items → ${outDir} + registry.json`
+  `Registry built: ${sourceItems.length} items → ${outDir} + registry.json`,
 );

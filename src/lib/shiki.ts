@@ -1,7 +1,6 @@
+import type { HighlighterCore, ThemedToken } from "@shikijs/core";
 import { createHighlighterCore } from "@shikijs/core";
 import { createOnigurumaEngine } from "@shikijs/engine-oniguruma";
-
-import type { HighlighterCore, ThemedToken } from "@shikijs/core";
 
 let highlighterPromise: Promise<HighlighterCore> | null = null;
 
@@ -16,7 +15,7 @@ async function getHighlighter(): Promise<HighlighterCore> {
           import("@shikijs/langs/bash"),
           import("@shikijs/langs/json"),
           import("@shikijs/langs/css"),
-        ]
+        ],
       );
       return createHighlighterCore({
         themes: [githubLight.default, githubDark.default],
@@ -45,7 +44,7 @@ export type HighlightedLine = HighlightedToken[];
  */
 export async function highlightTokens(
   code: string,
-  lang: SupportedLang = "tsx"
+  lang: SupportedLang = "tsx",
 ): Promise<HighlightedLine[]> {
   const highlighter = await getHighlighter();
 
@@ -67,7 +66,7 @@ export async function highlightTokens(
         dark: darkLine[tokIndex]?.color ?? tok.color,
         fontStyle: tok.fontStyle,
       }));
-    }
+    },
   );
 
   return lines;

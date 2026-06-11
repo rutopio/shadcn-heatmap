@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, Fragment, use, useMemo } from "react";
+import type { Locale, Day as WeekDay } from "date-fns";
 import {
   differenceInCalendarDays,
   eachDayOfInterval,
@@ -13,11 +13,9 @@ import {
   parseISO,
   subWeeks,
 } from "date-fns";
-
-import { cn } from "@/lib/utils";
-
-import type { Locale, Day as WeekDay } from "date-fns";
 import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
+import { createContext, Fragment, use, useMemo } from "react";
+import { cn } from "@/lib/utils";
 
 export type Activity = {
   date: string;
@@ -66,7 +64,7 @@ const getLevelFill = (
   levels: number,
   isNormalized: boolean,
   highlighted = false,
-  colors?: ColorConfig
+  colors?: ColorConfig,
 ): string => {
   const emptyColor = colors?.empty ?? "var(--color-secondary)";
   const scaleColor = colors?.scale ?? "var(--color-chart-1)";
@@ -84,7 +82,7 @@ const calculateLevel = (
   minValue: number,
   maxValue: number,
   levels: number,
-  isNormalized: boolean
+  isNormalized: boolean,
 ): number => {
   const steps = colorStepCount(levels, isNormalized);
   if (!Number.isFinite(value)) return isNormalized ? 1 : 0;
@@ -143,7 +141,7 @@ const EMPTY_STYLE: CSSProperties = {};
 const LABEL_MARGIN = 8;
 
 const CalendarHeatmapContext = createContext<CalendarHeatmapContextType | null>(
-  null
+  null,
 );
 
 const useCalendarHeatmap = () => {
@@ -151,7 +149,7 @@ const useCalendarHeatmap = () => {
 
   if (!context) {
     throw new Error(
-      "CalendarHeatmap components must be used within a CalendarHeatmap"
+      "CalendarHeatmap components must be used within a CalendarHeatmap",
     );
   }
 
@@ -164,11 +162,11 @@ const fillHoles = (activities: ActivityWithLevel[]): ActivityWithLevel[] => {
   }
 
   const sortedActivities = [...activities].sort((a, b) =>
-    a.date.localeCompare(b.date)
+    a.date.localeCompare(b.date),
   );
 
   const calendar = new Map<string, ActivityWithLevel>(
-    activities.map((a) => [a.date, a])
+    activities.map((a) => [a.date, a]),
   );
 
   const firstActivity = sortedActivities[0] as ActivityWithLevel;
@@ -199,7 +197,7 @@ const fillHoles = (activities: ActivityWithLevel[]): ActivityWithLevel[] => {
 const groupByYearAndMonth = (
   activities: ActivityWithLevel[],
   weekStart: WeekDay = 0,
-  hasEmptyColumn = false
+  hasEmptyColumn = false,
 ): YearRow[] => {
   if (activities.length === 0) {
     return [];
@@ -260,7 +258,7 @@ const groupByYearAndMonth = (
 
         const paddedActivities: Array<ActivityWithLevel | undefined> = [
           ...new Array(
-            differenceInCalendarDays(firstDate, firstCalendarDate)
+            differenceInCalendarDays(firstDate, firstCalendarDate),
           ).fill(undefined),
           ...monthActivities,
         ];
@@ -269,7 +267,7 @@ const groupByYearAndMonth = (
         const monthWeeks: Week[] = new Array(numberOfWeeks)
           .fill(undefined)
           .map((_, weekIndex) =>
-            paddedActivities.slice(weekIndex * 7, weekIndex * 7 + 7)
+            paddedActivities.slice(weekIndex * 7, weekIndex * 7 + 7),
           );
 
         if (hasEmptyColumn && rowWeeks.length > 0) {
@@ -308,7 +306,7 @@ const groupByYearAndMonth = (
 
 const groupContinuous = (
   activities: ActivityWithLevel[],
-  weekStart: WeekDay = 0
+  weekStart: WeekDay = 0,
 ): YearRow[] => {
   if (activities.length === 0) return [];
 
@@ -356,7 +354,7 @@ const groupContinuous = (
 
 const getMonthLabels = (
   weeks: Week[],
-  monthNames: string[] = generateMonthLabels()
+  monthNames: string[] = generateMonthLabels(),
 ): MonthLabel[] => {
   return weeks
     .reduce<MonthLabel[]>((labels, week, weekIndex) => {
@@ -373,7 +371,7 @@ const getMonthLabels = (
           month: "short",
         });
         throw new Error(
-          `Unexpected error: undefined month label for ${monthName}.`
+          `Unexpected error: undefined month label for ${monthName}.`,
         );
       }
 
@@ -494,7 +492,7 @@ export const CalendarHeatmap = ({
         minCount,
         maxCount,
         levels,
-        isNormalized
+        isNormalized,
       ),
     }));
   }, [data, levels, isNormalized]);
@@ -504,7 +502,7 @@ export const CalendarHeatmap = ({
       continuousMonths
         ? groupContinuous(dataWithLevels, weekStart)
         : groupByYearAndMonth(dataWithLevels, weekStart, hasEmptyColumn),
-    [dataWithLevels, weekStart, hasEmptyColumn, continuousMonths]
+    [dataWithLevels, weekStart, hasEmptyColumn, continuousMonths],
   );
   const weeks = useMemo(() => yearRows.flatMap((r) => r.weeks), [yearRows]);
 
@@ -518,7 +516,7 @@ export const CalendarHeatmap = ({
       legendLevelLabel: "{{level}} contributions",
       ...labelsProp,
     }),
-    [locale, labelsProp]
+    [locale, labelsProp],
   );
   const labelHeight = fontSize + LABEL_MARGIN;
 
@@ -584,7 +582,7 @@ export const CalendarHeatmap = ({
       continuousMonths,
       locale,
       colors,
-    ]
+    ],
   );
 
   if (data.length === 0) {
@@ -646,7 +644,7 @@ export const CalendarHeatmapBlock = ({
 
   const level = Math.max(
     0,
-    Math.min(colorStepCount(levels, isNormalized), activity.level)
+    Math.min(colorStepCount(levels, isNormalized), activity.level),
   );
 
   const ariaLabel = (labels.cellLabel ?? "{{date}}: {{value}} contributions")
@@ -663,8 +661,8 @@ export const CalendarHeatmapBlock = ({
       className={cn(
         "motion-safe:transition-opacity motion-safe:hover:opacity-70",
         onCellClick &&
-          "focus-visible:ring-ring cursor-pointer focus-visible:ring-2 focus-visible:outline-none",
-        className
+          "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+        className,
       )}
       data-value={activity.value}
       data-date={activity.date}
@@ -785,14 +783,14 @@ export const CalendarHeatmapBody = ({
       data-slot="calendar-heatmap-body"
       className={cn(
         "flex max-w-full flex-col gap-6 overflow-x-auto overflow-y-hidden py-4",
-        className
+        className,
       )}
       {...props}
     >
       {rowData.map(({ yearRow, height, monthLabels, yearTotalCount }) => (
         <div key={`year-row-${yearRow.year}`}>
           {!hideYearLabels && (
-            <div className={cn("text-muted-foreground mb-2", yearClassName)}>
+            <div className={cn("mb-2 text-muted-foreground", yearClassName)}>
               {yearRow.year}
             </div>
           )}
@@ -801,7 +799,7 @@ export const CalendarHeatmapBody = ({
             aria-label={(
               labels.heatmapLabel ?? "Contribution heatmap for {{year}}"
             ).replace("{{year}}", String(yearRow.year))}
-            className="focus-visible:ring-ring block overflow-visible rounded-sm focus-visible:ring-2 focus-visible:outline-none"
+            className="block overflow-visible rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
             height={height + strokePadding * 2}
             viewBox={`0 0 ${totalWidth} ${height + strokePadding * 2}`}
             width={totalWidth}
@@ -829,7 +827,7 @@ export const CalendarHeatmapBody = ({
                 <g
                   className={cn(
                     "fill-current font-mono text-xs",
-                    labelClassName
+                    labelClassName,
                   )}
                 >
                   {labels.weekdays?.map((label, dayIndex) => {
@@ -870,7 +868,7 @@ export const CalendarHeatmapBody = ({
                         {children({ activity, dayIndex, weekIndex })}
                       </Fragment>
                     );
-                  })
+                  }),
                 )}
               </g>
             </g>
@@ -895,7 +893,7 @@ export const CalendarHeatmapFooter = ({
     data-slot="calendar-heatmap-footer"
     className={cn(
       "flex flex-wrap gap-1 whitespace-nowrap sm:gap-x-4",
-      className
+      className,
     )}
     {...props}
   />
@@ -973,7 +971,7 @@ export const CalendarHeatmapLegend = ({
   const moreLabel = labelsProp?.more ?? "More";
 
   const legendLevels = Array.from({ length: levels }, (_, i) =>
-    isNormalized ? i + 1 : i
+    isNormalized ? i + 1 : i,
   );
 
   return (
@@ -981,12 +979,12 @@ export const CalendarHeatmapLegend = ({
       data-slot="calendar-heatmap-legend"
       aria-label={labels.legendLabel ?? "Activity intensity legend"}
       className={cn(
-        "text-muted-foreground ml-auto flex items-center gap-1",
-        className
+        "ml-auto flex items-center gap-1 text-muted-foreground",
+        className,
       )}
       {...props}
     >
-      <span className="mr-1 text-xs font-medium">{lessLabel}</span>
+      <span className="mr-1 font-medium text-xs">{lessLabel}</span>
       {legendLevels.map((level) =>
         children ? (
           <Fragment key={`legend-level-${level}`}>
@@ -1013,9 +1011,9 @@ export const CalendarHeatmapLegend = ({
               }}
             />
           </svg>
-        )
+        ),
       )}
-      <span className="ml-1 text-xs font-medium">{moreLabel}</span>
+      <span className="ml-1 font-medium text-xs">{moreLabel}</span>
     </fieldset>
   );
 };

@@ -1,4 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { CodeBlock } from "@/components/ui/code-block";
 import { DateDefaultDemo } from "@/docs";
 import { DemoFrame } from "@/docs/_frame/demo-frame";
 import { PropsTable } from "@/docs/_frame/props-table";
@@ -7,8 +8,6 @@ import { VariantGrid } from "@/docs/_frame/variant-grid";
 import { dateProps } from "@/docs/date/props";
 import { dateBasicCode, dateSampleData } from "@/docs/date/snippets";
 import { dateVariantItems } from "@/docs/date/variants";
-
-import { CodeBlock } from "@/components/ui/code-block";
 import { pageHead } from "@/lib/seo";
 
 const toc = [
@@ -41,13 +40,13 @@ function DatePage() {
   return (
     <ShowcaseSection label="DateHeatmap" toc={toc}>
       <div className="mb-6 flex flex-col gap-2 sm:mb-10">
-        <span className="text-muted-foreground text-xs font-medium uppercase">
+        <span className="font-medium text-muted-foreground text-xs uppercase">
           Component
         </span>
-        <h1 className="text-3xl font-semibold text-balance sm:text-4xl">
+        <h1 className="text-balance font-semibold text-3xl sm:text-4xl">
           DateHeatmap
         </h1>
-        <p className="text-muted-foreground max-w-2xl text-pretty">
+        <p className="max-w-2xl text-pretty text-muted-foreground">
           Date × hour grid for zoomed time windows (1–4 weeks). Supports
           optional aggregate rows and columns with custom compute functions,
           i18n, and custom colors.
@@ -65,8 +64,8 @@ function DatePage() {
         </div>
 
         <div id="sample-data" className="scroll-mt-24 space-y-4">
-          <h2 className="text-lg font-semibold text-balance">Sample data</h2>
-          <p className="text-muted-foreground text-sm text-pretty">
+          <h2 className="text-balance font-semibold text-lg">Sample data</h2>
+          <p className="text-pretty text-muted-foreground text-sm">
             Each entry is one date × hour slot. Use{" "}
             <code className="text-xs">hour = 24</code> for the daily Sum column.
             Dates are sorted automatically.
@@ -80,15 +79,15 @@ function DatePage() {
         </div>
 
         <div id="props-reference" className="scroll-mt-24 space-y-4">
-          <h2 className="text-lg font-semibold text-balance">
+          <h2 className="text-balance font-semibold text-lg">
             Props reference
           </h2>
           <PropsTable sections={dateProps} />
         </div>
 
         <div id="variants" className="scroll-mt-24 space-y-4">
-          <h2 className="text-lg font-semibold text-balance">Variants</h2>
-          <p className="text-muted-foreground text-sm text-pretty">
+          <h2 className="text-balance font-semibold text-lg">Variants</h2>
+          <p className="text-pretty text-muted-foreground text-sm">
             Drop in different props and see how the layout reacts.
           </p>
           <VariantGrid variants={dateVariantItems} />

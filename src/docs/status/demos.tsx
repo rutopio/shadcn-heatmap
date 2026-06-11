@@ -1,6 +1,9 @@
 import { format, parseISO } from "date-fns";
 import { zhTW } from "date-fns/locale";
-
+import type {
+  StatusActivity,
+  StatusValue,
+} from "@/components/heatmap/status-heatmap";
 import {
   StatusHeatmap,
   StatusHeatmapBlock,
@@ -17,11 +20,6 @@ import {
 } from "@/components/ui/tooltip";
 import _statusData from "@/data/status-sample.json";
 import _statusUptimeData from "@/data/status-uptime.json";
-
-import type {
-  StatusActivity,
-  StatusValue,
-} from "@/components/heatmap/status-heatmap";
 
 const statusData = _statusData as StatusActivity[];
 const statusUptimeData = _statusUptimeData as StatusActivity[];
@@ -137,7 +135,7 @@ export function StatusCustomTooltipDemo() {
                 sideOffset={6}
               >
                 <div className="flex flex-col gap-1">
-                  <p className="text-xs font-semibold">
+                  <p className="font-semibold text-xs">
                     {format(parseISO(activity.date), "EEEE, MMM d")}
                   </p>
                   <div className="flex items-center gap-1.5">

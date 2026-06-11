@@ -1,6 +1,5 @@
-import { format } from "date-fns";
-
 import type { Locale } from "date-fns";
+import { format } from "date-fns";
 
 type DateFormat = "MMM-dd-yyyy" | "yyyy-MMM-dd" | "dd-MMM-yyyy";
 
@@ -11,7 +10,7 @@ type DateFormat = "MMM-dd-yyyy" | "yyyy-MMM-dd" | "dd-MMM-yyyy";
 export function formatDate(
   date: Date | string,
   dateFormat: string = "MMM-dd-yyyy",
-  locale?: Locale
+  locale?: Locale,
 ): string {
   const d = typeof date === "string" ? new Date(date) : date;
   const year = d.getFullYear();
@@ -38,7 +37,7 @@ export function formatDate(
 export function formatDateWithWeekday(
   date: Date | string,
   dateFormat: string = "EEE, MMM dd, yyyy",
-  locale?: Locale
+  locale?: Locale,
 ): string {
   const d = typeof date === "string" ? new Date(date) : date;
   return format(d, dateFormat, locale ? { locale } : undefined);
@@ -54,7 +53,7 @@ export function formatDateWithWeekday(
  */
 export function formatHourRange(
   hour: number,
-  use12Hour: boolean = false
+  use12Hour: boolean = false,
 ): string {
   if (hour < 0 || hour > 23) {
     throw new RangeError(`Hour must be between 0 and 23, got ${hour}`);

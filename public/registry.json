@@ -9,11 +9,7 @@
       "type": "registry:component",
       "title": "CalendarHeatmap",
       "description": "GitHub-style yearly contribution heatmap with multi-year, weekStart, and i18n support.",
-      "dependencies": [
-        "clsx",
-        "tailwind-merge",
-        "date-fns"
-      ],
+      "dependencies": ["clsx", "tailwind-merge", "date-fns"],
       "registryDependencies": [],
       "files": [
         {
@@ -35,10 +31,7 @@
       "type": "registry:component",
       "title": "WeekdayHeatmap",
       "description": "Weekday × hour-of-day matrix with Sum row/column and independent colour scales.",
-      "dependencies": [
-        "clsx",
-        "tailwind-merge"
-      ],
+      "dependencies": ["clsx", "tailwind-merge"],
       "registryDependencies": [],
       "files": [
         {
@@ -60,11 +53,7 @@
       "type": "registry:component",
       "title": "DateHeatmap",
       "description": "Date × hour matrix for zooming into a narrow time window with daily Sum column.",
-      "dependencies": [
-        "clsx",
-        "tailwind-merge",
-        "date-fns"
-      ],
+      "dependencies": ["clsx", "tailwind-merge", "date-fns"],
       "registryDependencies": [],
       "files": [
         {
@@ -86,11 +75,7 @@
       "type": "registry:component",
       "title": "StatusHeatmap",
       "description": "Timeline status indicator showing daily activity over a period (e.g. 90 days). Similar to Atlassian Statuspage.",
-      "dependencies": [
-        "clsx",
-        "tailwind-merge",
-        "date-fns"
-      ],
+      "dependencies": ["clsx", "tailwind-merge", "date-fns"],
       "registryDependencies": [],
       "files": [
         {

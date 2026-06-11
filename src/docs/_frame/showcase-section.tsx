@@ -1,7 +1,7 @@
-import { TocSidebar } from "./toc-sidebar";
+import type { HTMLAttributes } from "react";
 
 import type { TocItem } from "./toc-sidebar";
-import type { HTMLAttributes } from "react";
+import { TocSidebar } from "./toc-sidebar";
 
 export function ShowcaseSection({
   label,

@@ -1,13 +1,10 @@
-import * as React from "react";
 import { CopyIcon } from "@phosphor-icons/react";
+import * as React from "react";
 import { toast } from "sonner";
-
+import type { HighlightedLine, SupportedLang } from "@/lib/shiki";
 import { highlightTokens } from "@/lib/shiki";
 import { cn } from "@/lib/utils";
-
 import { Button } from "./button";
-
-import type { HighlightedLine, SupportedLang } from "@/lib/shiki";
 
 type CodeBlockProps = {
   code: string;
@@ -81,13 +78,13 @@ export function CodeBlock({
   return (
     <div
       className={cn(
-        "group bg-background relative overflow-hidden rounded-lg border",
-        className
+        "group relative overflow-hidden rounded-lg border bg-background",
+        className,
       )}
     >
       {filename && (
-        <div className="bg-muted/60 flex items-center justify-between border-b px-4 py-4">
-          <span className="text-muted-foreground font-mono text-xs">
+        <div className="flex items-center justify-between border-b bg-muted/60 px-4 py-4">
+          <span className="font-mono text-muted-foreground text-xs">
             {filename}
           </span>
         </div>
@@ -95,11 +92,11 @@ export function CodeBlock({
       <div
         className={cn(
           "scrollbar-hidden relative overflow-auto",
-          scrollClassName
+          scrollClassName,
         )}
         style={!scrollClassName && maxHeight ? { maxHeight } : undefined}
       >
-        <pre className="text-foreground/80 py-4 font-mono text-sm leading-relaxed">
+        <pre className="py-4 font-mono text-foreground/80 text-sm leading-relaxed">
           <code>
             {/* Static syntax highlighting - line order is stable, index keys are safe */}
             {lines
@@ -120,12 +117,12 @@ export function CodeBlock({
                         <span
                           aria-hidden="true"
                           className={cn(
-                            "w-10 shrink-0 pr-3 text-right text-xs leading-6.5 select-none sm:w-16 sm:pr-4",
+                            "w-10 shrink-0 select-none pr-3 text-right text-xs leading-6.5 sm:w-16 sm:pr-4",
                             isDeleted
                               ? "text-red-400"
                               : isHighlighted
                                 ? "text-green-500"
-                                : "text-muted-foreground/40"
+                                : "text-muted-foreground/40",
                           )}
                         >
                           {isHighlighted || isDeleted ? (
