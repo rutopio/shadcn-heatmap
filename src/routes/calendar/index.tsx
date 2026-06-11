@@ -107,5 +107,6 @@ export const Route = createFileRoute("/calendar/")({
       description:
         "GitHub-style yearly contribution calendar for React. 7-row × N-week grid with multi-year support, ISO weeks, custom colors, and tooltips.",
       path: "/calendar",
+      image: "/og-calendar.png",
     }),
 });

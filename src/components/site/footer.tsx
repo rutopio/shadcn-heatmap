@@ -1,4 +1,4 @@
-import { GithubLogoIcon } from "@phosphor-icons/react";
+import { ArrowSquareOutIcon, GithubLogoIcon } from "@phosphor-icons/react";
 
 export function SiteFooter() {
   return (
@@ -27,7 +27,7 @@ export function SiteFooter() {
             rel="noreferrer"
             aria-label="shadcn/ui (opens in new tab)"
           >
-            <GithubLogoIcon
+            <ArrowSquareOutIcon
               aria-hidden="true"
               weight="bold"
               className="size-4"

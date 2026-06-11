@@ -16,24 +16,42 @@ const OFFSET = 96;
 
 function useActiveId(ids: string[]) {
   const [activeId, setActiveId] = useState<string>("");
+  // Stable key so the observer only re-subscribes when the id set changes,
+  // not on every render (ids is a fresh array each render).
+  const idsKey = ids.join("|");
 
   useEffect(() => {
-    function update() {
-      let found = "";
-      for (const id of ids) {
-        const el = document.getElementById(id);
-        if (!el) continue;
-        if (el.getBoundingClientRect().top <= OFFSET) {
-          found = id;
-        }
-      }
-      setActiveId(found);
-    }
+    const targetIds = idsKey ? idsKey.split("|") : [];
+    const elements = targetIds
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (elements.length === 0) return;
 
-    update();
-    window.addEventListener("scroll", update, { passive: true });
-    return () => window.removeEventListener("scroll", update);
-  }, [ids]);
+    // Track each heading's visibility and pick the last one past the top
+    // offset. IntersectionObserver replaces a scroll listener that read layout
+    // for every id on every scroll event (layout thrash / scroll jank).
+    const visibility = new Map<string, boolean>();
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          visibility.set(entry.target.id, entry.isIntersecting);
+        }
+        let found = "";
+        for (const id of targetIds) {
+          if (visibility.get(id)) {
+            found = id;
+            break;
+          }
+        }
+        setActiveId(found);
+      },
+      { rootMargin: `-${OFFSET}px 0px 0px 0px`, threshold: 0 },
+    );
+
+    for (const el of elements) observer.observe(el);
+    return () => observer.disconnect();
+  }, [idsKey]);
 
   return activeId;
 }

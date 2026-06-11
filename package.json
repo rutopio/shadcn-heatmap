@@ -16,7 +16,7 @@
     "url": "https://github.com/rutopio/shadcn-heatmap/issues"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "scripts": {
     "dev": "vite",
