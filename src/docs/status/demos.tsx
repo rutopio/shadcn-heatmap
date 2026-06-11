@@ -264,64 +264,6 @@ export function StatusWithLabelsDemo() {
   );
 }
 
-export function StatusCustomColorDemo() {
-  return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <StatusHeatmap
-        data={statusData}
-        colors={{
-          critical: "#dc2626",
-          degraded: "#ea580c",
-          healthy: "#16a34a",
-        }}
-      >
-        <StatusHeatmapBody>
-          {({ activity, dayIndex }) => (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
-              </TooltipTrigger>
-              <StatusTooltip activity={activity} />
-            </Tooltip>
-          )}
-        </StatusHeatmapBody>
-        <StatusHeatmapFooter>
-          <StatusHeatmapStat />
-          <StatusHeatmapLegend />
-        </StatusHeatmapFooter>
-      </StatusHeatmap>
-    </TooltipProvider>
-  );
-}
-
-export function StatusCustomSizeDemo() {
-  return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <StatusHeatmap
-        data={statusData}
-        blockSize={60}
-        blockAspectRatio={0.15}
-        blockMargin={1}
-      >
-        <StatusHeatmapBody>
-          {({ activity, dayIndex }) => (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
-              </TooltipTrigger>
-              <StatusTooltip activity={activity} />
-            </Tooltip>
-          )}
-        </StatusHeatmapBody>
-        <StatusHeatmapFooter>
-          <StatusHeatmapStat />
-          <StatusHeatmapLegend />
-        </StatusHeatmapFooter>
-      </StatusHeatmap>
-    </TooltipProvider>
-  );
-}
-
 export function StatusUptimeDemo() {
   const last30Days = statusUptimeData;
 

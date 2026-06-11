@@ -2,28 +2,115 @@
 @import "tw-animate-css";
 
 @font-face {
-  font-family: "Geist Sans";
-  font-style: normal;
+  font-family: "Albert Sans";
+  src: url("/fonts/AlbertSans-VariableFont_wght.woff2") format("woff2");
   font-weight: 100 900;
+  font-style: normal;
   font-display: swap;
-  src: url("/fonts/Geist-Variable.woff2") format("woff2");
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
-  font-family: "Geist Mono";
-  font-style: normal;
+  font-family: "Albert Sans";
+  src: url("/fonts/AlbertSans-VariableFont_wght-latin-ext.woff2")
+    format("woff2");
   font-weight: 100 900;
+  font-style: normal;
   font-display: swap;
-  src: url("/fonts/GeistMono-Variable.woff2") format("woff2");
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+    U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF,
+    U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Albert Sans";
+  src: url("/fonts/AlbertSans-Italic-VariableFont_wght.woff2") format("woff2");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Albert Sans";
+  src: url("/fonts/AlbertSans-Italic-VariableFont_wght-latin-ext.woff2")
+    format("woff2");
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+    U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF,
+    U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Host Grotesk";
+  src: url("/fonts/HostGrotesk-VariableFont_wght.woff2") format("woff2");
+  font-weight: 300 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Host Grotesk";
+  src: url("/fonts/HostGrotesk-VariableFont_wght-latin-ext.woff2")
+    format("woff2");
+  font-weight: 300 800;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+    U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF,
+    U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Host Grotesk";
+  src: url("/fonts/HostGrotesk-Italic-VariableFont_wght.woff2") format("woff2");
+  font-weight: 300 800;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA,
+    U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+2074, U+20AC, U+2122, U+2191,
+    U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: "Host Grotesk";
+  src: url("/fonts/HostGrotesk-Italic-VariableFont_wght-latin-ext.woff2")
+    format("woff2");
+  font-weight: 300 800;
+  font-style: italic;
+  font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7,
+    U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF,
+    U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+  font-family: "Paper Mono";
+  font-style: normal;
+  font-weight: 100 800;
+  font-display: swap;
+  src: url("/fonts/PaperMono-Variable.woff2") format("woff2");
 }
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
   --font-sans:
-    "Geist Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", "Roboto",
-    sans-serif;
-  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+    "Albert Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    "Roboto", sans-serif;
+  --font-title-sans:
+    "Host Grotesk", ui-sans-serif, system-ui, -apple-system, "Segoe UI",
+    "Roboto", sans-serif;
+  --font-mono: "Paper Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 
   --radius: 0.625rem;
   --radius-sm: calc(var(--radius) - 4px);
@@ -128,6 +215,15 @@
       "calt" 1;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: var(--font-title-sans);
   }
 
   button:not([disabled]),

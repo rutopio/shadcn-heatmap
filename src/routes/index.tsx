@@ -60,12 +60,21 @@ function IndexPage() {
             Copy the source, own it entirely.
           </p>
           <div className="flex flex-wrap items-center gap-3">
-            <Button asChild size="lg" className="gap-2">
-              <Link to="/install">
-                Get Started{" "}
-                <CodeIcon aria-hidden="true" weight="bold" className="size-4" />
-              </Link>
-            </Button>
+            <Button
+              size="lg"
+              className="gap-2"
+              nativeButton={false}
+              render={
+                <Link to="/install">
+                  Get Started{" "}
+                  <CodeIcon
+                    aria-hidden="true"
+                    weight="bold"
+                    className="size-4"
+                  />
+                </Link>
+              }
+            />
           </div>
         </div>
         <div className="mx-auto mt-8 flex w-full flex-col gap-12 sm:mt-14 sm:gap-16 md:gap-24">

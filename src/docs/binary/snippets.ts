@@ -58,29 +58,3 @@ const data = [
   </DateHeatmap>
 </TooltipProvider>
 `;
-
-export const binarySampleData = `
-// All three components accept the same data shapes as their regular counterparts.
-// The only difference is that values are strictly 0 or 1.
-
-// CalendarHeatmap binary: { date: string; value: 0 | 1 }
-const calendarData = [
-  { date: "2025-01-01", value: 1 }, // done
-  { date: "2025-01-02", value: 0 }, // missed
-  // ...
-];
-
-// WeekdayHeatmap binary: { weekday: number; hour: number; value: 0 | 1 }
-const weekdayData = [
-  { weekday: 1, hour: 9, value: 1 }, // Mon 09:00 — meeting
-  { weekday: 1, hour: 11, value: 0 }, // Mon 11:00 — free
-  // ...
-];
-
-// DateHeatmap binary: { date: string; hour: number; value: 0 | 1 }
-const dateData = [
-  { date: "2025-12-01", hour: 9, value: 1 }, // pass
-  { date: "2025-12-02", hour: 11, value: 0 }, // failed
-  // ...
-]
-`;

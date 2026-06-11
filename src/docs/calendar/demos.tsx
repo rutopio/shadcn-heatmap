@@ -118,46 +118,6 @@ export function CalendarChunkyDemo() {
   );
 }
 
-export function CalendarBinaryDemo() {
-  return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <CalendarHeatmap data={monthData} levels={2}>
-        <CalendarHeatmapBody>
-          {({ activity, dayIndex, weekIndex }) => (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <CalendarHeatmapBlock
-                  activity={activity}
-                  dayIndex={dayIndex}
-                  weekIndex={weekIndex}
-                />
-              </TooltipTrigger>
-              <TooltipContent
-                side="top"
-                className="pointer-events-none text-xs"
-                sideOffset={6}
-              >
-                <p className="font-medium">
-                  {format(parseISO(activity.date), "PPP")}
-                </p>
-                <p className="text-muted-foreground">
-                  {activity.value > 0 ? "Enabled" : "Disabled"}
-                </p>
-              </TooltipContent>
-            </Tooltip>
-          )}
-        </CalendarHeatmapBody>
-        <CalendarHeatmapFooter>
-          <CalendarHeatmapStat />
-          <CalendarHeatmapLegend
-            labels={{ less: "Disabled", more: "Enabled" }}
-          />
-        </CalendarHeatmapFooter>
-      </CalendarHeatmap>
-    </TooltipProvider>
-  );
-}
-
 export function CalendarTenLevelsDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>

@@ -233,51 +233,6 @@ export function WeekdayMinimalTicksDemo() {
   );
 }
 
-export function WeekdayBinaryDemo() {
-  return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <WeekdayHeatmap
-        data={weekData}
-        levels={2}
-        isNormalized
-        colors={{ scale: "var(--color-chart-2)" }}
-        extraRow={{ label: "Avg", compute: avgByHour }}
-        extraColumn={{ label: "Avg", compute: avgByWeekday }}
-      >
-        <WeekdayHeatmapBody
-          renderExtraRow={({ activity }) => (
-            <HeatmapTooltip
-              content={<WeekTooltipContent activity={activity} extra="row" />}
-            >
-              <WeekdayHeatmapBlock activity={activity} extra="row" />
-            </HeatmapTooltip>
-          )}
-          renderExtraColumn={({ activity }) => (
-            <HeatmapTooltip
-              content={
-                <WeekTooltipContent activity={activity} extra="column" />
-              }
-            >
-              <WeekdayHeatmapBlock activity={activity} extra="column" />
-            </HeatmapTooltip>
-          )}
-        >
-          {({ activity }) => (
-            <HeatmapTooltip
-              content={<WeekTooltipContent activity={activity} />}
-            >
-              <WeekdayHeatmapBlock activity={activity} />
-            </HeatmapTooltip>
-          )}
-        </WeekdayHeatmapBody>
-        <WeekdayHeatmapFooter>
-          <WeekdayHeatmapLegend labels={{ less: "Cold", more: "Hot" }} />
-        </WeekdayHeatmapFooter>
-      </WeekdayHeatmap>
-    </TooltipProvider>
-  );
-}
-
 export function WeekdayTenLevelsDemo() {
   return (
     <TooltipProvider delayDuration={80} skipDelayDuration={0}>

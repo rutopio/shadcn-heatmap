@@ -62,18 +62,6 @@ const medianByDate = (data: DateHourlyActivity[], dates: string[]) => {
   });
 };
 
-const p95ByDate = (data: DateHourlyActivity[], dates: string[]) => {
-  const byDate = new Map<string, number[]>();
-  data.forEach((a) => {
-    if (!byDate.has(a.date)) byDate.set(a.date, []);
-    byDate.get(a.date)?.push(a.value);
-  });
-  return dates.map((date) => {
-    const arr = [...(byDate.get(date) ?? [])].sort((x, y) => x - y);
-    return arr.length ? arr[Math.floor(arr.length * 0.95)] : 0;
-  });
-};
-
 const dateMedianMm = (() => {
   const sorted = [...dateData].sort((a, b) => a.value - b.value);
   return Math.round(sorted[Math.floor(sorted.length / 2)].value * 10) / 10;
@@ -568,64 +556,6 @@ export function DateSpanishDemo() {
             )}
           </DateHeatmapStat>
           <DateHeatmapLegend labels={{ less: "Seco", more: "Húmedo" }} />
-        </DateHeatmapFooter>
-      </DateHeatmap>
-    </TooltipProvider>
-  );
-}
-
-export function DateP95Demo() {
-  return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <DateHeatmap
-        data={dateData}
-        colors={{ scale: "var(--color-chart-3)" }}
-        extraRow={{ label: "Total", compute: sumByHour }}
-        extraColumn={{ label: <strong>P95</strong>, compute: p95ByDate }}
-      >
-        <DateHeatmapBody
-          renderExtraRow={({ activity, dateIndex }) => (
-            <HeatmapTooltip
-              content={<DateTooltipContent activity={activity} extra="row" />}
-            >
-              <DateHeatmapBlock
-                activity={activity}
-                dateIndex={dateIndex}
-                extra="row"
-              />
-            </HeatmapTooltip>
-          )}
-          renderExtraColumn={({ activity, dateIndex }) => (
-            <HeatmapTooltip
-              content={
-                <DateTooltipContent activity={activity} extra="column" />
-              }
-            >
-              <DateHeatmapBlock
-                activity={activity}
-                dateIndex={dateIndex}
-                extra="column"
-              />
-            </HeatmapTooltip>
-          )}
-        >
-          {({ activity, dateIndex }) => (
-            <HeatmapTooltip
-              content={<DateTooltipContent activity={activity} />}
-            >
-              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
-            </HeatmapTooltip>
-          )}
-        </DateHeatmapBody>
-        <DateHeatmapFooter>
-          <DateHeatmapStat>
-            {() => (
-              <div className="text-muted-foreground tabular-nums">
-                Total Rainfall: {dateTotalMm.toFixed(1)} mm
-              </div>
-            )}
-          </DateHeatmapStat>
-          <DateHeatmapLegend labels={{ less: "Dry", more: "Humid" }} />
         </DateHeatmapFooter>
       </DateHeatmap>
     </TooltipProvider>

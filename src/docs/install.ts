@@ -1,5 +1,3 @@
-export const REGISTRY_BASE_URL = "https://shadcn-heatmap.pages.dev/r"; // update to your deployment URL
-
 // GitHub registry form: <owner>/<repo>/<item> installs straight from the repo.
 // See https://ui.shadcn.com/docs/registry/github
 const GITHUB_REGISTRY = "rutopio/shadcn-heatmap";

@@ -58,9 +58,11 @@ function NotFoundPage() {
         <span className="text-foreground tabular-nums">{remaining}</span>
         {remaining === 1 ? " second" : " seconds"}.
       </p>
-      <Button asChild size="sm">
-        <Link to="/">Back to home</Link>
-      </Button>
+      <Button
+        size="sm"
+        nativeButton={false}
+        render={<Link to="/">Back to home</Link>}
+      />
     </div>
   );
 }
