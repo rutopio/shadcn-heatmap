@@ -74,7 +74,6 @@ function StatusPage() {
             code={statusSampleData}
             lang="tsx"
             filename="sample-data.ts"
-            maxHeight="18rem"
           />
         </div>
 

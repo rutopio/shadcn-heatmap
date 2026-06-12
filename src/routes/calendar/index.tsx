@@ -76,7 +76,6 @@ function CalendarPage() {
             code={calendarSampleData}
             lang="tsx"
             filename="sample-data.ts"
-            maxHeight="18rem"
           />
         </div>
 

@@ -134,7 +134,7 @@ export function SiteHeader() {
               />
             </svg>
           </span>
-          <span>shadcn-heatmap</span>
+          <span className="font-title-sans">shadcn-heatmap</span>
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">

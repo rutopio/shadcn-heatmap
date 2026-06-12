@@ -74,7 +74,6 @@ function DatePage() {
             code={dateSampleData}
             lang="tsx"
             filename="sample-data.ts"
-            maxHeight="18rem"
           />
         </div>
 
