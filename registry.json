@@ -17,15 +17,16 @@
       "registryDependencies": [],
       "files": [
         {
-          "path": "components/heatmap/calendar-heatmap.tsx",
-          "type": "registry:component"
+          "path": "src/components/heatmap/calendar-heatmap.tsx",
+          "type": "registry:component",
+          "target": "components/heatmap/calendar-heatmap.tsx"
         }
       ],
       "cssVars": {
         "theme": {
-          "color-secondary": "oklch(96.7% 0.001 286.4)",
-          "color-chart-1": "oklch(64.6% 0.222 41.1)",
-          "color-muted-foreground": "oklch(55.2% 0.014 285.9)"
+          "secondary": "oklch(96.7% 0.001 286.4)",
+          "chart-1": "oklch(64.6% 0.222 41.1)",
+          "muted-foreground": "oklch(55.2% 0.014 285.9)"
         }
       }
     },
@@ -42,15 +43,16 @@
       "registryDependencies": [],
       "files": [
         {
-          "path": "components/heatmap/weekday-heatmap.tsx",
-          "type": "registry:component"
+          "path": "src/components/heatmap/weekday-heatmap.tsx",
+          "type": "registry:component",
+          "target": "components/heatmap/weekday-heatmap.tsx"
         }
       ],
       "cssVars": {
         "theme": {
-          "color-secondary": "oklch(96.7% 0.001 286.4)",
-          "color-chart-1": "oklch(64.6% 0.222 41.1)",
-          "color-muted-foreground": "oklch(55.2% 0.014 285.9)"
+          "secondary": "oklch(96.7% 0.001 286.4)",
+          "chart-1": "oklch(64.6% 0.222 41.1)",
+          "muted-foreground": "oklch(55.2% 0.014 285.9)"
         }
       }
     },
@@ -68,15 +70,16 @@
       "registryDependencies": [],
       "files": [
         {
-          "path": "components/heatmap/date-heatmap.tsx",
-          "type": "registry:component"
+          "path": "src/components/heatmap/date-heatmap.tsx",
+          "type": "registry:component",
+          "target": "components/heatmap/date-heatmap.tsx"
         }
       ],
       "cssVars": {
         "theme": {
-          "color-secondary": "oklch(96.7% 0.001 286.4)",
-          "color-chart-1": "oklch(64.6% 0.222 41.1)",
-          "color-muted-foreground": "oklch(55.2% 0.014 285.9)"
+          "secondary": "oklch(96.7% 0.001 286.4)",
+          "chart-1": "oklch(64.6% 0.222 41.1)",
+          "muted-foreground": "oklch(55.2% 0.014 285.9)"
         }
       }
     },
@@ -94,15 +97,16 @@
       "registryDependencies": [],
       "files": [
         {
-          "path": "components/heatmap/status-heatmap.tsx",
-          "type": "registry:component"
+          "path": "src/components/heatmap/status-heatmap.tsx",
+          "type": "registry:component",
+          "target": "components/heatmap/status-heatmap.tsx"
         }
       ],
       "cssVars": {
         "theme": {
-          "color-secondary": "oklch(96.7% 0.001 286.4)",
-          "color-chart-1": "oklch(64.6% 0.222 41.1)",
-          "color-muted-foreground": "oklch(55.2% 0.014 285.9)"
+          "secondary": "oklch(96.7% 0.001 286.4)",
+          "chart-1": "oklch(64.6% 0.222 41.1)",
+          "muted-foreground": "oklch(55.2% 0.014 285.9)"
         }
       }
     }

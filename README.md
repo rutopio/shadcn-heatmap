@@ -68,15 +68,15 @@ See the [/install page](https://shadcn-heatmap.pages.dev/install) for the intera
    npx shadcn@latest add rutopio/shadcn-heatmap/status-heatmap
    ```
 
-   The `<owner>/<repo>/<item>` form installs straight from this GitHub repository — see [GitHub registries](https://ui.shadcn.com/docs/registry/github). You can pin a version with a ref, e.g. `npx shadcn@latest add rutopio/shadcn-heatmap/calendar-heatmap#v1.0.0`. Alternatively, install from the full URL: `npx shadcn@latest add https://shadcn-heatmap.pages.dev/r/calendar-heatmap.json`.
+   The `<owner>/<repo>/<item>` form installs straight from this GitHub repository — see [GitHub registries](https://ui.shadcn.com/docs/registry/github). You can pin a version with a git ref (tag, branch, or commit), e.g. `...calendar-heatmap#<ref>`. Alternatively, install from the full URL: `npx shadcn@latest add https://shadcn-heatmap.pages.dev/r/calendar-heatmap.json`.
 
-2. **Ensure the runtime dependencies exist.**
+2. **Ensure the runtime dependencies exist.** The components only need these — the CLI installs them automatically, listed here for reference.
 
    ```bash
-   pnpm add date-fns clsx tailwind-merge @base-ui/react
+   pnpm add date-fns clsx tailwind-merge
    ```
 
-3. **Install the shadcn tooltip component (optional but recommended).** The demos use tooltips to show activity details on hover.
+3. **(Optional) Add a tooltip for hover details.** The components render fine without it; the demos wrap blocks in a tooltip to show activity details on hover. Use any tooltip you like, or the shadcn one:
 
    ```bash
    npx shadcn@latest add tooltip
@@ -87,7 +87,7 @@ See the [/install page](https://shadcn-heatmap.pages.dev/install) for the intera
 1. **Install peer dependencies.**
 
    ```bash
-   pnpm add date-fns clsx tailwind-merge @base-ui/react
+   pnpm add date-fns clsx tailwind-merge
    ```
 
 2. **Add the `cn` helper** (if not already present). Create `src/lib/utils.ts`:
@@ -115,7 +115,7 @@ See the [/install page](https://shadcn-heatmap.pages.dev/install) for the intera
    }
    ```
 
-4. **Install the shadcn tooltip component (optional but recommended).** The demos use tooltips to show activity details on hover.
+4. **(Optional) Add a tooltip for hover details.** The components render fine without it; the demos wrap blocks in a tooltip to show activity details on hover.
 
    ```bash
    npx shadcn@latest add tooltip
@@ -318,7 +318,7 @@ If you're adding a new component or changing the public API, please open an issu
 
 ### Local setup
 
-Requires Node 20+ and pnpm 10.
+Requires Node 22+ and pnpm 10.
 
 ```bash
 pnpm install
