@@ -75,7 +75,7 @@ const weekMedianTemp = (() => {
 
 export function WeekdayDefaultDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <WeekdayHeatmap
         data={weekData}
         isNormalized
@@ -126,7 +126,7 @@ export function WeekdayDefaultDemo() {
 
 export function WeekdayMondayStartDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <WeekdayHeatmap
         data={weekData}
         weekStart={1}
@@ -178,7 +178,7 @@ export function WeekdayMondayStartDemo() {
 
 export function WeekdayMinimalTicksDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <WeekdayHeatmap
         data={weekData}
         isNormalized
@@ -235,7 +235,7 @@ export function WeekdayMinimalTicksDemo() {
 
 export function WeekdayTenLevelsDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <WeekdayHeatmap
         data={weekData}
         levels={10}
@@ -280,7 +280,7 @@ export function WeekdayTenLevelsDemo() {
 
 export function WeekdayJapaneseDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <WeekdayHeatmap
         data={weekData}
         totalCount={weekAvgTemp}
@@ -354,7 +354,7 @@ export function WeekdayJapaneseDemo() {
 
 export function WeekdayPlainGridDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <WeekdayHeatmap
         data={weekData}
         isNormalized
@@ -386,7 +386,7 @@ export function WeekdayPlainGridDemo() {
 
 export function WeekdayMiniDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <WeekdayHeatmap
         data={weekData}
         isNormalized
@@ -408,7 +408,7 @@ export function WeekdayMiniDemo() {
 
 export function Weekday12HourDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <WeekdayHeatmap
         data={weekData}
         use12Hour
@@ -466,7 +466,7 @@ export function Weekday12HourDemo() {
 
 export function WeekdayMedianDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <WeekdayHeatmap
         data={weekData}
         isNormalized
@@ -537,7 +537,7 @@ const WEEKDAY_NAMES = generateWeekdayNames();
 
 export function WeekdayCustomTooltipDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <WeekdayHeatmap
         data={weekData}
         isNormalized
@@ -662,7 +662,7 @@ export function WeekdayCustomTooltipDemo() {
 
 export function WeekdayNoFooterDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <WeekdayHeatmap
         data={weekData}
         isNormalized
@@ -703,7 +703,7 @@ export function WeekdayNoFooterDemo() {
 
 export function WeekdayCustomStylingDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <WeekdayHeatmap
         data={weekData}
         blockSize={32}

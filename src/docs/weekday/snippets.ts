@@ -56,7 +56,7 @@ const avgByWeekday = (d) => {
 
 export function WeeklyRhythm() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <WeekdayHeatmap data={data}>
         <WeekdayHeatmapBody
           renderExtraRow={({ activity }) => (

@@ -34,7 +34,7 @@ import {
 
 export function CalendarBinaryDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <CalendarHeatmap
         data={calendarBinaryData}
         levels={2}
@@ -73,7 +73,7 @@ export function CalendarBinaryDemo() {
 
 export function WeekdayBinaryDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <WeekdayHeatmap
         data={weekdayBinaryData}
         levels={2}
@@ -108,7 +108,7 @@ export function WeekdayBinaryDemo() {
 
 export function DateBinaryDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap
         data={dateBinaryData}
         levels={2}

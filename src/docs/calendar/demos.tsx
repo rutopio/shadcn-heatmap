@@ -39,7 +39,7 @@ function CalendarTooltip({
 
 export function CalendarDefaultDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <CalendarHeatmap data={monthData}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
@@ -66,7 +66,7 @@ export function CalendarDefaultDemo() {
 
 export function CalendarMondayStartDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <CalendarHeatmap data={monthData} weekStart={1}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
@@ -93,7 +93,7 @@ export function CalendarMondayStartDemo() {
 
 export function CalendarChunkyDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <CalendarHeatmap data={monthData} continuousMonths={false}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
@@ -120,7 +120,7 @@ export function CalendarChunkyDemo() {
 
 export function CalendarTenLevelsDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <CalendarHeatmap data={monthData} levels={10}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
@@ -147,7 +147,7 @@ export function CalendarTenLevelsDemo() {
 
 export function CalendarGermanDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <CalendarHeatmap data={monthData} locale={de}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
@@ -189,7 +189,7 @@ const multiYearYears = [2024, 2025];
 
 export function CalendarMultiYearDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <CalendarHeatmap data={calendarMultiYear}>
         <CalendarHeatmapBody
           renderYearFooter={({ year, totalCount }) => {
@@ -224,7 +224,7 @@ export function CalendarMultiYearDemo() {
 
 export function CalendarNoFooterDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <CalendarHeatmap data={monthData}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
@@ -247,7 +247,7 @@ export function CalendarNoFooterDemo() {
 
 export function CalendarMiniDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <CalendarHeatmap data={monthData}>
         <CalendarHeatmapBody hideMonthLabels hideWeekdayLabels hideYearLabels>
           {({ activity, dayIndex, weekIndex }) => (
@@ -270,7 +270,7 @@ export function CalendarMiniDemo() {
 
 export function CalendarCustomTooltipDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <CalendarHeatmap data={monthData}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
@@ -322,7 +322,7 @@ export function CalendarCustomTooltipDemo() {
 
 export function CalendarCustomStylingDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <CalendarHeatmap
         data={monthData}
         blockSize={18}

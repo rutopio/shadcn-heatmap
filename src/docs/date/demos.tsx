@@ -69,7 +69,7 @@ const dateMedianMm = (() => {
 
 export function DateDefaultDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap
         data={dateData}
         totalCount={dateTotalMm}
@@ -128,7 +128,7 @@ export function DateDefaultDemo() {
 
 export function DateTenLevelsDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap
         data={dateData}
         levels={10}
@@ -187,7 +187,7 @@ export function DateTenLevelsDemo() {
 
 export function DateCustomTooltipDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap
         data={dateData}
         colors={{ scale: "var(--color-chart-3)" }}
@@ -318,7 +318,7 @@ export function DateCustomTooltipDemo() {
 
 export function DateSparseTicksDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap
         data={dateData}
         colors={{ scale: "var(--color-chart-3)" }}
@@ -382,7 +382,7 @@ export function DateSparseTicksDemo() {
 
 export function DatePlainGridDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap data={dateData} colors={{ scale: "var(--color-chart-3)" }}>
         <DateHeatmapBody>
           {({ activity, dateIndex }) => (
@@ -410,7 +410,7 @@ export function DatePlainGridDemo() {
 
 export function DateNoLabelsDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap data={dateData} colors={{ scale: "var(--color-chart-3)" }}>
         <DateHeatmapBody hideDateLabels hideHourLabels>
           {({ activity, dateIndex }) => (
@@ -428,7 +428,7 @@ export function DateNoLabelsDemo() {
 
 export function Date12HourDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap
         data={dateData}
         totalCount={dateTotalMm}
@@ -494,7 +494,7 @@ export function Date12HourDemo() {
 
 export function DateSpanishDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap
         data={dateData}
         totalCount={dateTotalMm}
@@ -564,7 +564,7 @@ export function DateSpanishDemo() {
 
 export function DateMedianDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap
         data={dateData}
         colors={{ scale: "var(--color-chart-3)" }}
@@ -622,7 +622,7 @@ export function DateMedianDemo() {
 
 export function DateNoFooterDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap
         data={dateData}
         colors={{ scale: "var(--color-chart-3)" }}
@@ -670,7 +670,7 @@ export function DateNoFooterDemo() {
 
 export function DateCustomStylingDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap
         data={dateData}
         totalCount={dateTotalMm}

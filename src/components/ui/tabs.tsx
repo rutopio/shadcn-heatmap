@@ -1,10 +1,7 @@
 import { Tabs as TabsPrimitive } from "@base-ui/react/tabs";
 import { cn } from "@/lib/utils";
 
-const Tabs = ({
-  className,
-  ...props
-}: TabsPrimitive.Root.Props) => (
+const Tabs = ({ className, ...props }: TabsPrimitive.Root.Props) => (
   <TabsPrimitive.Root
     data-slot="tabs"
     className={cn("flex flex-col gap-2", className)}
@@ -13,10 +10,7 @@ const Tabs = ({
 );
 Tabs.displayName = "Tabs";
 
-const TabsList = ({
-  className,
-  ...props
-}: TabsPrimitive.List.Props) => (
+const TabsList = ({ className, ...props }: TabsPrimitive.List.Props) => (
   <TabsPrimitive.List
     data-slot="tabs-list"
     className={cn(
@@ -28,10 +22,7 @@ const TabsList = ({
 );
 TabsList.displayName = "TabsList";
 
-const TabsTrigger = ({
-  className,
-  ...props
-}: TabsPrimitive.Tab.Props) => (
+const TabsTrigger = ({ className, ...props }: TabsPrimitive.Tab.Props) => (
   <TabsPrimitive.Tab
     data-slot="tabs-trigger"
     className={cn(
@@ -43,10 +34,7 @@ const TabsTrigger = ({
 );
 TabsTrigger.displayName = "TabsTrigger";
 
-const TabsContent = ({
-  className,
-  ...props
-}: TabsPrimitive.Panel.Props) => (
+const TabsContent = ({ className, ...props }: TabsPrimitive.Panel.Props) => (
   <TabsPrimitive.Panel
     data-slot="tabs-content"
     className={cn("flex-1 outline-none", className)}

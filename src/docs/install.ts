@@ -10,10 +10,10 @@ export const cliInstallCommands = {
 } as const;
 
 export const packageManagerCommands = {
-  npm: "npm install date-fns clsx tailwind-merge @radix-ui/react-tooltip",
-  pnpm: "pnpm add date-fns clsx tailwind-merge @radix-ui/react-tooltip",
-  yarn: "yarn add date-fns clsx tailwind-merge @radix-ui/react-tooltip",
-  bun: "bun add date-fns clsx tailwind-merge @radix-ui/react-tooltip",
+  npm: "npm install date-fns clsx tailwind-merge",
+  pnpm: "pnpm add date-fns clsx tailwind-merge",
+  yarn: "yarn add date-fns clsx tailwind-merge",
+  bun: "bun add date-fns clsx tailwind-merge",
 } as const;
 
 export const utilsSnippet = `// src/lib/utils.ts

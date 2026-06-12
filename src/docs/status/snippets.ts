@@ -49,7 +49,7 @@ const data = [
 
 export function StatusTimeline() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <StatusHeatmap data={data}>
         <StatusHeatmapBody>
           {({ activity, dayIndex }) => (

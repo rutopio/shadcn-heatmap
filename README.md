@@ -73,7 +73,7 @@ See the [/install page](https://shadcn-heatmap.pages.dev/install) for the intera
 2. **Ensure the runtime dependencies exist.**
 
    ```bash
-   pnpm add date-fns clsx tailwind-merge @radix-ui/react-tooltip
+   pnpm add date-fns clsx tailwind-merge @base-ui/react
    ```
 
 3. **Install the shadcn tooltip component (optional but recommended).** The demos use tooltips to show activity details on hover.
@@ -87,7 +87,7 @@ See the [/install page](https://shadcn-heatmap.pages.dev/install) for the intera
 1. **Install peer dependencies.**
 
    ```bash
-   pnpm add date-fns clsx tailwind-merge @radix-ui/react-tooltip
+   pnpm add date-fns clsx tailwind-merge @base-ui/react
    ```
 
 2. **Add the `cn` helper** (if not already present). Create `src/lib/utils.ts`:

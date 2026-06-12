@@ -6,7 +6,7 @@ const data = [
   { date: "2025-01-02", value: 0 }, // missed
 ];
 
-<TooltipProvider delayDuration={80} skipDelayDuration={0}>
+<TooltipProvider delayDuration={0}>
   <CalendarHeatmap data={data} levels={2}>
     <CalendarHeatmapBody>
       {({ activity, dayIndex, weekIndex }) => <Tooltip>{/* ... */}</Tooltip>}
@@ -27,7 +27,7 @@ const data = [
   { weekday: 1, hour: 10, value: 0 }, // free
 ];
 
-<TooltipProvider delayDuration={80} skipDelayDuration={0}>
+<TooltipProvider delayDuration={0}>
   <WeekdayHeatmap data={data} levels={2}>
     <WeekdayHeatmapBody>
       {({ activity }) => <Tooltip>{/* ... */}</Tooltip>}
@@ -47,7 +47,7 @@ const data = [
   { date: "2025-12-02", hour: 11, value: 0 }, // failed
 ];
 
-<TooltipProvider delayDuration={80} skipDelayDuration={0}>
+<TooltipProvider delayDuration={0}>
   <DateHeatmap data={data} levels={2}>
     <DateHeatmapBody>
       {({ activity, dateIndex }) => <Tooltip>{/* ... */}</Tooltip>}

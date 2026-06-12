@@ -1,9 +1,5 @@
 import { Tooltip as TooltipPrimitive } from "@base-ui/react/tooltip";
-import {
-  Children,
-  type ReactElement,
-  isValidElement,
-} from "react";
+import { Children, isValidElement, type ReactElement } from "react";
 import { cn } from "@/lib/utils";
 
 // Accept the Radix-style `delayDuration` prop so existing call sites keep

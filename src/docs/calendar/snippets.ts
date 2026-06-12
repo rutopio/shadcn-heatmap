@@ -42,7 +42,7 @@ const data = [
 
 export function YearContributions() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <CalendarHeatmap data={data}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
