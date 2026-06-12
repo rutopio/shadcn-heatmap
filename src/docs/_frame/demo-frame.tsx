@@ -54,11 +54,7 @@ export function DemoFrame({
           </div>
         </TabsContent>
         <TabsContent value="code" className="mt-3">
-          <CodeBlock
-            code={code}
-            filename={filename}
-            scrollClassName="max-h-96"
-          />
+          <CodeBlock code={code} filename={filename} />
         </TabsContent>
       </Tabs>
     </div>

@@ -1,5 +1,3 @@
-export const REGISTRY_BASE_URL = "https://shadcn-heatmap.pages.dev/r"; // update to your deployment URL
-
 // GitHub registry form: <owner>/<repo>/<item> installs straight from the repo.
 // See https://ui.shadcn.com/docs/registry/github
 const GITHUB_REGISTRY = "rutopio/shadcn-heatmap";
@@ -12,10 +10,10 @@ export const cliInstallCommands = {
 } as const;
 
 export const packageManagerCommands = {
-  npm: "npm install date-fns clsx tailwind-merge @radix-ui/react-tooltip",
-  pnpm: "pnpm add date-fns clsx tailwind-merge @radix-ui/react-tooltip",
-  yarn: "yarn add date-fns clsx tailwind-merge @radix-ui/react-tooltip",
-  bun: "bun add date-fns clsx tailwind-merge @radix-ui/react-tooltip",
+  npm: "npm install date-fns clsx tailwind-merge",
+  pnpm: "pnpm add date-fns clsx tailwind-merge",
+  yarn: "yarn add date-fns clsx tailwind-merge",
+  bun: "bun add date-fns clsx tailwind-merge",
 } as const;
 
 export const utilsSnippet = `// src/lib/utils.ts

@@ -46,7 +46,7 @@ function IndexPage() {
     <section className="relative overflow-hidden border-b">
       <div className="container relative py-12 sm:py-28">
         <div className="flex flex-col items-center gap-6">
-          <h1 className="max-w-6xl text-center font-semibold text-4xl leading-tight sm:text-5xl md:text-6xl">
+          <h1 className="max-w-6xl text-balance text-center font-semibold text-4xl leading-tight sm:text-5xl md:text-6xl">
             Heatmap components for React,
             <br className="hidden sm:block" /> built for{" "}
             <span className="text-muted-foreground">shadcn/ui</span>
@@ -60,12 +60,21 @@ function IndexPage() {
             Copy the source, own it entirely.
           </p>
           <div className="flex flex-wrap items-center gap-3">
-            <Button asChild size="lg" className="gap-2">
-              <Link to="/install">
-                Get Started{" "}
-                <CodeIcon aria-hidden="true" weight="bold" className="size-4" />
-              </Link>
-            </Button>
+            <Button
+              size="lg"
+              className="gap-2"
+              nativeButton={false}
+              render={
+                <Link to="/install">
+                  Get Started{" "}
+                  <CodeIcon
+                    aria-hidden="true"
+                    weight="bold"
+                    className="size-4"
+                  />
+                </Link>
+              }
+            />
           </div>
         </div>
         <div className="mx-auto mt-8 flex w-full flex-col gap-12 sm:mt-14 sm:gap-16 md:gap-24">

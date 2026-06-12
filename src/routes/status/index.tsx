@@ -74,7 +74,6 @@ function StatusPage() {
             code={statusSampleData}
             lang="tsx"
             filename="sample-data.ts"
-            maxHeight="18rem"
           />
         </div>
 
@@ -105,5 +104,6 @@ export const Route = createFileRoute("/status/")({
       description:
         "Atlassian-style status timeline for React. Vertical bars show daily uptime across a period, with healthy-day counts, custom colors, and legends.",
       path: "/status",
+      image: "/og-status.png",
     }),
 });

@@ -50,7 +50,7 @@ function StatusTooltip({
 
 export function StatusCustomStylingDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <StatusHeatmap
         data={statusData}
         blockSize={60}
@@ -83,7 +83,7 @@ export function StatusCustomStylingDemo() {
 
 export function StatusNoFooterDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <StatusHeatmap data={statusData}>
         <StatusHeatmapBody>
           {({ activity, dayIndex }) => (
@@ -102,7 +102,7 @@ export function StatusNoFooterDemo() {
 
 export function StatusNoLabelsDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <StatusHeatmap data={statusData}>
         <StatusHeatmapBody hideDateLabels>
           {({ activity, dayIndex }) => (
@@ -121,7 +121,7 @@ export function StatusNoLabelsDemo() {
 
 export function StatusCustomTooltipDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <StatusHeatmap data={statusData}>
         <StatusHeatmapBody>
           {({ activity, dayIndex }) => (
@@ -168,7 +168,7 @@ export function StatusCustomTooltipDemo() {
 
 export function StatusI18nDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <StatusHeatmap
         data={statusData}
         locale={zhTW}
@@ -220,7 +220,7 @@ export function StatusI18nDemo() {
 
 export function StatusDefaultDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <StatusHeatmap data={statusData}>
         <StatusHeatmapBody>
           {({ activity, dayIndex }) => (
@@ -243,67 +243,9 @@ export function StatusDefaultDemo() {
 
 export function StatusWithLabelsDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <StatusHeatmap data={statusData}>
         <StatusHeatmapBody labelInterval={15}>
-          {({ activity, dayIndex }) => (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
-              </TooltipTrigger>
-              <StatusTooltip activity={activity} />
-            </Tooltip>
-          )}
-        </StatusHeatmapBody>
-        <StatusHeatmapFooter>
-          <StatusHeatmapStat />
-          <StatusHeatmapLegend />
-        </StatusHeatmapFooter>
-      </StatusHeatmap>
-    </TooltipProvider>
-  );
-}
-
-export function StatusCustomColorDemo() {
-  return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <StatusHeatmap
-        data={statusData}
-        colors={{
-          critical: "#dc2626",
-          degraded: "#ea580c",
-          healthy: "#16a34a",
-        }}
-      >
-        <StatusHeatmapBody>
-          {({ activity, dayIndex }) => (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
-              </TooltipTrigger>
-              <StatusTooltip activity={activity} />
-            </Tooltip>
-          )}
-        </StatusHeatmapBody>
-        <StatusHeatmapFooter>
-          <StatusHeatmapStat />
-          <StatusHeatmapLegend />
-        </StatusHeatmapFooter>
-      </StatusHeatmap>
-    </TooltipProvider>
-  );
-}
-
-export function StatusCustomSizeDemo() {
-  return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <StatusHeatmap
-        data={statusData}
-        blockSize={60}
-        blockAspectRatio={0.15}
-        blockMargin={1}
-      >
-        <StatusHeatmapBody>
           {({ activity, dayIndex }) => (
             <Tooltip>
               <TooltipTrigger asChild>
@@ -326,7 +268,7 @@ export function StatusUptimeDemo() {
   const last30Days = statusUptimeData;
 
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <StatusHeatmap
         data={last30Days}
         blockSize={32}

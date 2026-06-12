@@ -9,19 +9,24 @@
       "type": "registry:component",
       "title": "CalendarHeatmap",
       "description": "GitHub-style yearly contribution heatmap with multi-year, weekStart, and i18n support.",
-      "dependencies": ["clsx", "tailwind-merge", "date-fns"],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge",
+        "date-fns"
+      ],
       "registryDependencies": [],
       "files": [
         {
-          "path": "components/heatmap/calendar-heatmap.tsx",
-          "type": "registry:component"
+          "path": "src/components/heatmap/calendar-heatmap.tsx",
+          "type": "registry:component",
+          "target": "components/heatmap/calendar-heatmap.tsx"
         }
       ],
       "cssVars": {
         "theme": {
-          "color-secondary": "oklch(96.7% 0.001 286.4)",
-          "color-chart-1": "oklch(64.6% 0.222 41.1)",
-          "color-muted-foreground": "oklch(55.2% 0.014 285.9)"
+          "secondary": "oklch(96.7% 0.001 286.4)",
+          "chart-1": "oklch(64.6% 0.222 41.1)",
+          "muted-foreground": "oklch(55.2% 0.014 285.9)"
         }
       }
     },
@@ -31,19 +36,23 @@
       "type": "registry:component",
       "title": "WeekdayHeatmap",
       "description": "Weekday × hour-of-day matrix with Sum row/column and independent colour scales.",
-      "dependencies": ["clsx", "tailwind-merge"],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge"
+      ],
       "registryDependencies": [],
       "files": [
         {
-          "path": "components/heatmap/weekday-heatmap.tsx",
-          "type": "registry:component"
+          "path": "src/components/heatmap/weekday-heatmap.tsx",
+          "type": "registry:component",
+          "target": "components/heatmap/weekday-heatmap.tsx"
         }
       ],
       "cssVars": {
         "theme": {
-          "color-secondary": "oklch(96.7% 0.001 286.4)",
-          "color-chart-1": "oklch(64.6% 0.222 41.1)",
-          "color-muted-foreground": "oklch(55.2% 0.014 285.9)"
+          "secondary": "oklch(96.7% 0.001 286.4)",
+          "chart-1": "oklch(64.6% 0.222 41.1)",
+          "muted-foreground": "oklch(55.2% 0.014 285.9)"
         }
       }
     },
@@ -53,19 +62,24 @@
       "type": "registry:component",
       "title": "DateHeatmap",
       "description": "Date × hour matrix for zooming into a narrow time window with daily Sum column.",
-      "dependencies": ["clsx", "tailwind-merge", "date-fns"],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge",
+        "date-fns"
+      ],
       "registryDependencies": [],
       "files": [
         {
-          "path": "components/heatmap/date-heatmap.tsx",
-          "type": "registry:component"
+          "path": "src/components/heatmap/date-heatmap.tsx",
+          "type": "registry:component",
+          "target": "components/heatmap/date-heatmap.tsx"
         }
       ],
       "cssVars": {
         "theme": {
-          "color-secondary": "oklch(96.7% 0.001 286.4)",
-          "color-chart-1": "oklch(64.6% 0.222 41.1)",
-          "color-muted-foreground": "oklch(55.2% 0.014 285.9)"
+          "secondary": "oklch(96.7% 0.001 286.4)",
+          "chart-1": "oklch(64.6% 0.222 41.1)",
+          "muted-foreground": "oklch(55.2% 0.014 285.9)"
         }
       }
     },
@@ -75,19 +89,24 @@
       "type": "registry:component",
       "title": "StatusHeatmap",
       "description": "Timeline status indicator showing daily activity over a period (e.g. 90 days). Similar to Atlassian Statuspage.",
-      "dependencies": ["clsx", "tailwind-merge", "date-fns"],
+      "dependencies": [
+        "clsx",
+        "tailwind-merge",
+        "date-fns"
+      ],
       "registryDependencies": [],
       "files": [
         {
-          "path": "components/heatmap/status-heatmap.tsx",
-          "type": "registry:component"
+          "path": "src/components/heatmap/status-heatmap.tsx",
+          "type": "registry:component",
+          "target": "components/heatmap/status-heatmap.tsx"
         }
       ],
       "cssVars": {
         "theme": {
-          "color-secondary": "oklch(96.7% 0.001 286.4)",
-          "color-chart-1": "oklch(64.6% 0.222 41.1)",
-          "color-muted-foreground": "oklch(55.2% 0.014 285.9)"
+          "secondary": "oklch(96.7% 0.001 286.4)",
+          "chart-1": "oklch(64.6% 0.222 41.1)",
+          "muted-foreground": "oklch(55.2% 0.014 285.9)"
         }
       }
     }

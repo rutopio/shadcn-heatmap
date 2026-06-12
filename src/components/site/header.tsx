@@ -134,50 +134,57 @@ export function SiteHeader() {
               />
             </svg>
           </span>
-          <span>shadcn-heatmap</span>
+          <span className="font-title-sans">shadcn-heatmap</span>
         </Link>
 
         <nav className="hidden items-center gap-1 md:flex">
-          <Button asChild variant="ghost" size="sm">
-            <Link to="/install">
-              Install
-              <CodeIcon aria-hidden="true" weight="bold" className="size-4" />
-            </Link>
-          </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            nativeButton={false}
+            render={
+              <Link to="/install">
+                Install
+                <CodeIcon aria-hidden="true" weight="bold" className="size-4" />
+              </Link>
+            }
+          />
           {navLinks.map((link) => (
             <Button
               key={link.to}
-              asChild
               variant="ghost"
               size="sm"
               className={cn("gap-2", pathname === link.to && "bg-muted")}
-            >
-              <Link
-                to={link.to}
-                aria-current={pathname === link.to ? "page" : undefined}
-              >
-                {link.label}
-              </Link>
-            </Button>
+              nativeButton={false}
+              render={
+                <Link
+                  to={link.to}
+                  aria-current={pathname === link.to ? "page" : undefined}
+                >
+                  {link.label}
+                </Link>
+              }
+            />
           ))}
         </nav>
 
         <div className="ml-auto flex items-center gap-1">
           <Button
-            asChild
             variant="ghost"
             className="hidden md:inline-flex"
             aria-label="View source on GitHub (opens in new tab)"
-          >
-            <a href={GITHUB_URL} target="_blank" rel="noreferrer">
-              <GithubLogoIcon
-                aria-hidden="true"
-                weight="bold"
-                className="size-4"
-              />
-              <span className="hidden lg:inline">rutopio/shadcn-heatmap</span>
-            </a>
-          </Button>
+            nativeButton={false}
+            render={
+              <a href={GITHUB_URL} target="_blank" rel="noreferrer">
+                <GithubLogoIcon
+                  aria-hidden="true"
+                  weight="bold"
+                  className="size-4"
+                />
+                <span className="hidden lg:inline">rutopio/shadcn-heatmap</span>
+              </a>
+            }
+          />
           <ThemeToggle />
           <Button
             variant="ghost"

@@ -16,7 +16,7 @@
     "url": "https://github.com/rutopio/shadcn-heatmap/issues"
   },
   "engines": {
-    "node": ">=20"
+    "node": ">=22"
   },
   "scripts": {
     "dev": "vite",
@@ -29,10 +29,8 @@
     "check": "biome check --write . && pnpm lint && pnpm check-types"
   },
   "dependencies": {
+    "@base-ui/react": "1.5.0",
     "@phosphor-icons/react": "2.1.10",
-    "@radix-ui/react-slot": "1.2.4",
-    "@radix-ui/react-tabs": "1.1.13",
-    "@radix-ui/react-tooltip": "1.2.8",
     "@tanstack/react-router": "1.168.23",
     "clsx": "2.1.1",
     "date-fns": "4.1.0",

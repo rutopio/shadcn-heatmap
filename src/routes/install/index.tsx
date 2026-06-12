@@ -93,11 +93,11 @@ function InstallPage() {
 
             <div className="space-y-2">
               <h2 className="text-balance font-medium text-sm">
-                3. Install the shadcn tooltip component (optional but
-                recommended)
+                3. (Optional) Add a tooltip for hover details
               </h2>
               <p className="text-pretty text-muted-foreground text-sm">
-                The demos use tooltips to show activity details on hover:
+                The components render fine without it; the demos wrap blocks in
+                a tooltip to show activity details on hover:
               </p>
               <CodeBlock
                 code="npx shadcn@latest add tooltip"
@@ -177,12 +177,12 @@ function InstallPage() {
 
             <div className="space-y-2">
               <h2 className="text-balance font-medium text-sm">
-                4. Install the shadcn tooltip component (optional but
-                recommended)
+                4. (Optional) Add a tooltip for hover details
               </h2>
               <p className="text-pretty text-muted-foreground text-sm">
-                The demos use tooltips to show activity details on hover. If you
-                want this functionality, add the tooltip component:
+                The components render fine without it; the demos wrap blocks in a
+                tooltip to show activity details on hover. If you want this, add a
+                tooltip component:
               </p>
               <CodeBlock
                 code="npx shadcn@latest add tooltip"

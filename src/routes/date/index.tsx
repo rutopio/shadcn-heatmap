@@ -74,7 +74,6 @@ function DatePage() {
             code={dateSampleData}
             lang="tsx"
             filename="sample-data.ts"
-            maxHeight="18rem"
           />
         </div>
 
@@ -105,5 +104,6 @@ export const Route = createFileRoute("/date/")({
       description:
         "Date × hour activity grid for React. One row per calendar date with a daily Sum column, perfect for zooming into recent 1–4 week windows.",
       path: "/date",
+      image: "/og-date.png",
     }),
 });

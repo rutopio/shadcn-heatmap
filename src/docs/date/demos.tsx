@@ -62,18 +62,6 @@ const medianByDate = (data: DateHourlyActivity[], dates: string[]) => {
   });
 };
 
-const p95ByDate = (data: DateHourlyActivity[], dates: string[]) => {
-  const byDate = new Map<string, number[]>();
-  data.forEach((a) => {
-    if (!byDate.has(a.date)) byDate.set(a.date, []);
-    byDate.get(a.date)?.push(a.value);
-  });
-  return dates.map((date) => {
-    const arr = [...(byDate.get(date) ?? [])].sort((x, y) => x - y);
-    return arr.length ? arr[Math.floor(arr.length * 0.95)] : 0;
-  });
-};
-
 const dateMedianMm = (() => {
   const sorted = [...dateData].sort((a, b) => a.value - b.value);
   return Math.round(sorted[Math.floor(sorted.length / 2)].value * 10) / 10;
@@ -81,7 +69,7 @@ const dateMedianMm = (() => {
 
 export function DateDefaultDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap
         data={dateData}
         totalCount={dateTotalMm}
@@ -140,7 +128,7 @@ export function DateDefaultDemo() {
 
 export function DateTenLevelsDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap
         data={dateData}
         levels={10}
@@ -199,7 +187,7 @@ export function DateTenLevelsDemo() {
 
 export function DateCustomTooltipDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap
         data={dateData}
         colors={{ scale: "var(--color-chart-3)" }}
@@ -330,7 +318,7 @@ export function DateCustomTooltipDemo() {
 
 export function DateSparseTicksDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap
         data={dateData}
         colors={{ scale: "var(--color-chart-3)" }}
@@ -394,7 +382,7 @@ export function DateSparseTicksDemo() {
 
 export function DatePlainGridDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap data={dateData} colors={{ scale: "var(--color-chart-3)" }}>
         <DateHeatmapBody>
           {({ activity, dateIndex }) => (
@@ -422,7 +410,7 @@ export function DatePlainGridDemo() {
 
 export function DateNoLabelsDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap data={dateData} colors={{ scale: "var(--color-chart-3)" }}>
         <DateHeatmapBody hideDateLabels hideHourLabels>
           {({ activity, dateIndex }) => (
@@ -440,7 +428,7 @@ export function DateNoLabelsDemo() {
 
 export function Date12HourDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap
         data={dateData}
         totalCount={dateTotalMm}
@@ -506,7 +494,7 @@ export function Date12HourDemo() {
 
 export function DateSpanishDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap
         data={dateData}
         totalCount={dateTotalMm}
@@ -574,67 +562,9 @@ export function DateSpanishDemo() {
   );
 }
 
-export function DateP95Demo() {
-  return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
-      <DateHeatmap
-        data={dateData}
-        colors={{ scale: "var(--color-chart-3)" }}
-        extraRow={{ label: "Total", compute: sumByHour }}
-        extraColumn={{ label: <strong>P95</strong>, compute: p95ByDate }}
-      >
-        <DateHeatmapBody
-          renderExtraRow={({ activity, dateIndex }) => (
-            <HeatmapTooltip
-              content={<DateTooltipContent activity={activity} extra="row" />}
-            >
-              <DateHeatmapBlock
-                activity={activity}
-                dateIndex={dateIndex}
-                extra="row"
-              />
-            </HeatmapTooltip>
-          )}
-          renderExtraColumn={({ activity, dateIndex }) => (
-            <HeatmapTooltip
-              content={
-                <DateTooltipContent activity={activity} extra="column" />
-              }
-            >
-              <DateHeatmapBlock
-                activity={activity}
-                dateIndex={dateIndex}
-                extra="column"
-              />
-            </HeatmapTooltip>
-          )}
-        >
-          {({ activity, dateIndex }) => (
-            <HeatmapTooltip
-              content={<DateTooltipContent activity={activity} />}
-            >
-              <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
-            </HeatmapTooltip>
-          )}
-        </DateHeatmapBody>
-        <DateHeatmapFooter>
-          <DateHeatmapStat>
-            {() => (
-              <div className="text-muted-foreground tabular-nums">
-                Total Rainfall: {dateTotalMm.toFixed(1)} mm
-              </div>
-            )}
-          </DateHeatmapStat>
-          <DateHeatmapLegend labels={{ less: "Dry", more: "Humid" }} />
-        </DateHeatmapFooter>
-      </DateHeatmap>
-    </TooltipProvider>
-  );
-}
-
 export function DateMedianDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap
         data={dateData}
         colors={{ scale: "var(--color-chart-3)" }}
@@ -692,7 +622,7 @@ export function DateMedianDemo() {
 
 export function DateNoFooterDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap
         data={dateData}
         colors={{ scale: "var(--color-chart-3)" }}
@@ -740,7 +670,7 @@ export function DateNoFooterDemo() {
 
 export function DateCustomStylingDemo() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap
         data={dateData}
         totalCount={dateTotalMm}

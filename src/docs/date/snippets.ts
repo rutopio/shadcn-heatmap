@@ -53,7 +53,7 @@ const sumByDate = (d, dates) => {
 
 export function DateHourlyUsage() {
   return (
-    <TooltipProvider delayDuration={80} skipDelayDuration={0}>
+    <TooltipProvider delayDuration={0}>
       <DateHeatmap data={data}>
         <DateHeatmapBody
           renderExtraRow={({ activity, dateIndex }) => (

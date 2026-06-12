@@ -13,6 +13,7 @@ const HOMEPAGE = "https://shadcn-heatmap.pages.dev";
 type RegistryFile = {
   path: string;
   type: string;
+  target?: string;
   content?: string;
 };
 
@@ -69,11 +70,14 @@ const components: {
   },
 ];
 
+// Keys are intentionally unprefixed (`secondary`, not `color-secondary`): the
+// shadcn CLI prepends `--color-` under Tailwind v4 `@theme inline`. Prefixing
+// here would emit a broken `--color-color-secondary` token.
 const cssVars = {
   theme: {
-    "color-secondary": "oklch(96.7% 0.001 286.4)",
-    "color-chart-1": "oklch(64.6% 0.222 41.1)",
-    "color-muted-foreground": "oklch(55.2% 0.014 285.9)",
+    secondary: "oklch(96.7% 0.001 286.4)",
+    "chart-1": "oklch(64.6% 0.222 41.1)",
+    "muted-foreground": "oklch(55.2% 0.014 285.9)",
   },
 };
 
@@ -86,10 +90,14 @@ for (const comp of components) {
   const filePath = path.join(heatmapDir, comp.filename);
   const content = fs.readFileSync(filePath, "utf-8");
 
+  // `path` is the real repo-root-relative source path (required for GitHub-form
+  // installs, which fetch the file from the repo). `target` is where the CLI
+  // writes it in the user's project, so the `src/` prefix never leaks downstream.
   const files: RegistryFile[] = [
     {
-      path: `components/heatmap/${comp.filename}`,
+      path: `src/components/heatmap/${comp.filename}`,
       type: "registry:component",
+      target: `components/heatmap/${comp.filename}`,
     },
   ];
 

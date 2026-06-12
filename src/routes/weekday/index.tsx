@@ -74,7 +74,6 @@ function WeekdayPage() {
             code={weekdaySampleData}
             lang="tsx"
             filename="sample-data.ts"
-            maxHeight="18rem"
           />
         </div>
 
@@ -105,5 +104,6 @@ export const Route = createFileRoute("/weekday/")({
       description:
         "Weekday × hour-of-day activity grid for React. Optional Avg row and column, independent min–max scaling, tooltips, and full i18n support.",
       path: "/weekday",
+      image: "/og-weekday.png",
     }),
 });
