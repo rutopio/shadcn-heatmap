@@ -180,9 +180,9 @@ function InstallPage() {
                 4. (Optional) Add a tooltip for hover details
               </h2>
               <p className="text-pretty text-muted-foreground text-sm">
-                The components render fine without it; the demos wrap blocks in a
-                tooltip to show activity details on hover. If you want this, add a
-                tooltip component:
+                The components render fine without it; the demos wrap blocks in
+                a tooltip to show activity details on hover. If you want this,
+                add a tooltip component:
               </p>
               <CodeBlock
                 code="npx shadcn@latest add tooltip"

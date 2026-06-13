@@ -1,5 +1,3 @@
-"use client";
-
 import type { Locale, Day as WeekDay } from "date-fns";
 import { format } from "date-fns";
 import type { CSSProperties, HTMLAttributes, ReactNode } from "react";

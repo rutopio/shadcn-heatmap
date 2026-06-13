@@ -1,5 +1,3 @@
-"use client";
-
 import type { Locale, Day as WeekDay } from "date-fns";
 import {
   differenceInCalendarDays,
