@@ -56,19 +56,19 @@ See the [/install page](https://shadcn-heatmap.pages.dev/install) for the intera
 
    ```bash
    # CalendarHeatmap
-   npx shadcn@latest add rutopio/shadcn-heatmap/calendar-heatmap
+   npx shadcn@latest add @heatmap/calendar-heatmap
 
    # WeekdayHeatmap
-   npx shadcn@latest add rutopio/shadcn-heatmap/weekday-heatmap
+   npx shadcn@latest add @heatmap/weekday-heatmap
 
    # DateHeatmap
-   npx shadcn@latest add rutopio/shadcn-heatmap/date-heatmap
+   npx shadcn@latest add @heatmap/date-heatmap
 
    # StatusHeatmap
-   npx shadcn@latest add rutopio/shadcn-heatmap/status-heatmap
+   npx shadcn@latest add @heatmap/status-heatmap
    ```
 
-   The `<owner>/<repo>/<item>` form installs straight from this GitHub repository — see [GitHub registries](https://ui.shadcn.com/docs/registry/github). You can pin a version with a git ref (tag, branch, or commit), e.g. `...calendar-heatmap#<ref>`. Alternatively, install from the full URL: `npx shadcn@latest add https://shadcn-heatmap.pages.dev/r/calendar-heatmap.json`.
+   `@heatmap` is an official [shadcn registry namespace](https://ui.shadcn.com/docs/registry/namespace), listed in the [shadcn directory](https://github.com/shadcn-ui/ui/pull/10803). Alternatively, install from the full URL: `npx shadcn@latest add https://shadcn-heatmap.pages.dev/r/calendar-heatmap.json`, or straight from this GitHub repo: `npx shadcn@latest add rutopio/shadcn-heatmap/calendar-heatmap`.
 
 2. **Ensure the runtime dependencies exist.** The components only need these — the CLI installs them automatically, listed here for reference.
 

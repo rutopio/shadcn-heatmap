@@ -1,12 +1,12 @@
-// GitHub registry form: <owner>/<repo>/<item> installs straight from the repo.
-// See https://ui.shadcn.com/docs/registry/github
-const GITHUB_REGISTRY = "rutopio/shadcn-heatmap";
+// Official shadcn registry namespace, listed in the shadcn directory.
+// See https://ui.shadcn.com/docs/registry/namespace
+const REGISTRY = "@heatmap";
 
 export const cliInstallCommands = {
-  calendar: `npx shadcn@latest add ${GITHUB_REGISTRY}/calendar-heatmap`,
-  weekday: `npx shadcn@latest add ${GITHUB_REGISTRY}/weekday-heatmap`,
-  date: `npx shadcn@latest add ${GITHUB_REGISTRY}/date-heatmap`,
-  status: `npx shadcn@latest add ${GITHUB_REGISTRY}/status-heatmap`,
+  calendar: `npx shadcn@latest add ${REGISTRY}/calendar-heatmap`,
+  weekday: `npx shadcn@latest add ${REGISTRY}/weekday-heatmap`,
+  date: `npx shadcn@latest add ${REGISTRY}/date-heatmap`,
+  status: `npx shadcn@latest add ${REGISTRY}/status-heatmap`,
 } as const;
 
 export const packageManagerCommands = {
