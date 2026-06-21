@@ -1,7 +1,7 @@
 {
   "$schema": "https://ui.shadcn.com/schema/registry.json",
   "name": "@heatmap",
-  "homepage": "https://shadcn-heatmap.pages.dev",
+  "homepage": "https://heatmap.chingru.com",
   "items": [
     {
       "name": "calendar-heatmap",

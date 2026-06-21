@@ -6,16 +6,16 @@ shadcn-heatmap is a component registry, not an npm package. Each component is a 
 
 ## Components
 
-- [CalendarHeatmap](https://shadcn-heatmap.pages.dev/calendar): GitHub-style yearly contribution grid. Supports multiple years, ISO Monday start, custom colors, i18n labels, and full tooltip control. Install: `npx shadcn@latest add rutopio/shadcn-heatmap/calendar-heatmap`
-- [WeekdayHeatmap](https://shadcn-heatmap.pages.dev/weekday): Weekday × hour-of-day matrix with Sum row/column and independent colour scales. Install: `npx shadcn@latest add rutopio/shadcn-heatmap/weekday-heatmap`
-- [DateHeatmap](https://shadcn-heatmap.pages.dev/date): Date × hour matrix for zooming into a narrow time window with a daily Sum column. Install: `npx shadcn@latest add rutopio/shadcn-heatmap/date-heatmap`
-- [StatusHeatmap](https://shadcn-heatmap.pages.dev/status): Timeline status indicator showing daily activity over a period (e.g. 90 days), similar to Atlassian Statuspage. Install: `npx shadcn@latest add rutopio/shadcn-heatmap/status-heatmap`
-- [Binary heatmaps](https://shadcn-heatmap.pages.dev/binary): Using any of the above with strictly 0/1 values for done/missed, pass/fail, on/off patterns.
+- [CalendarHeatmap](https://heatmap.chingru.com/calendar): GitHub-style yearly contribution grid. Supports multiple years, ISO Monday start, custom colors, i18n labels, and full tooltip control. Install: `npx shadcn@latest add rutopio/shadcn-heatmap/calendar-heatmap`
+- [WeekdayHeatmap](https://heatmap.chingru.com/weekday): Weekday × hour-of-day matrix with Sum row/column and independent colour scales. Install: `npx shadcn@latest add rutopio/shadcn-heatmap/weekday-heatmap`
+- [DateHeatmap](https://heatmap.chingru.com/date): Date × hour matrix for zooming into a narrow time window with a daily Sum column. Install: `npx shadcn@latest add rutopio/shadcn-heatmap/date-heatmap`
+- [StatusHeatmap](https://heatmap.chingru.com/status): Timeline status indicator showing daily activity over a period (e.g. 90 days), similar to Atlassian Statuspage. Install: `npx shadcn@latest add rutopio/shadcn-heatmap/status-heatmap`
+- [Binary heatmaps](https://heatmap.chingru.com/binary): Using any of the above with strictly 0/1 values for done/missed, pass/fail, on/off patterns.
 
 ## Docs
 
-- [Install](https://shadcn-heatmap.pages.dev/install): CLI and manual installation, runtime dependencies, and required theme tokens (`--color-chart-1`, `--color-secondary`, `--color-muted-foreground`).
-- [Registry (JSON)](https://shadcn-heatmap.pages.dev/r): shadcn registry items consumed by the CLI.
+- [Install](https://heatmap.chingru.com/install): CLI and manual installation, runtime dependencies, and required theme tokens (`--color-chart-1`, `--color-secondary`, `--color-muted-foreground`).
+- [Registry (JSON)](https://heatmap.chingru.com/r): shadcn registry items consumed by the CLI.
 
 ## Optional
 

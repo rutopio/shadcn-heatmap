@@ -34,7 +34,6 @@ stats.json
 stats.html
 
 *.log
-.DS_Store
 .cache
 .idea
 

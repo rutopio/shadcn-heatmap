@@ -1,4 +1,4 @@
-const SITE_URL = "https://shadcn-heatmap.pages.dev";
+const SITE_URL = "https://heatmap.chingru.com";
 export const SITE_NAME = "shadcn-heatmap";
 export const SITE_TITLE =
   "shadcn-heatmap — Heatmap components for React, built for shadcn/ui";

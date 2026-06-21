@@ -8,7 +8,7 @@ const heatmapDir = path.join(root, "src/components/heatmap");
 const outDir = path.join(root, "public/r");
 
 const REGISTRY_NAME = "@heatmap";
-const HOMEPAGE = "https://shadcn-heatmap.pages.dev";
+const HOMEPAGE = "https://heatmap.chingru.com";
 
 type RegistryFile = {
   path: string;

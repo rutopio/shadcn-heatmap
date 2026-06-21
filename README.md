@@ -2,7 +2,7 @@
 
 # shadcn-heatmap
 
-**Live demo: [https://shadcn-heatmap.pages.dev](https://shadcn-heatmap.pages.dev)**
+**Live demo: [https://heatmap.chingru.com](https://heatmap.chingru.com)**
 
 Heatmap components for React, built for [shadcn/ui](https://ui.shadcn.com).
 
@@ -48,7 +48,7 @@ Daily status timeline for uptime or incident history. Four status levels (health
 
 ## Installation
 
-See the [/install page](https://shadcn-heatmap.pages.dev/install) for the interactive walkthrough. The steps below mirror it 1-to-1.
+See the [/install page](https://heatmap.chingru.com/install) for the interactive walkthrough. The steps below mirror it 1-to-1.
 
 ### shadcn CLI (recommended)
 
@@ -68,7 +68,7 @@ See the [/install page](https://shadcn-heatmap.pages.dev/install) for the intera
    npx shadcn@latest add @heatmap/status-heatmap
    ```
 
-   `@heatmap` is an official [shadcn registry namespace](https://ui.shadcn.com/docs/registry/namespace), listed in the [shadcn directory](https://github.com/shadcn-ui/ui/pull/10803). Alternatively, install from the full URL: `npx shadcn@latest add https://shadcn-heatmap.pages.dev/r/calendar-heatmap.json`, or straight from this GitHub repo: `npx shadcn@latest add rutopio/shadcn-heatmap/calendar-heatmap`.
+   `@heatmap` is an official [shadcn registry namespace](https://ui.shadcn.com/docs/registry/namespace), listed in the [shadcn directory](https://github.com/shadcn-ui/ui/pull/10803). Alternatively, install from the full URL: `npx shadcn@latest add https://heatmap.chingru.com/r/calendar-heatmap.json`, or straight from this GitHub repo: `npx shadcn@latest add rutopio/shadcn-heatmap/calendar-heatmap`.
 
 2. **Ensure the runtime dependencies exist.** The components only need these — the CLI installs them automatically, listed here for reference.
 
@@ -308,7 +308,7 @@ export default function Example() {
 }
 ```
 
-See the [live demo](https://shadcn-heatmap.pages.dev) for full examples of all four components, including tooltips, i18n, and custom colors.
+See the [live demo](https://heatmap.chingru.com) for full examples of all four components, including tooltips, i18n, and custom colors.
 
 ## Contributing
 
@@ -318,7 +318,7 @@ If you're adding a new component or changing the public API, please open an issu
 
 ### Local setup
 
-Requires Node 22+ and pnpm 10.
+Requires Node 22+ and pnpm 11.
 
 ```bash
 pnpm install

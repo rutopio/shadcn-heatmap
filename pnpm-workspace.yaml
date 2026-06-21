@@ -1,0 +1,9 @@
+allowBuilds:
+  esbuild: true
+
+verifyDepsBeforeRun: false
+
+overrides:
+  # Transitive-only advisory via @tanstack/router-plugin; upstream unpatched.
+  # Cap at 7.x: router-plugin uses Babel 7's Scope#references, removed in Babel 8.
+  "@babel/core": ">=7.29.1 <8"

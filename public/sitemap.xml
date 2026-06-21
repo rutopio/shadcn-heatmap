@@ -1,37 +1,37 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
-    <loc>https://shadcn-heatmap.pages.dev/</loc>
+    <loc>https://heatmap.chingru.com/</loc>
     <changefreq>monthly</changefreq>
     <priority>1.0</priority>
   </url>
   <url>
-    <loc>https://shadcn-heatmap.pages.dev/install</loc>
+    <loc>https://heatmap.chingru.com/install</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://shadcn-heatmap.pages.dev/calendar</loc>
+    <loc>https://heatmap.chingru.com/calendar</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://shadcn-heatmap.pages.dev/weekday</loc>
+    <loc>https://heatmap.chingru.com/weekday</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://shadcn-heatmap.pages.dev/date</loc>
+    <loc>https://heatmap.chingru.com/date</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://shadcn-heatmap.pages.dev/status</loc>
+    <loc>https://heatmap.chingru.com/status</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://shadcn-heatmap.pages.dev/binary</loc>
+    <loc>https://heatmap.chingru.com/binary</loc>
     <changefreq>monthly</changefreq>
     <priority>0.7</priority>
   </url>
