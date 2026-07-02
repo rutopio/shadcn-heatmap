@@ -7,7 +7,9 @@
 @import "@fontsource-variable/host-grotesk";
 @import "@fontsource-variable/host-grotesk/wght-italic.css";
 
-/* Paper Mono is not on @fontsource — keep self-hosted woff2. */
+/* Paper Mono is not on @fontsource — keep self-hosted woff2. Body/heading/mono
+   fonts are preloaded (see vite.config.ts fontPreloadPlugin) so swap's FOUT
+   flash is hidden while swap still guarantees the custom font is applied. */
 @font-face {
   font-family: "Paper Mono";
   font-style: normal;
