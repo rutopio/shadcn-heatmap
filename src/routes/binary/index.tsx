@@ -65,7 +65,7 @@ function BinaryPage() {
           Binary Mode
         </h1>
         <p className="max-w-2xl text-pretty text-muted-foreground">
-          Set <code className="text-xs">levels={"{1}"}</code> on any heatmap to
+          Set <code className="text-xs">levels={"{2}"}</code> on any heatmap to
           collapse the colour scale to two states — active or inactive. Data
           values must be <code className="text-xs">0</code> (off) or{" "}
           <code className="text-xs">1</code> (on). Useful for habit trackers,
