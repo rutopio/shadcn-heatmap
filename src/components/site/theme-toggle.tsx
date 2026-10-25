@@ -25,7 +25,7 @@ export function ThemeToggle() {
     try {
       localStorage.setItem(STORAGE_KEY, theme);
     } catch {
-      // ignore
+      // Storage may be unavailable in private browsing.
     }
   }, [theme]);
 

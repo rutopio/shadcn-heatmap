@@ -1,22 +1,26 @@
 # shadcn-heatmap
 
-> Four heatmap components for React — calendar, weekday, date, and status. Built on SVG and Tailwind v4 tokens, following shadcn/ui conventions. Install via the shadcn CLI or copy the source and own it entirely.
+> Four heatmap components for React: calendar, weekday, date, and status. Built on SVG and Tailwind v4 tokens, following shadcn/ui conventions. Install via the shadcn CLI or copy the source and own it entirely.
 
-shadcn-heatmap is a component registry, not an npm package. Each component is a single self-contained `.tsx` file installed into your project with `npx shadcn@latest add rutopio/shadcn-heatmap/<name>`. Runtime dependencies are `clsx`, `tailwind-merge`, and (for date-based components) `date-fns`. Tooltips are optional and use your own shadcn `tooltip` component.
+shadcn-heatmap is a component registry, not an npm package. Each component is a single self-contained `.tsx` file installed into your project with `npx shadcn@latest add @heatmap/<name>`. Runtime dependencies are `clsx`, `tailwind-merge`, and `date-fns`. Tooltips are optional and use your own shadcn `tooltip` component.
 
 ## Components
 
-- [CalendarHeatmap](https://heatmap.chingru.com/calendar): GitHub-style yearly contribution grid. Supports multiple years, ISO Monday start, custom colors, i18n labels, and full tooltip control. Install: `npx shadcn@latest add rutopio/shadcn-heatmap/calendar-heatmap`
-- [WeekdayHeatmap](https://heatmap.chingru.com/weekday): Weekday × hour-of-day matrix with Sum row/column and independent colour scales. Install: `npx shadcn@latest add rutopio/shadcn-heatmap/weekday-heatmap`
-- [DateHeatmap](https://heatmap.chingru.com/date): Date × hour matrix for zooming into a narrow time window with a daily Sum column. Install: `npx shadcn@latest add rutopio/shadcn-heatmap/date-heatmap`
-- [StatusHeatmap](https://heatmap.chingru.com/status): Timeline status indicator showing daily activity over a period (e.g. 90 days), similar to Atlassian Statuspage. Install: `npx shadcn@latest add rutopio/shadcn-heatmap/status-heatmap`
-- [Binary heatmaps](https://heatmap.chingru.com/binary): Using any of the above with strictly 0/1 values for done/missed, pass/fail, on/off patterns.
+- [CalendarHeatmap](https://heatmap.chingru.com/calendar): GitHub-style yearly contribution grid. Supports multiple years, ISO Monday start, custom colors, i18n labels, and full tooltip control. Install: `npx shadcn@latest add @heatmap/calendar-heatmap`
+- [WeekdayHeatmap](https://heatmap.chingru.com/weekday): Weekday × hour-of-day matrix with optional aggregate rows and columns and independent color scales. Install: `npx shadcn@latest add @heatmap/weekday-heatmap`
+- [DateHeatmap](https://heatmap.chingru.com/date): Date × hour matrix for zooming into a narrow time window with a daily Sum column. Install: `npx shadcn@latest add @heatmap/date-heatmap`
+- [StatusHeatmap](https://heatmap.chingru.com/status): Timeline status indicator showing daily activity over a period (e.g. 90 days), similar to Atlassian Statuspage. Install: `npx shadcn@latest add @heatmap/status-heatmap`
+- [Binary heatmaps](https://heatmap.chingru.com/binary): Using CalendarHeatmap, WeekdayHeatmap, or DateHeatmap with levels={2} with strictly 0/1 values for done/missed, pass/fail, on/off patterns.
 
 ## Docs
 
 - [Install](https://heatmap.chingru.com/install): CLI and manual installation, runtime dependencies, and required theme tokens (`--color-chart-1`, `--color-secondary`, `--color-muted-foreground`).
-- [Registry (JSON)](https://heatmap.chingru.com/r): shadcn registry items consumed by the CLI.
+- [Registry (JSON)](https://heatmap.chingru.com/r/index.json): shadcn registry items consumed by the CLI.
 
 ## Optional
 
 - [GitHub repository](https://github.com/rutopio/shadcn-heatmap): Source code, issues, and MIT license.
+
+## Data and rendering
+
+Use a client component in React Server Components apps. Dates use valid YYYY-MM-DD strings; hours are integers from 0 to 23 and weekdays from 0 to 6. Values must be finite. Duplicate slots use the last input record. Invalid inputs throw RangeError. Calendar and Status fill missing dates between the first and last record with value 0. Aggregate callbacks are separate from input data and do not change the footer calculation.

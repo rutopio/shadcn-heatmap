@@ -10,36 +10,21 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
-import { Route as WeekdayIndexRouteImport } from './routes/weekday/index'
-import { Route as StatusIndexRouteImport } from './routes/status/index'
-import { Route as InstallIndexRouteImport } from './routes/install/index'
-import { Route as DateIndexRouteImport } from './routes/date/index'
-import { Route as CalendarIndexRouteImport } from './routes/calendar/index'
 import { Route as BinaryIndexRouteImport } from './routes/binary/index'
+import { Route as CalendarIndexRouteImport } from './routes/calendar/index'
+import { Route as DateIndexRouteImport } from './routes/date/index'
+import { Route as InstallIndexRouteImport } from './routes/install/index'
+import { Route as StatusIndexRouteImport } from './routes/status/index'
+import { Route as WeekdayIndexRouteImport } from './routes/weekday/index'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const WeekdayIndexRoute = WeekdayIndexRouteImport.update({
-  id: '/weekday/',
-  path: '/weekday/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const StatusIndexRoute = StatusIndexRouteImport.update({
-  id: '/status/',
-  path: '/status/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const InstallIndexRoute = InstallIndexRouteImport.update({
-  id: '/install/',
-  path: '/install/',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const DateIndexRoute = DateIndexRouteImport.update({
-  id: '/date/',
-  path: '/date/',
+const BinaryIndexRoute = BinaryIndexRouteImport.update({
+  id: '/binary/',
+  path: '/binary/',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CalendarIndexRoute = CalendarIndexRouteImport.update({
@@ -47,9 +32,24 @@ const CalendarIndexRoute = CalendarIndexRouteImport.update({
   path: '/calendar/',
   getParentRoute: () => rootRouteImport,
 } as any)
-const BinaryIndexRoute = BinaryIndexRouteImport.update({
-  id: '/binary/',
-  path: '/binary/',
+const DateIndexRoute = DateIndexRouteImport.update({
+  id: '/date/',
+  path: '/date/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const InstallIndexRoute = InstallIndexRouteImport.update({
+  id: '/install/',
+  path: '/install/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const StatusIndexRoute = StatusIndexRouteImport.update({
+  id: '/status/',
+  path: '/status/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const WeekdayIndexRoute = WeekdayIndexRouteImport.update({
+  id: '/weekday/',
+  path: '/weekday/',
   getParentRoute: () => rootRouteImport,
 } as any)
 
@@ -130,32 +130,11 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/weekday/': {
-      id: '/weekday/'
-      path: '/weekday'
-      fullPath: '/weekday/'
-      preLoaderRoute: typeof WeekdayIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/status/': {
-      id: '/status/'
-      path: '/status'
-      fullPath: '/status/'
-      preLoaderRoute: typeof StatusIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/install/': {
-      id: '/install/'
-      path: '/install'
-      fullPath: '/install/'
-      preLoaderRoute: typeof InstallIndexRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/date/': {
-      id: '/date/'
-      path: '/date'
-      fullPath: '/date/'
-      preLoaderRoute: typeof DateIndexRouteImport
+    '/binary/': {
+      id: '/binary/'
+      path: '/binary'
+      fullPath: '/binary/'
+      preLoaderRoute: typeof BinaryIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/calendar/': {
@@ -165,11 +144,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CalendarIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
-    '/binary/': {
-      id: '/binary/'
-      path: '/binary'
-      fullPath: '/binary/'
-      preLoaderRoute: typeof BinaryIndexRouteImport
+    '/date/': {
+      id: '/date/'
+      path: '/date'
+      fullPath: '/date/'
+      preLoaderRoute: typeof DateIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/install/': {
+      id: '/install/'
+      path: '/install'
+      fullPath: '/install/'
+      preLoaderRoute: typeof InstallIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/status/': {
+      id: '/status/'
+      path: '/status'
+      fullPath: '/status/'
+      preLoaderRoute: typeof StatusIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/weekday/': {
+      id: '/weekday/'
+      path: '/weekday'
+      fullPath: '/weekday/'
+      preLoaderRoute: typeof WeekdayIndexRouteImport
       parentRoute: typeof rootRouteImport
     }
   }

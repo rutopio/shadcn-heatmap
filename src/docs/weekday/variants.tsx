@@ -19,7 +19,6 @@ export const weekdayVariantItems = [
     description:
       "Use colors to theme the blocks, labelClassName to style axis labels, className on Stat and Legend to style the footer, and blockSize/blockMargin to adjust block dimensions.",
     preview: <WeekdayCustomStylingDemo />,
-    highlightLines: [3, 4, 5, 7, 11, 12],
     code: `
 <WeekdayHeatmap
   data={data}
@@ -28,7 +27,7 @@ export const weekdayVariantItems = [
   colors={{ scale: "var(--color-destructive)" }}
 >
   <WeekdayHeatmapBody labelClassName="text-destructive font-bold">
-    {({ activity }) => <Tooltip>{/* ... */}</Tooltip>}
+    {({ activity }) => <WeekdayHeatmapBlock activity={activity} />}
   </WeekdayHeatmapBody>
   <WeekdayHeatmapFooter>
     <WeekdayHeatmapStat className="text-destructive" />
@@ -51,9 +50,10 @@ export const weekdayVariantItems = [
   <WeekdayHeatmapBody
     renderExtraRow={({ activity }) => (
       <Tooltip>
-        <TooltipTrigger asChild>
-          <WeekdayHeatmapBlock activity={activity} extra="row" />
-        </TooltipTrigger>
+        <TooltipTrigger
+          tabIndex={0}
+          render={<WeekdayHeatmapBlock activity={activity} extra="row" />}
+        />
         <TooltipContent
           side="top"
           className="pointer-events-none text-xs"
@@ -70,17 +70,16 @@ export const weekdayVariantItems = [
     )}
     renderExtraColumn={({ activity }) => (
       <Tooltip>
-        <TooltipTrigger asChild>
-          <WeekdayHeatmapBlock activity={activity} extra="column" />
-        </TooltipTrigger>
+        <TooltipTrigger
+          tabIndex={0}
+          render={<WeekdayHeatmapBlock activity={activity} extra="column" />}
+        />
         <TooltipContent
           side="top"
           className="pointer-events-none text-xs"
           sideOffset={6}
         >
-          <p className="font-medium">
-            {WEEKDAY_NAMES[activity.weekday]} Avg
-          </p>
+          <p className="font-medium">{WEEKDAY_NAMES[activity.weekday]} Avg</p>
           <p className="text-muted-foreground">
             avg. {activity.value.toFixed(1)} °C
           </p>
@@ -88,7 +87,7 @@ export const weekdayVariantItems = [
       </Tooltip>
     )}
   >
-    {({ activity }) => <Tooltip>{/* ... */}</Tooltip>}
+    {({ activity }) => <WeekdayHeatmapBlock activity={activity} />}
   </WeekdayHeatmapBody>
   <WeekdayHeatmapFooter>
     <WeekdayHeatmapStat />
@@ -100,13 +99,12 @@ export const weekdayVariantItems = [
   {
     title: "Ten levels",
     description:
-      "Expand the intensity scale to 10 levels for fine-grained differentiation of high-frequency data.",
+      "Expand the intensity scale to 10 levels for more detail in the color scale.",
     preview: <WeekdayTenLevelsDemo />,
-    highlightLines: [1],
     code: `
 <WeekdayHeatmap data={data} levels={10}>
   <WeekdayHeatmapBody>
-    {({ activity }) => <Tooltip>{/* ... */}</Tooltip>}
+    {({ activity }) => <WeekdayHeatmapBlock activity={activity} />}
   </WeekdayHeatmapBody>
   <WeekdayHeatmapFooter>
     <WeekdayHeatmapStat />
@@ -119,16 +117,14 @@ export const weekdayVariantItems = [
     title: "i18n labels (e.g., Japanese)",
     slug: "i18n",
     description:
-      "Pass a date-fns locale to auto-generate localised weekday labels, plus custom extra row/column label, legend, and total value text.",
+      "Pass a date-fns locale to auto-generate localized weekday labels, plus custom extra row/column label, legend, and total value text.",
     preview: <WeekdayJapaneseDemo />,
-    highlightLines: [
-      1, 5, 6, 7, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24,
-      25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42,
-      43, 44, 45, 46, 47, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61,
-      62, 63, 64, 65, 66, 67, 68, 71, 72, 73, 74, 75, 76, 77, 78,
-    ],
     code: `
 import { ja } from "date-fns/locale";
+
+const japaneseWeekdays = Array.from({ length: 7 }, (_, day) =>
+  format(new Date(2000, 0, 2 + day), "EEEE", { locale: ja }),
+);
 
 <WeekdayHeatmap
   data={data}
@@ -139,9 +135,10 @@ import { ja } from "date-fns/locale";
   <WeekdayHeatmapBody
     renderExtraRow={({ activity }) => (
       <Tooltip>
-        <TooltipTrigger asChild>
-          <WeekdayHeatmapBlock activity={activity} extra="row" />
-        </TooltipTrigger>
+        <TooltipTrigger
+          tabIndex={0}
+          render={<WeekdayHeatmapBlock activity={activity} extra="row" />}
+        />
         <TooltipContent
           side="top"
           className="pointer-events-none text-xs"
@@ -158,16 +155,17 @@ import { ja } from "date-fns/locale";
     )}
     renderExtraColumn={({ activity }) => (
       <Tooltip>
-        <TooltipTrigger asChild>
-          <WeekdayHeatmapBlock activity={activity} extra="column" />
-        </TooltipTrigger>
+        <TooltipTrigger
+          tabIndex={0}
+          render={<WeekdayHeatmapBlock activity={activity} extra="column" />}
+        />
         <TooltipContent
           side="top"
           className="pointer-events-none text-xs"
           sideOffset={6}
         >
           <p className="font-medium">
-            {generateWeekdayNames(ja)[activity.weekday]}, 平均
+            {japaneseWeekdays[activity.weekday]}, 平均
           </p>
           <p className="text-muted-foreground">
             平均 {activity.value.toFixed(1)} °C
@@ -178,16 +176,17 @@ import { ja } from "date-fns/locale";
   >
     {({ activity }) => (
       <Tooltip>
-        <TooltipTrigger asChild>
-          <WeekdayHeatmapBlock activity={activity} />
-        </TooltipTrigger>
+        <TooltipTrigger
+          tabIndex={0}
+          render={<WeekdayHeatmapBlock activity={activity} />}
+        />
         <TooltipContent
           side="top"
           className="pointer-events-none text-xs"
           sideOffset={6}
         >
           <p className="font-medium">
-            {generateWeekdayNames(ja)[activity.weekday]},{" "}
+            {japaneseWeekdays[activity.weekday]},{" "}
             {String(activity.hour).padStart(2, "0")}:00
           </p>
           <p className="text-muted-foreground">
@@ -207,7 +206,7 @@ import { ja } from "date-fns/locale";
     </WeekdayHeatmapStat>
     <WeekdayHeatmapLegend labels={{ less: "寒い", more: "暑い" }} />
   </WeekdayHeatmapFooter>
-</WeekdayHeatmap>
+</WeekdayHeatmap>;
 `,
   },
   {
@@ -219,7 +218,7 @@ import { ja } from "date-fns/locale";
     code: `
 <WeekdayHeatmap data={data}>
   <WeekdayHeatmapBody>
-    {({ activity }) => <Tooltip>{/* ... */}</Tooltip>}
+    {({ activity }) => <WeekdayHeatmapBlock activity={activity} />}
   </WeekdayHeatmapBody>
   <WeekdayHeatmapFooter>
     <WeekdayHeatmapStat />
@@ -231,14 +230,13 @@ import { ja } from "date-fns/locale";
   {
     title: "Grid only",
     description:
-      "Strip both axis labels — great for inline cards or a hero preview.",
+      "Strip both axis labels: great for inline cards or a hero preview.",
     preview: <WeekdayMiniDemo />,
-    highlightLines: [2],
     deletedLines: [5, 6, 7, 8],
     code: `
 <WeekdayHeatmap data={data}>
   <WeekdayHeatmapBody hideHourLabels hideWeekdayLabels>
-    {({ activity }) => <Tooltip>{/* ... */}</Tooltip>}
+    {({ activity }) => <WeekdayHeatmapBlock activity={activity} />}
   </WeekdayHeatmapBody>
   <WeekdayHeatmapFooter>
     <WeekdayHeatmapStat />
@@ -250,30 +248,23 @@ import { ja } from "date-fns/locale";
   {
     title: "Custom tooltip",
     description:
-      "Replace the default tooltip with any JSX — add emoji, charts, or extra metadata without touching the heatmap internals.",
+      "Replace the default tooltip with any JSX: add emoji, charts, or extra metadata without touching the heatmap internals.",
     preview: <WeekdayCustomTooltipDemo />,
-    highlightLines: [
-      1, 3, 4, 5, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23,
-      24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41,
-      42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59,
-      60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 74, 75, 76, 77, 78,
-      79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96,
-      97, 98, 99, 100, 101, 102, 103, 104, 105, 106,
-    ],
     code: `
 import { format } from "date-fns";
 
 const WEEKDAY_NAMES = Array.from({ length: 7 }, (_, i) =>
-  format(new Date(2000, 0, 2 + i), "EEEE")
+  format(new Date(2000, 0, 2 + i), "EEEE"),
 );
 
 <WeekdayHeatmap data={data}>
   <WeekdayHeatmapBody
     renderExtraRow={({ activity }) => (
       <Tooltip>
-        <TooltipTrigger asChild>
-          <WeekdayHeatmapBlock activity={activity} extra="row" />
-        </TooltipTrigger>
+        <TooltipTrigger
+          tabIndex={0}
+          render={<WeekdayHeatmapBlock activity={activity} extra="row" />}
+        />
         <TooltipContent
           side="top"
           className="pointer-events-none"
@@ -303,9 +294,10 @@ const WEEKDAY_NAMES = Array.from({ length: 7 }, (_, i) =>
     )}
     renderExtraColumn={({ activity }) => (
       <Tooltip>
-        <TooltipTrigger asChild>
-          <WeekdayHeatmapBlock activity={activity} extra="column" />
-        </TooltipTrigger>
+        <TooltipTrigger
+          tabIndex={0}
+          render={<WeekdayHeatmapBlock activity={activity} extra="column" />}
+        />
         <TooltipContent
           side="top"
           className="pointer-events-none"
@@ -336,9 +328,10 @@ const WEEKDAY_NAMES = Array.from({ length: 7 }, (_, i) =>
   >
     {({ activity }) => (
       <Tooltip>
-        <TooltipTrigger asChild>
-          <WeekdayHeatmapBlock activity={activity} />
-        </TooltipTrigger>
+        <TooltipTrigger
+          tabIndex={0}
+          render={<WeekdayHeatmapBlock activity={activity} />}
+        />
         <TooltipContent
           side="top"
           className="pointer-events-none"
@@ -372,7 +365,7 @@ const WEEKDAY_NAMES = Array.from({ length: 7 }, (_, i) =>
     <WeekdayHeatmapStat />
     <WeekdayHeatmapLegend />
   </WeekdayHeatmapFooter>
-</WeekdayHeatmap>
+</WeekdayHeatmap>;
 `,
   },
   {
@@ -381,11 +374,10 @@ const WEEKDAY_NAMES = Array.from({ length: 7 }, (_, i) =>
     description:
       "Rotate the weekday axis to start on Monday instead of Sunday.",
     preview: <WeekdayMondayStartDemo />,
-    highlightLines: [1],
     code: `
 <WeekdayHeatmap data={data} weekStart={1}>
   <WeekdayHeatmapBody>
-    {({ activity }) => <Tooltip>{/* ... */}</Tooltip>}
+    {({ activity }) => <WeekdayHeatmapBlock activity={activity} />}
   </WeekdayHeatmapBody>
   <WeekdayHeatmapFooter>
     <WeekdayHeatmapStat />
@@ -400,19 +392,18 @@ const WEEKDAY_NAMES = Array.from({ length: 7 }, (_, i) =>
     description:
       "Only label every 6th hour (00 / 06 / 12 / 18) and drop the trailing tick to reduce axis noise.",
     preview: <WeekdayMinimalTicksDemo />,
-    highlightLines: [3, 4, 5, 6, 7, 8],
     code: `
 <WeekdayHeatmap
   data={data}
   labels={{
     hours: Array.from({ length: 24 }, (_, i) =>
-      i % 6 === 0 ? String(i).padStart(2, "0") : ""
+      i % 6 === 0 ? String(i).padStart(2, "0") : "",
     ),
     endHour: null,
   }}
 >
   <WeekdayHeatmapBody>
-    {({ activity }) => <Tooltip>{/* ... */}</Tooltip>}
+    {({ activity }) => <WeekdayHeatmapBlock activity={activity} />}
   </WeekdayHeatmapBody>
   <WeekdayHeatmapFooter>
     <WeekdayHeatmapStat />
@@ -427,11 +418,10 @@ const WEEKDAY_NAMES = Array.from({ length: 7 }, (_, i) =>
     description:
       "Switch the hour axis to 12-hour AM/PM format with a single prop.",
     preview: <Weekday12HourDemo />,
-    highlightLines: [1],
     code: `
 <WeekdayHeatmap data={data} use12Hour>
   <WeekdayHeatmapBody>
-    {({ activity }) => <Tooltip>{/* ... */}</Tooltip>}
+    {({ activity }) => <WeekdayHeatmapBlock activity={activity} />}
   </WeekdayHeatmapBody>
   <WeekdayHeatmapFooter>
     <WeekdayHeatmapStat />
@@ -444,28 +434,45 @@ const WEEKDAY_NAMES = Array.from({ length: 7 }, (_, i) =>
     title: "Aggregate row/column",
     slug: "aggregate",
     description:
-      "extraRow/extraColumn accept any ReactNode label and any compute function — sum, average, median, or whatever fits. Stat is updated to reflect the aggregate.",
+      "extraRow/extraColumn accept any ReactNode label and any compute function: sum, average, median, or whatever fits. Set Stat separately to show the same calculation.",
     preview: <WeekdayMedianDemo />,
-    highlightLines: [
-      1, 2, 3, 4, 5, 6, 7, 8, 10, 11, 12, 13, 14, 15, 16, 17, 21, 22, 28, 29,
-      30, 31, 32, 33, 34,
-    ],
     code: `
-const medianByHour = (data) => {
-  const byHour = Array.from({ length: 24 }, () => []);
+function median(values: number[]): number {
+  if (!values.length) return 0;
+  const sorted = [...values].sort((a, b) => a - b);
+  const middle = Math.floor(sorted.length / 2);
+  return sorted.length % 2
+    ? sorted[middle]
+    : (sorted[middle - 1] + sorted[middle]) / 2;
+}
+
+const medianValue = median(data.map((activity) => activity.value));
+
+const medianByHour = (data: WeekdayHourlyActivity[]) => {
+  const byHour = Array.from({ length: 24 }, () => [] as number[]);
   data.forEach((a) => byHour[a.hour].push(a.value));
   return byHour.map((arr) => {
     const s = [...arr].sort((x, y) => x - y);
-    return s.length ? s[Math.floor(s.length / 2)] : 0;
+    const middle = Math.floor(s.length / 2);
+    return s.length === 0
+      ? 0
+      : s.length % 2 === 0
+        ? (s[middle - 1] + s[middle]) / 2
+        : s[middle];
   });
 };
 
-const medianByWeekday = (data) => {
-  const byWeekday = Array.from({ length: 7 }, () => []);
+const medianByWeekday = (data: WeekdayHourlyActivity[]) => {
+  const byWeekday = Array.from({ length: 7 }, () => [] as number[]);
   data.forEach((a) => byWeekday[a.weekday].push(a.value));
   return byWeekday.map((arr) => {
     const s = [...arr].sort((x, y) => x - y);
-    return s.length ? s[Math.floor(s.length / 2)] : 0;
+    const middle = Math.floor(s.length / 2);
+    return s.length === 0
+      ? 0
+      : s.length % 2 === 0
+        ? (s[middle - 1] + s[middle]) / 2
+        : s[middle];
   });
 };
 
@@ -475,19 +482,19 @@ const medianByWeekday = (data) => {
   extraColumn={{ label: "Median", compute: medianByWeekday }}
 >
   <WeekdayHeatmapBody>
-    {({ activity }) => <Tooltip>{/* ... */}</Tooltip>}
+    {({ activity }) => <WeekdayHeatmapBlock activity={activity} />}
   </WeekdayHeatmapBody>
   <WeekdayHeatmapFooter>
     <WeekdayHeatmapStat>
       {() => (
         <div className="text-muted-foreground tabular-nums">
-          Median Temperature: {medianValue.toFixed(1)} °C
+          Median temperature: {medianValue.toFixed(1)} °C
         </div>
       )}
     </WeekdayHeatmapStat>
     <WeekdayHeatmapLegend />
   </WeekdayHeatmapFooter>
-</WeekdayHeatmap>
+</WeekdayHeatmap>;
 `,
   },
 ];

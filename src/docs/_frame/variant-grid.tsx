@@ -1,8 +1,8 @@
 import { LinkSimpleBreakIcon } from "@phosphor-icons/react";
 import type { ReactNode } from "react";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { CodeBlock } from "@/components/ui/code-block";
+import { copyText } from "@/lib/clipboard";
 
 type Variant = {
   title: string;
@@ -27,18 +27,21 @@ function toSlug(title: string) {
 
 function copyVariantLink(slug: string) {
   const url = `${window.location.origin}${window.location.pathname}#${slug}`;
-  navigator.clipboard.writeText(url);
-  toast.success("Link copied to clipboard", { description: url });
+  void copyText(url, "Link copied to clipboard", url);
 }
 
 export function VariantGrid({ variants }: VariantGridProps) {
   return (
-    <div className="grid grid-cols-1 gap-6 bg-background">
+    <div className="bg-background grid grid-cols-1 gap-6">
+      <p className="text-muted-foreground text-sm">
+        Variant snippets focus on the changed settings. For a complete starting
+        point, use the default example on the component's page.{" "}
+      </p>
       {variants.map((variant) => (
         <div
           key={variant.title}
           id={variant.slug ?? toSlug(variant.title)}
-          className="flex flex-col overflow-hidden rounded-xl border bg-background"
+          className="bg-background flex flex-col overflow-hidden rounded-xl border"
         >
           <div className="border-b px-4 py-4">
             <div className="flex items-center gap-1">
@@ -53,9 +56,9 @@ export function VariantGrid({ variants }: VariantGridProps) {
               >
                 <LinkSimpleBreakIcon aria-hidden="true" className="size-4" />
               </Button>
-              <h3 className="text-balance font-medium">{variant.title}</h3>
+              <h3 className="font-medium text-balance">{variant.title}</h3>
             </div>
-            <p className="mt-1 text-pretty text-muted-foreground text-xs">
+            <p className="text-muted-foreground mt-1 text-xs text-pretty">
               {variant.description}
             </p>
           </div>

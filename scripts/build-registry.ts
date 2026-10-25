@@ -49,15 +49,14 @@ const components: {
     name: "weekday-heatmap",
     title: "WeekdayHeatmap",
     description:
-      "Weekday × hour-of-day matrix with Sum row/column and independent colour scales.",
-    extraDeps: [],
+      "Weekday by hour grid with optional aggregate rows and columns.",
+    extraDeps: ["date-fns"],
   },
   {
     filename: "date-heatmap.tsx",
     name: "date-heatmap",
     title: "DateHeatmap",
-    description:
-      "Date × hour matrix for zooming into a narrow time window with daily Sum column.",
+    description: "Date by hour grid with optional aggregate rows and columns.",
     extraDeps: ["date-fns"],
   },
   {
@@ -81,7 +80,23 @@ const cssVars = {
   },
 };
 
-fs.mkdirSync(outDir, { recursive: true });
+const checkOnly = process.argv.includes("--check");
+if (!checkOnly) fs.mkdirSync(outDir, { recursive: true });
+
+function writeOutput(filename: string, content: string) {
+  if (checkOnly) {
+    if (
+      !fs.existsSync(filename) ||
+      fs.readFileSync(filename, "utf8") !== content
+    ) {
+      throw new Error(
+        `Outdated registry output: ${path.relative(root, filename)}. Run pnpm build:registry.`,
+      );
+    }
+    return;
+  }
+  fs.writeFileSync(filename, content);
+}
 
 // Full item entries for the source registry.json (no file content).
 const sourceItems: Omit<RegistryItem, "$schema">[] = [];
@@ -119,7 +134,7 @@ for (const comp of components) {
     files: [{ ...files[0], content }],
   };
 
-  fs.writeFileSync(
+  writeOutput(
     path.join(outDir, `${comp.name}.json`),
     `${JSON.stringify(servedItem, null, 2)}\n`,
   );
@@ -141,10 +156,10 @@ const sourceRegistry = {
 
 const sourceRegistryJson = `${JSON.stringify(sourceRegistry, null, 2)}\n`;
 // Repo root: flat structure for the directory submission.
-fs.writeFileSync(path.join(root, "registry.json"), sourceRegistryJson);
+writeOutput(path.join(root, "registry.json"), sourceRegistryJson);
 // public/: so the deployed site serves it at /registry.json (Pages serves the
 // build output, not the repo root).
-fs.writeFileSync(path.join(root, "public/registry.json"), sourceRegistryJson);
+writeOutput(path.join(root, "public/registry.json"), sourceRegistryJson);
 
 // Served index for the public registry endpoint (slim listing).
 const index = {
@@ -159,11 +174,11 @@ const index = {
   })),
 };
 
-fs.writeFileSync(
+writeOutput(
   path.join(outDir, "index.json"),
   `${JSON.stringify(index, null, 2)}\n`,
 );
 
 console.log(
-  `Registry built: ${sourceItems.length} items → ${outDir} + registry.json`,
+  `Registry ${checkOnly ? "verified" : "built"}: ${sourceItems.length} items`,
 );

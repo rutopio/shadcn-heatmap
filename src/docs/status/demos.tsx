@@ -1,9 +1,6 @@
 import { format, parseISO } from "date-fns";
 import { zhTW } from "date-fns/locale";
-import type {
-  StatusActivity,
-  StatusValue,
-} from "@/components/heatmap/status-heatmap";
+import type { StatusValue } from "@/components/heatmap/status-heatmap";
 import {
   StatusHeatmap,
   StatusHeatmapBlock,
@@ -18,14 +15,12 @@ import {
   TooltipProvider,
   TooltipTrigger,
 } from "@/components/ui/tooltip";
-import _statusData from "@/data/status-sample.json";
-import _statusUptimeData from "@/data/status-uptime.json";
-
-const statusData = _statusData as StatusActivity[];
-const statusUptimeData = _statusUptimeData as StatusActivity[];
+import statusData from "@/data/status-sample.json";
+import statusUptimeData from "@/data/status-uptime.json";
+import { StatusExample } from "@/examples/status";
 
 const STATUS_LABELS: Record<StatusValue, string> = {
-  0: "No Data",
+  0: "No data",
   1: "Critical",
   2: "Degraded",
   3: "Healthy",
@@ -50,7 +45,7 @@ function StatusTooltip({
 
 export function StatusCustomStylingDemo() {
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delay={0}>
       <StatusHeatmap
         data={statusData}
         blockSize={60}
@@ -65,9 +60,12 @@ export function StatusCustomStylingDemo() {
         <StatusHeatmapBody labelClassName="text-destructive font-bold">
           {({ activity, dayIndex }) => (
             <Tooltip>
-              <TooltipTrigger asChild>
-                <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
-              </TooltipTrigger>
+              <TooltipTrigger
+                tabIndex={0}
+                render={
+                  <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
+                }
+              />
               <StatusTooltip activity={activity} />
             </Tooltip>
           )}
@@ -83,14 +81,17 @@ export function StatusCustomStylingDemo() {
 
 export function StatusNoFooterDemo() {
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delay={0}>
       <StatusHeatmap data={statusData}>
         <StatusHeatmapBody>
           {({ activity, dayIndex }) => (
             <Tooltip>
-              <TooltipTrigger asChild>
-                <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
-              </TooltipTrigger>
+              <TooltipTrigger
+                tabIndex={0}
+                render={
+                  <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
+                }
+              />
               <StatusTooltip activity={activity} />
             </Tooltip>
           )}
@@ -102,14 +103,17 @@ export function StatusNoFooterDemo() {
 
 export function StatusNoLabelsDemo() {
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delay={0}>
       <StatusHeatmap data={statusData}>
         <StatusHeatmapBody hideDateLabels>
           {({ activity, dayIndex }) => (
             <Tooltip>
-              <TooltipTrigger asChild>
-                <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
-              </TooltipTrigger>
+              <TooltipTrigger
+                tabIndex={0}
+                render={
+                  <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
+                }
+              />
               <StatusTooltip activity={activity} />
             </Tooltip>
           )}
@@ -121,21 +125,24 @@ export function StatusNoLabelsDemo() {
 
 export function StatusCustomTooltipDemo() {
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delay={0}>
       <StatusHeatmap data={statusData}>
         <StatusHeatmapBody>
           {({ activity, dayIndex }) => (
             <Tooltip>
-              <TooltipTrigger asChild>
-                <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
-              </TooltipTrigger>
+              <TooltipTrigger
+                tabIndex={0}
+                render={
+                  <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
+                }
+              />
               <TooltipContent
                 side="top"
                 className="pointer-events-none"
                 sideOffset={6}
               >
                 <div className="flex flex-col gap-1">
-                  <p className="font-semibold text-xs">
+                  <p className="text-xs font-semibold">
                     {format(parseISO(activity.date), "EEEE, MMM d")}
                   </p>
                   <div className="flex items-center gap-1.5">
@@ -168,7 +175,7 @@ export function StatusCustomTooltipDemo() {
 
 export function StatusI18nDemo() {
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delay={0}>
       <StatusHeatmap
         data={statusData}
         locale={zhTW}
@@ -185,9 +192,12 @@ export function StatusI18nDemo() {
         <StatusHeatmapBody>
           {({ activity, dayIndex }) => (
             <Tooltip>
-              <TooltipTrigger asChild>
-                <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
-              </TooltipTrigger>
+              <TooltipTrigger
+                tabIndex={0}
+                render={
+                  <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
+                }
+              />
               <TooltipContent
                 side="top"
                 className="pointer-events-none text-xs"
@@ -219,38 +229,22 @@ export function StatusI18nDemo() {
 }
 
 export function StatusDefaultDemo() {
-  return (
-    <TooltipProvider delayDuration={0}>
-      <StatusHeatmap data={statusData}>
-        <StatusHeatmapBody>
-          {({ activity, dayIndex }) => (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
-              </TooltipTrigger>
-              <StatusTooltip activity={activity} />
-            </Tooltip>
-          )}
-        </StatusHeatmapBody>
-        <StatusHeatmapFooter>
-          <StatusHeatmapStat />
-          <StatusHeatmapLegend />
-        </StatusHeatmapFooter>
-      </StatusHeatmap>
-    </TooltipProvider>
-  );
+  return <StatusExample data={statusData} />;
 }
 
 export function StatusWithLabelsDemo() {
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delay={0}>
       <StatusHeatmap data={statusData}>
         <StatusHeatmapBody labelInterval={15}>
           {({ activity, dayIndex }) => (
             <Tooltip>
-              <TooltipTrigger asChild>
-                <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
-              </TooltipTrigger>
+              <TooltipTrigger
+                tabIndex={0}
+                render={
+                  <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
+                }
+              />
               <StatusTooltip activity={activity} />
             </Tooltip>
           )}
@@ -268,7 +262,7 @@ export function StatusUptimeDemo() {
   const last30Days = statusUptimeData;
 
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delay={0}>
       <StatusHeatmap
         data={last30Days}
         blockSize={32}
@@ -278,9 +272,12 @@ export function StatusUptimeDemo() {
         <StatusHeatmapBody>
           {({ activity, dayIndex }) => (
             <Tooltip>
-              <TooltipTrigger asChild>
-                <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
-              </TooltipTrigger>
+              <TooltipTrigger
+                tabIndex={0}
+                render={
+                  <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
+                }
+              />
               <StatusTooltip activity={activity} />
             </Tooltip>
           )}

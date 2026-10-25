@@ -1,17 +1,22 @@
+"use client";
+
 import type { Locale, Day as WeekDay } from "date-fns";
 import {
-  differenceInCalendarDays,
   eachDayOfInterval,
   format,
   formatISO,
   getDay,
   getMonth,
   getYear,
-  nextDay,
+  isValid,
   parseISO,
-  subWeeks,
 } from "date-fns";
-import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
+import type {
+  ComponentPropsWithRef,
+  CSSProperties,
+  HTMLAttributes,
+  ReactNode,
+} from "react";
 import { createContext, Fragment, use, useMemo } from "react";
 import { cn } from "@/lib/utils";
 
@@ -28,7 +33,6 @@ type Week = Array<ActivityWithLevel | undefined>;
 
 type YearRow = {
   year: number;
-  startMonth: number;
   weeks: Week[];
 };
 
@@ -135,6 +139,25 @@ type CalendarHeatmapContextType = {
   colors?: ColorConfig;
 };
 
+const normalizeData = (data: Activity[]): Activity[] => {
+  const cells = new Map<string, Activity>();
+  for (const activity of data) {
+    if (!Number.isFinite(activity.value)) {
+      throw new RangeError("Heatmap values must be finite numbers.");
+    }
+    const date = parseISO(activity.date);
+    if (
+      !/^\d{4}-\d{2}-\d{2}$/.test(activity.date) ||
+      !isValid(date) ||
+      formatISO(date, { representation: "date" }) !== activity.date
+    ) {
+      throw new RangeError("Heatmap dates must be valid YYYY-MM-DD strings.");
+    }
+    cells.set(activity.date, activity);
+  }
+  return [...cells.values()].sort((a, b) => a.date.localeCompare(b.date));
+};
+
 const EMPTY_STYLE: CSSProperties = {};
 const LABEL_MARGIN = 8;
 
@@ -192,163 +215,65 @@ const fillHoles = (activities: ActivityWithLevel[]): ActivityWithLevel[] => {
   });
 };
 
+const toWeeks = (
+  activities: ActivityWithLevel[],
+  weekStart: WeekDay,
+): Week[] => {
+  const first = activities[0];
+  if (!first) return [];
+  const leadingDays = (getDay(parseISO(first.date)) - weekStart + 7) % 7;
+  const padded: Week = [
+    ...Array<undefined>(leadingDays).fill(undefined),
+    ...activities,
+  ];
+  return Array.from({ length: Math.ceil(padded.length / 7) }, (_, index) =>
+    padded.slice(index * 7, index * 7 + 7),
+  );
+};
+
+const groupYears = (
+  activities: ActivityWithLevel[],
+): Map<number, ActivityWithLevel[]> => {
+  const years = new Map<number, ActivityWithLevel[]>();
+  for (const activity of fillHoles(activities)) {
+    const year = getYear(parseISO(activity.date));
+    const entries = years.get(year) ?? [];
+    entries.push(activity);
+    years.set(year, entries);
+  }
+  return years;
+};
+
 const groupByYearAndMonth = (
   activities: ActivityWithLevel[],
-  weekStart: WeekDay = 0,
-  hasEmptyColumn = false,
-): YearRow[] => {
-  if (activities.length === 0) {
-    return [];
-  }
-
-  const normalizedActivities = fillHoles(activities);
-
-  const activitiesByYearMonth = new Map<string, ActivityWithLevel[]>();
-
-  for (const activity of normalizedActivities) {
-    const date = parseISO(activity.date);
-    const year = getYear(date);
-    const month = getMonth(date);
-    const key = `${year}-${String(month).padStart(2, "0")}`;
-
-    if (!activitiesByYearMonth.has(key)) {
-      activitiesByYearMonth.set(key, []);
+  weekStart: WeekDay,
+  hasEmptyColumn: boolean,
+): YearRow[] =>
+  [...groupYears(activities)].map(([year, entries]) => {
+    const months = new Map<number, ActivityWithLevel[]>();
+    for (const activity of entries) {
+      const month = getMonth(parseISO(activity.date));
+      const days = months.get(month) ?? [];
+      days.push(activity);
+      months.set(month, days);
     }
-    activitiesByYearMonth.get(key)?.push(activity);
-  }
-
-  const sortedKeys = Array.from(activitiesByYearMonth.keys()).sort();
-
-  if (sortedKeys.length === 0) {
-    return [];
-  }
-
-  const firstKey = sortedKeys[0];
-  const [firstYearStr, firstMonthStr] = firstKey.split("-");
-  const startYear = parseInt(firstYearStr, 10);
-  const startMonth = parseInt(firstMonthStr, 10);
-
-  const yearRows: YearRow[] = [];
-  let currentYear = startYear;
-  let currentMonth = startMonth;
-
-  while (true) {
-    const rowWeeks: Week[] = [];
-    let hasData = false;
-
-    for (let monthOffset = 0; monthOffset < 12; monthOffset++) {
-      const monthIndex = (currentMonth + monthOffset) % 12;
-      const yearOffset = Math.floor((currentMonth + monthOffset) / 12);
-      const year = currentYear + yearOffset;
-      const key = `${year}-${String(monthIndex).padStart(2, "0")}`;
-
-      const monthActivities = activitiesByYearMonth.get(key) || [];
-
-      if (monthActivities.length > 0) {
-        hasData = true;
-
-        const firstActivity = monthActivities[0] as ActivityWithLevel;
-        const firstDate = parseISO(firstActivity.date);
-        const firstCalendarDate =
-          getDay(firstDate) === weekStart
-            ? firstDate
-            : subWeeks(nextDay(firstDate, weekStart), 1);
-
-        const paddedActivities: Array<ActivityWithLevel | undefined> = [
-          ...new Array(
-            differenceInCalendarDays(firstDate, firstCalendarDate),
-          ).fill(undefined),
-          ...monthActivities,
-        ];
-
-        const numberOfWeeks = Math.ceil(paddedActivities.length / 7);
-        const monthWeeks: Week[] = new Array(numberOfWeeks)
-          .fill(undefined)
-          .map((_, weekIndex) =>
-            paddedActivities.slice(weekIndex * 7, weekIndex * 7 + 7),
-          );
-
-        if (hasEmptyColumn && rowWeeks.length > 0) {
-          rowWeeks.push(new Array(7).fill(undefined) as Week);
-        }
-
-        rowWeeks.push(...monthWeeks);
-      }
+    const weeks: Week[] = [];
+    for (const days of months.values()) {
+      if (hasEmptyColumn && weeks.length)
+        weeks.push(Array<undefined>(7).fill(undefined));
+      weeks.push(...toWeeks(days, weekStart));
     }
-
-    if (!hasData) {
-      break;
-    }
-
-    yearRows.push({
-      year: currentYear,
-      startMonth: currentMonth,
-      weeks: rowWeeks,
-    });
-
-    currentYear++;
-    currentMonth = startMonth;
-
-    const hasNextYearData = sortedKeys.some((key) => {
-      const [yearStr] = key.split("-");
-      return parseInt(yearStr, 10) >= currentYear;
-    });
-
-    if (!hasNextYearData) {
-      break;
-    }
-  }
-
-  return yearRows;
-};
+    return { year, weeks };
+  });
 
 const groupContinuous = (
   activities: ActivityWithLevel[],
-  weekStart: WeekDay = 0,
-): YearRow[] => {
-  if (activities.length === 0) return [];
-
-  const normalizedActivities = fillHoles(activities);
-
-  const first = normalizedActivities[0] as ActivityWithLevel;
-  const firstDate = parseISO(first.date);
-  const firstCalendarDate =
-    getDay(firstDate) === weekStart
-      ? firstDate
-      : subWeeks(nextDay(firstDate, weekStart), 1);
-
-  const leadingPad = differenceInCalendarDays(firstDate, firstCalendarDate);
-
-  const padded: Array<ActivityWithLevel | undefined> = [
-    ...new Array(leadingPad).fill(undefined),
-    ...normalizedActivities,
-  ];
-
-  const numberOfWeeks = Math.ceil(padded.length / 7);
-  const allWeeks: Week[] = new Array(numberOfWeeks)
-    .fill(undefined)
-    .map((_, i) => padded.slice(i * 7, i * 7 + 7));
-
-  const yearMap = new Map<number, Week[]>();
-  for (const week of allWeeks) {
-    const firstActivity = week.find((a) => a !== undefined);
-    const year = firstActivity
-      ? getYear(parseISO(firstActivity.date))
-      : undefined;
-    if (year !== undefined) {
-      if (!yearMap.has(year)) yearMap.set(year, []);
-      yearMap.get(year)?.push(week);
-    }
-  }
-
-  return Array.from(yearMap.entries())
-    .sort(([a], [b]) => a - b)
-    .map(([year, weeks]) => ({
-      year,
-      startMonth: 0,
-      weeks,
-    }));
-};
+  weekStart: WeekDay,
+): YearRow[] =>
+  [...groupYears(activities)].map(([year, entries]) => ({
+    year,
+    weeks: toWeeks(entries, weekStart),
+  }));
 
 const getMonthLabels = (
   weeks: Week[],
@@ -365,7 +290,7 @@ const getMonthLabels = (
       const month = monthNames[getMonth(parseISO(firstActivity.date))];
 
       if (!month) {
-        const monthName = new Date(firstActivity.date).toLocaleString("en-US", {
+        const monthName = parseISO(firstActivity.date).toLocaleString("en-US", {
           month: "short",
         });
         throw new Error(
@@ -385,7 +310,7 @@ const getMonthLabels = (
       const minWeeks = 3;
 
       if (index === 0) {
-        return labels[1] && labels[1].weekIndex - weekIndex >= minWeeks;
+        return (labels[1]?.weekIndex ?? weeks.length) - weekIndex >= minWeeks;
       }
 
       if (index === labels.length - 1) {
@@ -418,41 +343,8 @@ export type CalendarHeatmapProps = HTMLAttributes<HTMLDivElement> & {
   children: ReactNode;
 };
 
-/**
- * Calendar Heatmap
- *
- * A GitHub-style contribution calendar showing daily activity over months and years.
- * Each cell represents one day, arranged in weeks (rows) and months (columns).
- *
- * @example
- * ```tsx
- * <CalendarHeatmap data={data} weekStart={1} continuousMonths>
- *   <CalendarHeatmapBody>
- *     {({ activity, dayIndex, weekIndex }) => (
- *       <CalendarHeatmapBlock
- *         activity={activity}
- *         dayIndex={dayIndex}
- *         weekIndex={weekIndex}
- *       />
- *     )}
- *   </CalendarHeatmapBody>
- *   <CalendarHeatmapFooter>
- *     <CalendarHeatmapStat />
- *     <CalendarHeatmapLegend />
- *   </CalendarHeatmapFooter>
- * </CalendarHeatmap>
- * ```
- *
- * @param data - Array of activities with date (YYYY-MM-DD) and value
- * @param weekStart - First day of week (0=Sunday, 1=Monday). Default: 0
- * @param continuousMonths - Display months continuously vs. grouped by year. Default: true
- * @param hasEmptyColumn - Add empty column between months. Default: false
- * @param blockAspectRatio - Width/height ratio of blocks. Default: 1
- * @param levels - Total number of legend cells (including empty when not normalized). Default: 5
- * @param isNormalized - When true, uses min-max normalization across the dataset (suitable for signed values). When false (default), treats 0 as empty and scales from 0 to max.
- */
 export const CalendarHeatmap = ({
-  data,
+  data: inputData,
   weekStart = 0,
   continuousMonths = true,
   hasEmptyColumn = false,
@@ -473,12 +365,21 @@ export const CalendarHeatmap = ({
   children,
   ...props
 }: CalendarHeatmapProps) => {
-  const levels = Math.max(1, levelsProp);
+  const data = useMemo(() => normalizeData(inputData), [inputData]);
+  if (!Number.isInteger(weekStart) || weekStart < 0 || weekStart > 6) {
+    throw new RangeError("weekStart must be an integer from 0 to 6.");
+  }
+  const levels = levelsProp;
+  if (!Number.isInteger(levels) || levels < (isNormalized ? 1 : 2)) {
+    throw new RangeError(
+      "levels must be a positive integer, at least 2 when not normalized.",
+    );
+  }
 
   const dataWithLevels = useMemo((): ActivityWithLevel[] => {
     if (data.length === 0) return [];
 
-    const maxCount = data.reduce((max, d) => Math.max(max, d.value), 1);
+    const maxCount = data.reduce((max, d) => Math.max(max, d.value), -Infinity);
     const minCount = isNormalized
       ? data.reduce((min, d) => Math.min(min, d.value), Infinity)
       : 0;
@@ -508,10 +409,10 @@ export const CalendarHeatmap = ({
     () => ({
       months: generateMonthLabels(locale),
       weekdays: generateWeekdayLabels(locale),
-      cellLabel: "{{date}}: {{value}} contributions",
+      cellLabel: "{{date}}: contributions {{value}}",
       heatmapLabel: "Contribution heatmap for {{year}}",
       legendLabel: "Activity intensity legend",
-      legendLevelLabel: "{{level}} contributions",
+      legendLevelLabel: "Level {{level}}",
       ...labelsProp,
     }),
     [locale, labelsProp],
@@ -584,7 +485,7 @@ export const CalendarHeatmap = ({
   );
 
   if (data.length === 0) {
-    return emptyState ? emptyState : null;
+    return emptyState ?? null;
   }
 
   return (
@@ -601,7 +502,7 @@ export const CalendarHeatmap = ({
   );
 };
 
-export type CalendarHeatmapBlockProps = HTMLAttributes<SVGRectElement> & {
+export type CalendarHeatmapBlockProps = ComponentPropsWithRef<"rect"> & {
   activity: ActivityWithLevel;
   dayIndex: number;
   weekIndex: number;
@@ -625,9 +526,7 @@ export const CalendarHeatmapBlock = ({
   className,
   style: styleProp,
   ...props
-}: CalendarHeatmapBlockProps & {
-  ref?: React.RefObject<SVGRectElement | null>;
-}) => {
+}: CalendarHeatmapBlockProps) => {
   const {
     blockSize,
     blockWidth,
@@ -645,7 +544,7 @@ export const CalendarHeatmapBlock = ({
     Math.min(colorStepCount(levels, isNormalized), activity.level),
   );
 
-  const ariaLabel = (labels.cellLabel ?? "{{date}}: {{value}} contributions")
+  const ariaLabel = (labels.cellLabel ?? "{{date}}: contributions {{value}}")
     .replace("{{date}}", activity.date)
     .replace("{{value}}", String(activity.value));
 
@@ -657,9 +556,9 @@ export const CalendarHeatmapBlock = ({
       tabIndex={onCellClick ? 0 : -1}
       aria-label={ariaLabel}
       className={cn(
-        "motion-safe:transition-opacity motion-safe:hover:opacity-70",
+        "focus-visible:stroke-current focus-visible:stroke-2 focus-visible:outline-none motion-safe:transition-opacity motion-safe:hover:opacity-70",
         onCellClick &&
-          "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          "focus-visible:ring-ring cursor-pointer focus-visible:ring-2 focus-visible:outline-none",
         className,
       )}
       data-value={activity.value}
@@ -788,16 +687,16 @@ export const CalendarHeatmapBody = ({
       {rowData.map(({ yearRow, height, monthLabels, yearTotalCount }) => (
         <div key={`year-row-${yearRow.year}`}>
           {!hideYearLabels && (
-            <div className={cn("mb-2 text-muted-foreground", yearClassName)}>
+            <div className={cn("text-muted-foreground mb-2", yearClassName)}>
               {yearRow.year}
             </div>
           )}
           <svg
-            role="img"
+            role="group"
             aria-label={(
               labels.heatmapLabel ?? "Contribution heatmap for {{year}}"
             ).replace("{{year}}", String(yearRow.year))}
-            className="block overflow-visible rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+            className="focus-visible:ring-ring block overflow-visible rounded-sm focus-visible:ring-2 focus-visible:outline-none"
             height={height + strokePadding * 2}
             viewBox={`0 0 ${totalWidth} ${height + strokePadding * 2}`}
             width={totalWidth}
@@ -917,7 +816,7 @@ export const CalendarHeatmapStat = ({
   children,
   ...props
 }: CalendarHeatmapStatProps) => {
-  const { data, totalCount, year, labels } = useCalendarHeatmap();
+  const { data, totalCount, year, yearRows, labels } = useCalendarHeatmap();
 
   const value = compute ? compute(data) : totalCount;
 
@@ -925,8 +824,10 @@ export const CalendarHeatmapStat = ({
     return <>{children({ value, data, year })}</>;
   }
 
+  const period =
+    yearRows.length > 1 ? `${year} to ${yearRows.at(-1)?.year}` : String(year);
   const template =
-    label ?? labels.stat ?? "{{value}} contributions in {{year}}";
+    label ?? labels.stat ?? "Contributions in {{year}}: {{value}}";
 
   return (
     <div
@@ -934,9 +835,7 @@ export const CalendarHeatmapStat = ({
       className={cn("text-muted-foreground tabular-nums", className)}
       {...props}
     >
-      {template
-        .replace("{{value}}", String(value))
-        .replace("{{year}}", String(year))}
+      {template.replace("{{value}}", String(value)).replace("{{year}}", period)}
     </div>
   );
 };
@@ -977,12 +876,12 @@ export const CalendarHeatmapLegend = ({
       data-slot="calendar-heatmap-legend"
       aria-label={labels.legendLabel ?? "Activity intensity legend"}
       className={cn(
-        "ml-auto flex items-center gap-1 text-muted-foreground",
+        "text-muted-foreground ml-auto flex items-center gap-1",
         className,
       )}
       {...props}
     >
-      <span className="mr-1 font-medium text-xs">{lessLabel}</span>
+      <span className="mr-1 text-xs font-medium">{lessLabel}</span>
       {legendLevels.map((level) =>
         children ? (
           <Fragment key={`legend-level-${level}`}>
@@ -990,10 +889,11 @@ export const CalendarHeatmapLegend = ({
           </Fragment>
         ) : (
           <svg
-            role="img"
-            aria-label={(
-              labels.legendLevelLabel ?? "{{level}} contributions"
-            ).replace("{{level}}", String(level))}
+            role="group"
+            aria-label={(labels.legendLevelLabel ?? "Level {{level}}").replace(
+              "{{level}}",
+              String(level),
+            )}
             height={blockSize}
             key={`legend-level-${level}`}
             width={blockWidth}
@@ -1011,7 +911,7 @@ export const CalendarHeatmapLegend = ({
           </svg>
         ),
       )}
-      <span className="ml-1 font-medium text-xs">{moreLabel}</span>
+      <span className="ml-1 text-xs font-medium">{moreLabel}</span>
     </fieldset>
   );
 };

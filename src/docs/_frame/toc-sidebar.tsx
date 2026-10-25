@@ -27,40 +27,30 @@ function useActiveId(ids: string[]) {
       .filter((el): el is HTMLElement => el !== null);
     if (elements.length === 0) return;
 
-    // Track each heading's visibility and pick the last one past the top
-    // offset. IntersectionObserver replaces a scroll listener that read layout
-    // for every id on every scroll event (layout thrash / scroll jank).
-    const visibility = new Map<string, boolean>();
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        for (const entry of entries) {
-          visibility.set(entry.target.id, entry.isIntersecting);
-        }
-        let found = "";
-        for (const id of targetIds) {
-          if (visibility.get(id)) {
-            found = id;
-            break;
-          }
-        }
-        setActiveId(found);
-      },
-      { rootMargin: `-${OFFSET}px 0px 0px 0px`, threshold: 0 },
-    );
-
-    for (const el of elements) observer.observe(el);
-    return () => observer.disconnect();
+    let frame = 0;
+    const update = () => {
+      frame = 0;
+      let current = elements[0].id;
+      for (const element of elements) {
+        if (element.getBoundingClientRect().top <= OFFSET + 1)
+          current = element.id;
+      }
+      setActiveId(current);
+    };
+    const scheduleUpdate = () => {
+      if (!frame) frame = requestAnimationFrame(update);
+    };
+    update();
+    window.addEventListener("scroll", scheduleUpdate, { passive: true });
+    window.addEventListener("resize", scheduleUpdate);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener("scroll", scheduleUpdate);
+      window.removeEventListener("resize", scheduleUpdate);
+    };
   }, [idsKey]);
 
   return activeId;
-}
-
-function scrollTo(id: string) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  const top = el.getBoundingClientRect().top + window.scrollY - 88;
-  window.scrollTo({ top, behavior: "smooth" });
 }
 
 export function TocSidebar({ items }: TocSidebarProps) {
@@ -70,47 +60,43 @@ export function TocSidebar({ items }: TocSidebarProps) {
   ]);
   const activeId = useActiveId(allIds);
 
-  function isParentActive(item: TocItem) {
-    if (activeId === item.id) return true;
-    if (item.children?.some((c) => c.id === activeId)) return false;
-    return false;
-  }
-
   return (
     <aside className="sticky top-20 hidden w-52 shrink-0 self-start xl:block">
-      <div className="rounded-lg border bg-background backdrop-blur-sm">
+      <div className="bg-background rounded-lg border backdrop-blur-sm">
         <nav aria-label="Table of contents" className="p-3">
           <ul className="space-y-0.5">
             {items.map((item) => (
               <li key={item.id}>
-                <button
-                  type="button"
-                  onClick={() => scrollTo(item.id)}
+                <a
+                  href={`#${item.id}`}
+                  aria-current={activeId === item.id ? "location" : undefined}
                   className={cn(
-                    "w-full rounded px-2 py-1 text-left text-sm transition-colors hover:text-foreground",
-                    isParentActive(item)
-                      ? "font-medium text-foreground"
+                    "hover:text-foreground block w-full rounded px-2 py-1 text-left text-sm transition-colors",
+                    activeId === item.id
+                      ? "text-foreground font-medium"
                       : "text-muted-foreground",
                   )}
                 >
                   {item.label}
-                </button>
+                </a>
                 {item.children && item.children.length > 0 && (
-                  <ul className="mt-0.5 ml-2 space-y-0.5 border-border/60 border-l pl-2">
+                  <ul className="border-border/60 mt-0.5 ml-2 space-y-0.5 border-l pl-2">
                     {item.children.map((child) => (
                       <li key={child.id}>
-                        <button
-                          type="button"
-                          onClick={() => scrollTo(child.id)}
+                        <a
+                          href={`#${child.id}`}
+                          aria-current={
+                            activeId === child.id ? "location" : undefined
+                          }
                           className={cn(
-                            "w-full rounded px-2 py-0.5 text-left text-xs transition-colors hover:text-foreground",
+                            "hover:text-foreground block w-full rounded px-2 py-0.5 text-left text-xs transition-colors",
                             activeId === child.id
-                              ? "font-medium text-foreground"
+                              ? "text-foreground font-medium"
                               : "text-muted-foreground/80",
                           )}
                         >
                           {child.label}
-                        </button>
+                        </a>
                       </li>
                     ))}
                   </ul>
@@ -119,14 +105,13 @@ export function TocSidebar({ items }: TocSidebarProps) {
             ))}
           </ul>
         </nav>
-        <div className="mt-3 border-border/60 border-t p-3">
-          <button
-            type="button"
-            onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })}
-            className="w-full rounded px-2 py-1 text-left text-muted-foreground text-sm transition-colors hover:text-foreground"
+        <div className="border-border/60 mt-3 border-t p-3">
+          <a
+            href="#top"
+            className="text-muted-foreground hover:text-foreground block w-full rounded px-2 py-1 text-left text-sm transition-colors"
           >
             Back to top
-          </button>
+          </a>
         </div>
       </div>
     </aside>

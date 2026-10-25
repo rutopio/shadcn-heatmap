@@ -23,3 +23,11 @@ jobs:
       - run: pnpm run check
 
       - run: pnpm run build
+
+      - run: pnpm exec playwright install --with-deps chromium
+
+      - run: pnpm test:browser
+
+      - run: pnpm test:registry
+
+      - run: git diff --exit-code

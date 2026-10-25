@@ -14,7 +14,7 @@ Built on SVG and Tailwind v4 tokens. Copy the source, own it entirely.
 
 ## Components
 
-All four are single-file, zero-config components.
+Each component is a single file. Install it in a React 19 project with Tailwind CSS v4.
 
 ### CalendarHeatmap
 
@@ -30,13 +30,13 @@ Weekday × hour-of-day matrix for recurring weekly patterns. Supports optional a
 
 ### DateHeatmap
 
-Date × hour grid for zoomed time windows (1–4 weeks). Supports optional aggregate rows and columns with custom compute functions, i18n, and custom colors.
+Date × hour grid for zoomed time windows (1 to 4 weeks). Supports optional aggregate rows and columns with custom compute functions, i18n, and custom colors.
 
 ![DateHeatmap](assets/date-heatmap.png)
 
 ### StatusHeatmap
 
-Daily status timeline for uptime or incident history. Four status levels (healthy / degraded / critical / no data), custom colors, i18n, and adjustable label intervals.
+Daily status timeline for uptime or incident history. Four built-in statuses (healthy, degraded, critical, and no data), with support for custom values, custom colors, i18n, and adjustable label intervals.
 
 ![StatusHeatmap](assets/status-heatmap.png)
 
@@ -48,11 +48,11 @@ Daily status timeline for uptime or incident history. Four status levels (health
 
 ## Installation
 
-See the [/install page](https://heatmap.chingru.com/install) for the interactive walkthrough. The steps below mirror it 1-to-1.
+See the [installation guide](https://heatmap.chingru.com/install) for a step-by-step walkthrough.
 
 ### shadcn CLI (recommended)
 
-1. **Install via `shadcn@latest`.** Pick the component you need — the CLI writes it into your project's `components/heatmap/` directory.
+1. **Install via `shadcn@latest`.** Pick the component you need: the CLI writes it into your configured components directory, for example `src/components/heatmap/`.
 
    ```bash
    # CalendarHeatmap
@@ -70,7 +70,7 @@ See the [/install page](https://heatmap.chingru.com/install) for the interactive
 
    `@heatmap` is an official [shadcn registry namespace](https://ui.shadcn.com/docs/registry/namespace), listed in the [shadcn directory](https://github.com/shadcn-ui/ui/pull/10803). Alternatively, install from the full URL: `npx shadcn@latest add https://heatmap.chingru.com/r/calendar-heatmap.json`, or straight from this GitHub repo: `npx shadcn@latest add rutopio/shadcn-heatmap/calendar-heatmap`.
 
-2. **Ensure the runtime dependencies exist.** The components only need these — the CLI installs them automatically, listed here for reference.
+2. **Ensure the runtime dependencies exist.** The components only need these: the CLI installs them automatically, listed here for reference.
 
    ```bash
    pnpm add date-fns clsx tailwind-merge
@@ -102,7 +102,7 @@ See the [/install page](https://heatmap.chingru.com/install) for the interactive
    }
    ```
 
-3. **Expose theme tokens used by the blocks.** The heatmaps reference `--color-chart-1` for activity colors, `--color-secondary` for empty cells, and `--color-muted-foreground` for labels. You can customize these via the `colors` prop.
+3. **Expose theme tokens used by the blocks.** The heatmaps reference `--color-chart-1` for activity colors, `--color-secondary` for empty cells, and `--color-muted-foreground` for labels. Use the `colors` prop for block colors and `labelClassName` for axis text.
 
    ```css
    /* src/styles/globals.css (Tailwind v4) */
@@ -125,9 +125,27 @@ See the [/install page](https://heatmap.chingru.com/install) for the interactive
 
 ## Usage
 
+The heatmaps use client-side React APIs. In Next.js or another React Server Components app, put the composition below in a file beginning with `"use client"`, including any render callbacks. Plain data can be passed in from a server component.
+
+For the Base UI tooltip examples, initialize a Base UI shadcn project or install `@base-ui/react` before adding `tooltip`. Tooltip examples on the demo site use the Base UI version of shadcn Tooltip (`render` and `delay`). If your project uses the Radix version, adapt those two tooltip props to its API.
+
+### Data rules
+
+- Dates must be valid `YYYY-MM-DD` strings. They represent local calendar dates, without a time zone.
+- Hours are integers from 0 to 23. Weekdays are integers from 0 (Sunday) to 6 (Saturday).
+- Values must be finite numbers. Duplicate dates or time slots use the last input record for cells, statistics, and aggregates.
+- CalendarHeatmap and StatusHeatmap fill dates between the first and last records. Missing cells have value 0. DateHeatmap and WeekdayHeatmap fill missing hours with value 0.
+- Invalid dates, hours, weekdays, values, level counts, or aggregate lengths throw a `RangeError`.
+- `levels` must be an integer of at least 2, or at least 1 with `isNormalized`. Normalization uses the actual minimum and maximum, including negative and fractional values. A constant dataset uses the first colored level.
+- Aggregate row callbacks must return 24 finite values. Column callbacks return 7 values for WeekdayHeatmap or one per date for DateHeatmap. The body sets `activity.extra` so the default block renderer positions these cells correctly.
+- Aggregates do not change the footer calculation. Use the Stat component's `compute` or `children` prop to show an average, median, or other metric.
+
+
 ### CalendarHeatmap
 
 ```tsx
+"use client";
+
 import {
   CalendarHeatmap,
   CalendarHeatmapBlock,
@@ -167,6 +185,8 @@ export default function Example() {
 ### WeekdayHeatmap
 
 ```tsx
+"use client";
+
 import {
   WeekdayHeatmap,
   WeekdayHeatmapBlock,
@@ -176,8 +196,8 @@ import {
   WeekdayHeatmapStat,
 } from "@/components/heatmap/weekday-heatmap";
 
-// weekday: 0–6 (Sun–Sat)
-// hour:    0–23
+// weekday: 0 to 6 (Sunday to Saturday)
+// hour:    0 to 23
 const data = [
   { weekday: 1, hour: 9, value: 16.3 },
   { weekday: 1, hour: 14, value: 22.1 },
@@ -186,7 +206,7 @@ const data = [
 
 // Optional: aggregated row/column pass through `extraRow` / `extraColumn`.
 // `compute` receives the full data; return 24 values for the row (by hour)
-// or 7 values for the column (indexed by weekday 0–6).
+// or 7 values for the column (indexed by weekday 0 to 6).
 const avgByHour = (d: typeof data) => {
   const sums = Array(24).fill(0);
   const counts = Array(24).fill(0);
@@ -219,6 +239,8 @@ export default function Example() {
 ### DateHeatmap
 
 ```tsx
+"use client";
+
 import {
   DateHeatmap,
   DateHeatmapBlock,
@@ -229,7 +251,7 @@ import {
 } from "@/components/heatmap/date-heatmap";
 
 // date: YYYY-MM-DD
-// hour: 0–23
+// hour: 0 to 23
 const data = [
   { date: "2025-12-11", hour: 13, value: 8.4 },
   { date: "2025-12-11", hour: 14, value: 22.7 },
@@ -248,7 +270,7 @@ const sumByHour = (d: typeof data) => {
 };
 const sumByDate = (d: typeof data, dates: string[]) =>
   dates.map((date) =>
-    d.filter((a) => a.date === date).reduce((s, a) => s + a.value, 0)
+    d.filter((a) => a.date === date).reduce((s, a) => s + a.value, 0),
   );
 
 export default function Example() {
@@ -275,6 +297,8 @@ export default function Example() {
 ### StatusHeatmap
 
 ```tsx
+"use client";
+
 import {
   StatusHeatmap,
   StatusHeatmapBlock,
@@ -312,13 +336,13 @@ See the [live demo](https://heatmap.chingru.com) for full examples of all four c
 
 ## Contributing
 
-Contributions are warmly welcome. Whether it's a bug report, a new variant idea, a11y improvement, or docs polish — feel free to open an [issue](https://github.com/rutopio/shadcn-heatmap/issues) or send a pull request.
+Open an [issue](https://github.com/rutopio/shadcn-heatmap/issues) or pull request for bugs, new variants, accessibility improvements, or documentation fixes.
 
 If you're adding a new component or changing the public API, please open an issue first so we can align on scope before you write the code.
 
 ### Local setup
 
-Requires Node 22+ and pnpm 11.
+Use Node 24 and pnpm 11.8.0, as specified in `.nvmrc` and `package.json`.
 
 ```bash
 pnpm install
@@ -329,19 +353,40 @@ pnpm dev            # start the demo site on http://localhost:5173
 
 - Branch from `master` using a short descriptive name (`fix/status-empty-data`, `feat/binary-heatmap`).
 - Keep commits focused; prefer a series of small commits over one large one.
-- Commit messages are lowercase imperative, short (see recent history for the flavour).
+- Use short commit messages that describe the change.
 
 ### Before opening a PR
 
-Run the same checks CI runs — merges are blocked if they fail:
+Run the checks used by CI:
 
 ```bash
-pnpm run check      # format + lint + check-types
+pnpm run check      # formatting, lint, types, tests, examples, and registry consistency
 pnpm run build      # build the registry + the demo site
 ```
 
-If your change touches a component in `src/components/heatmap/`, open the demo site and verify the affected variant renders correctly — there is no test suite, so visual verification is the safety net.
+For component changes, also run the browser and consumer installation checks:
+
+```bash
+pnpm exec playwright install chromium
+pnpm test:browser
+pnpm test:registry  # installs through shadcn in temporary projects; requires network access
+```
+
+The registry check tests full URLs and a local `@heatmap` namespace with the generated files. It installs WeekdayHeatmap first to check its dependencies, then compiles all four components in clean projects. It does not publish the registry.
+
+Default examples live in `src/examples/`. The demo and its displayed code use these same files. Run `pnpm format` to format code and snippets, or `pnpm fix` for automatic lint fixes.
+
+To rebuild social images after changing the examples:
+
+```bash
+python3 -m venv .venv
+.venv/bin/pip install -r scripts/requirements-og.txt
+pnpm screenshots
+.venv/bin/python scripts/build-og.py
+```
+
+Keep generated registry files in the same commit as their source changes. `pnpm build` updates them and generates static metadata for every documentation route.
 
 ## License
 
-MIT License
+MIT for project code. See [THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md) for font licenses.

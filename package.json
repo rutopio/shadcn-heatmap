@@ -16,52 +16,56 @@
     "url": "https://github.com/rutopio/shadcn-heatmap/issues"
   },
   "engines": {
-    "node": ">=22"
+    "node": ">=24"
   },
   "scripts": {
     "dev": "vite",
-    "build": "pnpm build:registry && tsc -b && vite build",
-    "build:registry": "tsx scripts/build-registry.ts",
+    "build": "pnpm build:registry && tsc -b && vite build && node --import tsx scripts/build-pages.ts",
+    "build:registry": "node --import tsx scripts/build-registry.ts",
     "format": "biome format --write . && node scripts/format-snippets.mjs",
     "preview": "vite preview",
     "lint": "biome lint .",
-    "check-types": "tsc -b --noEmit && tsc -p functions/tsconfig.json",
-    "check": "biome check --write . && pnpm lint && pnpm check-types"
+    "check-types": "tsc -b --noEmit && tsc -p functions/tsconfig.json && tsc -p tsconfig.test.json",
+    "check": "biome check . && pnpm check-types && pnpm test && node scripts/format-snippets.mjs --check && node --import tsx scripts/build-registry.ts --check && node scripts/check-examples.mjs",
+    "test": "TSX_TSCONFIG_PATH=tsconfig.test.json node --import tsx --test tests/*.test.*",
+    "test:browser": "playwright test",
+    "fix": "biome check --write .",
+    "test:registry": "pnpm build:registry && node scripts/verify-registry.mjs",
+    "screenshots": "node scripts/capture-examples.mjs"
   },
   "dependencies": {
-    "@base-ui/react": "1.6.0",
+    "@base-ui/react": "1.9.0",
     "@fontsource-variable/albert-sans": "5.2.8",
     "@fontsource-variable/host-grotesk": "5.2.8",
     "@phosphor-icons/react": "2.1.10",
-    "@tanstack/react-router": "1.170.16",
+    "@tanstack/react-router": "1.170.46",
     "clsx": "2.1.1",
     "date-fns": "4.4.0",
     "react": "19.2.7",
     "react-dom": "19.2.7",
-    "sonner": "2.0.7",
-    "tailwind-merge": "3.6.0"
+    "sonner": "2.0.8",
+    "tailwind-merge": "3.7.0"
   },
   "devDependencies": {
-    "@biomejs/biome": "2.5.0",
+    "@biomejs/biome": "2.6.3",
     "@cloudflare/workers-types": "^4.20260620.1",
-    "@ianvs/prettier-plugin-sort-imports": "4.7.1",
-    "@shikijs/core": "4.2.0",
-    "@shikijs/engine-oniguruma": "4.2.0",
-    "@shikijs/langs": "4.2.0",
-    "@shikijs/themes": "4.2.0",
-    "@tailwindcss/vite": "4.3.1",
-    "@tanstack/router-plugin": "1.168.18",
-    "@types/node": "26.0.0",
+    "@playwright/test": "^1.64.1",
+    "@shikijs/core": "4.5.0",
+    "@shikijs/engine-oniguruma": "4.5.0",
+    "@shikijs/langs": "4.5.0",
+    "@shikijs/themes": "4.5.0",
+    "@tailwindcss/vite": "4.3.3",
+    "@tanstack/router-plugin": "1.168.48",
+    "@types/node": "24.19.2",
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
-    "@vitejs/plugin-react": "6.0.2",
-    "prettier": "3.8.4",
-    "prettier-plugin-tailwindcss": "0.8.0",
-    "shiki": "4.2.0",
-    "tailwindcss": "4.3.1",
-    "tsx": "4.22.4",
+    "@vitejs/plugin-react": "6.1.2",
+    "prettier": "3.9.10",
+    "shiki": "4.5.0",
+    "tailwindcss": "4.3.3",
+    "tsx": "4.23.15",
     "tw-animate-css": "1.4.0",
     "typescript": "6.0.3",
-    "vite": "8.0.16"
+    "vite": "8.3.5"
   }
 }

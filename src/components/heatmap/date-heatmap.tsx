@@ -1,15 +1,22 @@
+"use client";
+
 import type { Locale } from "date-fns";
-import { format } from "date-fns";
-import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
+import { format, formatISO, isValid, parseISO } from "date-fns";
+import type {
+  ComponentPropsWithRef,
+  CSSProperties,
+  HTMLAttributes,
+  ReactNode,
+} from "react";
 import { createContext, Fragment, use, useMemo } from "react";
 import { cn } from "@/lib/utils";
 
-function formatDateWithWeekday(
+function formatDateLabel(
   date: Date | string,
   dateFormat: string = "EEE, MMM dd, yyyy",
   locale?: Locale,
 ): string {
-  const d = typeof date === "string" ? new Date(date) : date;
+  const d = typeof date === "string" ? parseISO(date) : date;
   return format(d, dateFormat, locale ? { locale } : undefined);
 }
 
@@ -41,12 +48,13 @@ export type DateHour =
 
 export type DateHourlyActivity = {
   date: string; // YYYY-MM-DD
-  hour: number; // 0–23
+  hour: number; // 0 to 23
   value: number;
 };
 
-type DateHourlyActivityWithLevel = DateHourlyActivity & {
+export type DateHourlyActivityWithLevel = DateHourlyActivity & {
   level: number;
+  extra?: "row" | "column";
 };
 
 export type DateExtraRowSpec = {
@@ -162,6 +170,42 @@ const TWELVE_HOUR_LABELS = Array.from({ length: 24 }, (_, i) => {
 
 const HOURS = Array.from({ length: 24 }, (_, i) => i);
 
+const normalizeData = (data: DateHourlyActivity[]): DateHourlyActivity[] => {
+  const cells = new Map<string, DateHourlyActivity>();
+  for (const activity of data) {
+    if (!Number.isFinite(activity.value)) {
+      throw new RangeError("Heatmap values must be finite numbers.");
+    }
+    const date = parseISO(activity.date);
+    if (
+      !/^\d{4}-\d{2}-\d{2}$/.test(activity.date) ||
+      !isValid(date) ||
+      formatISO(date, { representation: "date" }) !== activity.date
+    ) {
+      throw new RangeError("Heatmap dates must be valid YYYY-MM-DD strings.");
+    }
+    if (
+      !Number.isInteger(activity.hour) ||
+      activity.hour < 0 ||
+      activity.hour > 23
+    ) {
+      throw new RangeError("Heatmap hours must be integers from 0 to 23.");
+    }
+    cells.set(`${activity.date}:${activity.hour}`, activity);
+  }
+  return [...cells.values()].sort(
+    (a, b) => a.date.localeCompare(b.date) || a.hour - b.hour,
+  );
+};
+
+const validateAggregate = (values: number[], expectedLength: number) => {
+  if (values.length !== expectedLength || !values.every(Number.isFinite)) {
+    throw new RangeError(
+      `Aggregate must return exactly ${expectedLength} finite values.`,
+    );
+  }
+};
+
 const EMPTY_STYLE: CSSProperties = {};
 const LABEL_MARGIN = 8;
 const PADDING = 20;
@@ -201,43 +245,8 @@ export type DateHeatmapProps = HTMLAttributes<HTMLDivElement> & {
   children: ReactNode;
 };
 
-/**
- * Date Heatmap
- *
- * A time-range analysis heatmap showing hourly activity across specific dates.
- * Each row represents a date (rows auto-derived from unique `date` values in data),
- * columns represent hours (0–23), with optional aggregated row (per hour) and column (per date).
- *
- * @example
- * ```tsx
- * <DateHeatmap data={data} use12Hour dateFormat="MMM dd, yyyy">
- *   <DateHeatmapBody>
- *     {({ activity, dateIndex }) => (
- *       <DateHeatmapBlock
- *         activity={activity}
- *         dateIndex={dateIndex}
- *       />
- *     )}
- *   </DateHeatmapBody>
- *   <DateHeatmapFooter>
- *     <DateHeatmapStat />
- *     <DateHeatmapLegend />
- *   </DateHeatmapFooter>
- * </DateHeatmap>
- * ```
- *
- * @param data - Array of activities with date (YYYY-MM-DD), hour (0–23), and numeric value
- * @param use12Hour - Use 12-hour format for hour labels. Default: false
- * @param dateFormat - date-fns format string for date labels. Default: "MMM dd, yyyy"
- * @param blockSize - Block height in pixels. Default: 24
- * @param blockAspectRatio - Block width/height ratio. Default: 1 (square)
- * @param levels - Total number of legend cells (including empty when not normalized). Default: 5
- * @param isNormalized - When true, uses min-max normalization across the dataset (suitable for signed values). When false (default), treats 0 as empty and scales from 0 to max.
- * @param extraRow - Appends an aggregated row below the grid. `compute` receives all activities and must return 24 values (one per hour). Rendered through `renderExtraRow` on the body, or falls back to `children`.
- * @param extraColumn - Appends an aggregated column to the right of the grid. `compute` receives all activities plus the sorted date list and must return one value per date. Rendered through `renderExtraColumn` on the body, or falls back to `children`.
- */
 export const DateHeatmap = ({
-  data,
+  data: inputData,
   use12Hour = false,
   dateFormat = "MMM dd, yyyy",
   blockSize = 24,
@@ -259,12 +268,18 @@ export const DateHeatmap = ({
   children,
   ...props
 }: DateHeatmapProps) => {
-  const levels = Math.max(1, levelsProp);
+  const data = useMemo(() => normalizeData(inputData), [inputData]);
+  const levels = levelsProp;
+  if (!Number.isInteger(levels) || levels < (isNormalized ? 1 : 2)) {
+    throw new RangeError(
+      "levels must be a positive integer, at least 2 when not normalized.",
+    );
+  }
 
   const dataWithLevels = useMemo((): DateHourlyActivityWithLevel[] => {
     if (data.length === 0) return [];
 
-    const maxRegular = data.reduce((m, d) => Math.max(m, d.value), 1);
+    const maxRegular = data.reduce((m, d) => Math.max(m, d.value), -Infinity);
     const minRegular = isNormalized
       ? data.reduce((m, d) => Math.min(m, d.value), Infinity)
       : 0;
@@ -288,7 +303,7 @@ export const DateHeatmap = ({
       cellLabel: "{{date}} {{hour}}: {{value}}",
       heatmapLabel: "Activity heatmap by date and hour",
       legendLabel: "Activity intensity legend",
-      legendLevelLabel: "{{level}} contributions",
+      legendLevelLabel: "Level {{level}}",
       ...labelsProp,
     }),
     [use12Hour, labelsProp],
@@ -306,7 +321,8 @@ export const DateHeatmap = ({
   const resolvedExtraRow = useMemo<ResolvedDateExtraRow | null>(() => {
     if (!extraRow) return null;
     const values = extraRow.compute(data);
-    const maxVal = values.reduce((m, v) => Math.max(m, v), 1);
+    validateAggregate(values, 24);
+    const maxVal = values.reduce((m, v) => Math.max(m, v), -Infinity);
     const minVal = isNormalized
       ? values.reduce((m, v) => Math.min(m, v), Infinity)
       : 0;
@@ -323,7 +339,8 @@ export const DateHeatmap = ({
   const resolvedExtraColumn = useMemo<ResolvedDateExtraColumn | null>(() => {
     if (!extraColumn) return null;
     const values = extraColumn.compute(data, dates);
-    const maxVal = values.reduce((m, v) => Math.max(m, v), 1);
+    validateAggregate(values, dates.length);
+    const maxVal = values.reduce((m, v) => Math.max(m, v), -Infinity);
     const minVal = isNormalized
       ? values.reduce((m, v) => Math.min(m, v), Infinity)
       : 0;
@@ -410,7 +427,7 @@ export const DateHeatmap = ({
   );
 
   if (data.length === 0 || dates.length === 0) {
-    return emptyState ? emptyState : null;
+    return emptyState ?? null;
   }
 
   return (
@@ -427,7 +444,7 @@ export const DateHeatmap = ({
   );
 };
 
-export type DateHeatmapBlockProps = HTMLAttributes<SVGRectElement> & {
+export type DateHeatmapBlockProps = ComponentPropsWithRef<"rect"> & {
   activity: DateHourlyActivityWithLevel;
   dateIndex: number;
   extra?: "row" | "column";
@@ -441,7 +458,7 @@ export const DateHeatmapBlock = ({
   ref,
   activity,
   dateIndex,
-  extra,
+  extra = activity.extra,
   highlighted = false,
   onCellClick,
   onCellHover,
@@ -452,9 +469,7 @@ export const DateHeatmapBlock = ({
   className,
   style: styleProp,
   ...props
-}: DateHeatmapBlockProps & {
-  ref?: React.RefObject<SVGRectElement | null>;
-}) => {
+}: DateHeatmapBlockProps) => {
   const {
     blockSize,
     blockWidth,
@@ -466,6 +481,8 @@ export const DateHeatmapBlock = ({
     levels,
     isNormalized,
     colors,
+    extraRow,
+    extraColumn,
   } = useDateHeatmap();
 
   const level = Math.max(
@@ -488,9 +505,15 @@ export const DateHeatmapBlock = ({
       extraColumnGap
     : labelWidth + (blockWidth + blockMargin) * activity.hour;
 
-  const dateToken = isExtraRow ? "extra" : activity.date;
+  const dateToken = isExtraRow
+    ? typeof extraRow?.label === "string"
+      ? extraRow.label
+      : "Aggregate"
+    : activity.date;
   const hourToken = isExtraColumn
-    ? "extra"
+    ? typeof extraColumn?.label === "string"
+      ? extraColumn.label
+      : "Aggregate"
     : `${String(activity.hour).padStart(2, "0")}:00`;
   const ariaLabel = (labels.cellLabel ?? "{{date}} {{hour}}: {{value}}")
     .replace("{{date}}", dateToken)
@@ -505,9 +528,9 @@ export const DateHeatmapBlock = ({
       tabIndex={onCellClick ? 0 : -1}
       aria-label={ariaLabel}
       className={cn(
-        "motion-safe:transition-opacity motion-safe:hover:opacity-70",
+        "focus-visible:stroke-current focus-visible:stroke-2 focus-visible:outline-none motion-safe:transition-opacity motion-safe:hover:opacity-70",
         onCellClick &&
-          "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          "focus-visible:ring-ring cursor-pointer focus-visible:ring-2 focus-visible:outline-none",
         className,
       )}
       data-value={activity.value}
@@ -658,6 +681,7 @@ export const DateHeatmapBody = ({
         return entry
           ? {
               activity: {
+                extra: "column" as const,
                 date,
                 hour: 0,
                 value: entry.value,
@@ -667,18 +691,19 @@ export const DateHeatmapBody = ({
             }
           : null;
       })
-      .filter(
-        (
-          a,
-        ): a is { activity: DateHourlyActivityWithLevel; dateIndex: number } =>
-          a !== null,
-      );
+      .filter((a): a is NonNullable<typeof a> => a !== null);
   }, [dates, extraColumnMap]);
 
   const extraRowActivities = useMemo(() => {
     if (!extraRow) return [];
     return extraRow.values.map(({ hour, value, level }) => ({
-      activity: { date: dates[0] ?? "", hour, value, level },
+      activity: {
+        extra: "row" as const,
+        date: dates[0] ?? "",
+        hour,
+        value,
+        level,
+      },
       dateIndex: dates.length,
     }));
   }, [extraRow, dates]);
@@ -690,9 +715,9 @@ export const DateHeatmapBody = ({
       {...props}
     >
       <svg
-        role="img"
+        role="group"
         aria-label={labels.heatmapLabel ?? "Activity heatmap by date and hour"}
-        className="block overflow-visible rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="focus-visible:ring-ring block overflow-visible rounded-sm focus-visible:ring-2 focus-visible:outline-none"
         height={svgHeight + PADDING * 2}
         viewBox={`${-PADDING} ${-PADDING} ${svgWidth + PADDING * 2} ${svgHeight + PADDING * 2}`}
         width={svgWidth + PADDING * 2}
@@ -700,7 +725,7 @@ export const DateHeatmapBody = ({
         {!hideDateLabels && (
           <g
             className={cn(
-              "fill-current font-medium font-mono text-sm",
+              "fill-current font-mono text-sm font-medium",
               labelClassName,
             )}
           >
@@ -719,7 +744,7 @@ export const DateHeatmapBody = ({
                   textAnchor="end"
                   style={{ fontSize: `${fontSize * 0.75}px` }}
                 >
-                  {formatDateWithWeekday(date, dateFormat, locale)}
+                  {formatDateLabel(date, dateFormat, locale)}
                 </text>
               );
             })}
@@ -856,7 +881,7 @@ export const DateHeatmapStat = ({
     return <>{children({ value, data })}</>;
   }
 
-  const template = label ?? labels.stat ?? "{{value}} contributions";
+  const template = label ?? labels.stat ?? "Contributions: {{value}}";
 
   return (
     <div
@@ -905,12 +930,12 @@ export const DateHeatmapLegend = ({
       data-slot="date-heatmap-legend"
       aria-label={labels.legendLabel ?? "Activity intensity legend"}
       className={cn(
-        "ml-auto flex items-center gap-1 text-muted-foreground",
+        "text-muted-foreground ml-auto flex items-center gap-1",
         className,
       )}
       {...props}
     >
-      <span className="mr-1 font-medium text-xs">{lessLabel}</span>
+      <span className="mr-1 text-xs font-medium">{lessLabel}</span>
       {legendLevels.map((level) =>
         children ? (
           <Fragment key={`legend-level-${level}`}>
@@ -919,9 +944,10 @@ export const DateHeatmapLegend = ({
         ) : (
           <svg
             role="img"
-            aria-label={(
-              labels.legendLevelLabel ?? "{{level}} contributions"
-            ).replace("{{level}}", String(level))}
+            aria-label={(labels.legendLevelLabel ?? "Level {{level}}").replace(
+              "{{level}}",
+              String(level),
+            )}
             height={blockSize}
             key={`legend-level-${level}`}
             width={blockWidth}
@@ -939,7 +965,7 @@ export const DateHeatmapLegend = ({
           </svg>
         ),
       )}
-      <span className="ml-1 font-medium text-xs">{moreLabel}</span>
+      <span className="ml-1 text-xs font-medium">{moreLabel}</span>
     </fieldset>
   );
 };

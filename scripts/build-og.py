@@ -1,27 +1,19 @@
 #!/usr/bin/env python3
-"""Generate per-route Open Graph images.
+"""Build social images from the captured demos and installed Fontsource fonts."""
 
-For /calendar /weekday /date /status: 1200x630, white background, a bold
-"shadcn-heatmap" title in Host Grotesk, the matching component example image
-below it, then a small grey site URL (Albert Sans). The title + image + url
-group is centered as a whole.
-
-og-calendar.png doubles as the site-wide default OG image (see seo.ts OG_IMAGE);
-other pages inherit it. The title uses Host Grotesk; the URL uses Albert Sans.
-
-Run: python3 scripts/build-og.py
-"""
-
+from io import BytesIO
 from pathlib import Path
+
+from fontTools.ttLib import TTFont
 
 from PIL import Image, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parent.parent
 ASSETS = ROOT / "assets"
 PUBLIC = ROOT / "public"
-FONTS = ROOT / "public" / "fonts"
-TITLE_FONT = FONTS / "HostGrotesk-VariableFont_wght.woff2"
-URL_FONT = FONTS / "AlbertSans-VariableFont_wght.woff2"
+FONTS = ROOT / "node_modules" / "@fontsource-variable"
+TITLE_FONT = FONTS / "host-grotesk/files/host-grotesk-latin-wght-normal.woff2"
+URL_FONT = FONTS / "albert-sans/files/albert-sans-latin-wght-normal.woff2"
 
 OG_W, OG_H = 1200, 630
 BG = (255, 255, 255)
@@ -48,11 +40,14 @@ ROUTES = {
 
 
 def load_font(path: Path, size: int, weight: int) -> ImageFont.FreeTypeFont:
-    font = ImageFont.truetype(str(path), size)
-    try:
-        font.set_variation_by_axes([weight])
-    except Exception:
-        pass
+    # FreeType builds do not all support WOFF2, so decode it in memory.
+    source = TTFont(path)
+    source.flavor = None
+    buffer = BytesIO()
+    source.save(buffer)
+    buffer.seek(0)
+    font = ImageFont.truetype(buffer, size)
+    font.set_variation_by_axes([weight])
     return font
 
 
@@ -75,12 +70,10 @@ def build(
     canvas = Image.new("RGB", (OG_W, OG_H), BG)
     draw = ImageDraw.Draw(canvas)
 
-    # Title metrics.
     t_bbox = draw.textbbox((0, 0), TITLE, font=title_font)
     title_w = t_bbox[2] - t_bbox[0]
     title_h = t_bbox[3] - t_bbox[1]
 
-    # URL metrics.
     u_bbox = draw.textbbox((0, 0), URL, font=url_font)
     url_w = u_bbox[2] - u_bbox[0]
     url_h = u_bbox[3] - u_bbox[1]
@@ -100,12 +93,10 @@ def build(
     title_y = top - t_bbox[1]
     draw.text((title_x, title_y), TITLE, font=title_font, fill=FG)
 
-    # Example image centered horizontally, below the title.
     img_x = (OG_W - example.width) // 2
     img_y = top + title_h + GAP
     canvas.paste(example, (img_x, img_y))
 
-    # URL: small, grey, centered below the example image.
     url_x = (OG_W - url_w) // 2 - u_bbox[0]
     url_y = img_y + example.height + URL_GAP - u_bbox[1]
     draw.text((url_x, url_y), URL, font=url_font, fill=MUTED)

@@ -1,6 +1,6 @@
 import type { Locale } from "date-fns";
 import { format, parseISO } from "date-fns";
-import type { ReactNode } from "react";
+import type { ReactElement, ReactNode } from "react";
 import {
   Tooltip,
   TooltipContent,
@@ -17,13 +17,13 @@ export function HeatmapTooltip({
   enabled = true,
 }: {
   content: ReactNode;
-  children: ReactNode;
+  children: ReactElement;
   enabled?: boolean;
 }) {
   if (!enabled) return <>{children}</>;
   return (
     <Tooltip>
-      <TooltipTrigger asChild>{children}</TooltipTrigger>
+      <TooltipTrigger tabIndex={0} render={children} />
       <TooltipContent
         side="top"
         className="pointer-events-none text-xs"
@@ -35,10 +35,17 @@ export function HeatmapTooltip({
   );
 }
 
-export const generateWeekdayNames = (locale?: Locale): string[] =>
-  Array.from({ length: 7 }, (_, i) =>
+const weekdayNameCache = new WeakMap<Locale, string[]>();
+export const generateWeekdayNames = (locale?: Locale): string[] => {
+  if (locale && weekdayNameCache.has(locale))
+    return weekdayNameCache.get(locale) as string[];
+  const names = Array.from({ length: 7 }, (_, i) =>
     format(new Date(2000, 0, 2 + i), "EEEE", locale ? { locale } : undefined),
   );
+
+  if (locale) weekdayNameCache.set(locale, names);
+  return names;
+};
 
 export const WEEKDAY_NAMES = generateWeekdayNames();
 
@@ -47,28 +54,30 @@ export function WeekTooltipContent({
   extra,
   use12Hour = false,
   locale,
-  avgLabel = "Avg",
-  avgPrefix = "avg. ",
+  aggregateLabel = "Avg",
+  aggregatePrefix = "avg. ",
 }: {
   activity: { weekday: number; hour: number; value: number };
   extra?: "row" | "column";
   use12Hour?: boolean;
   locale?: Locale;
-  avgLabel?: string;
-  avgPrefix?: string;
+  aggregateLabel?: string;
+  aggregatePrefix?: string;
 }) {
-  const names = generateWeekdayNames(locale);
-  const day = extra === "row" ? avgLabel : names[activity.weekday];
+  const names = locale ? generateWeekdayNames(locale) : WEEKDAY_NAMES;
+  const day = extra === "row" ? aggregateLabel : names[activity.weekday];
   const hour =
-    extra === "column" ? avgLabel : formatHourRange(activity.hour, use12Hour);
-  const isAvg = extra !== undefined;
+    extra === "column"
+      ? aggregateLabel
+      : formatHourRange(activity.hour, use12Hour);
+  const isAggregate = extra !== undefined;
   return (
     <>
       <p className="font-medium">
         {day}, {hour}
       </p>
       <p className="text-muted-foreground">
-        {isAvg ? avgPrefix : ""}
+        {isAggregate ? aggregatePrefix : ""}
         {activity.value.toFixed(1)} °C
       </p>
     </>
@@ -80,20 +89,24 @@ export function DateTooltipContent({
   extra,
   locale,
   dateFormat = "PPP",
+  aggregateLabel = "Total",
   use12Hour = false,
 }: {
   activity: { date: string; hour: number; value: number };
   extra?: "row" | "column";
   locale?: Locale;
   dateFormat?: string;
+  aggregateLabel?: string;
   use12Hour?: boolean;
 }) {
   const hour =
-    extra === "column" ? "Total" : formatHourRange(activity.hour, use12Hour);
+    extra === "column"
+      ? aggregateLabel
+      : formatHourRange(activity.hour, use12Hour);
 
   const dateLabel =
     extra === "row"
-      ? "Total"
+      ? aggregateLabel
       : format(
           parseISO(activity.date),
           dateFormat,

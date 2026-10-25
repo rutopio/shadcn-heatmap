@@ -13,13 +13,13 @@
       "name": "weekday-heatmap",
       "type": "registry:component",
       "title": "WeekdayHeatmap",
-      "description": "Weekday × hour-of-day matrix with Sum row/column and independent colour scales."
+      "description": "Weekday by hour grid with optional aggregate rows and columns."
     },
     {
       "name": "date-heatmap",
       "type": "registry:component",
       "title": "DateHeatmap",
-      "description": "Date × hour matrix for zooming into a narrow time window with daily Sum column."
+      "description": "Date by hour grid with optional aggregate rows and columns."
     },
     {
       "name": "status-heatmap",

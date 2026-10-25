@@ -1,11 +1,10 @@
 import {
   createRootRoute,
+  type ErrorComponentProps,
   HeadContent,
   Link,
   Outlet,
-  useNavigate,
 } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
 
 import { SiteFooter } from "@/components/site/footer";
 import { SiteHeader } from "@/components/site/header";
@@ -13,15 +12,13 @@ import { Button } from "@/components/ui/button";
 import { Toaster } from "@/components/ui/sonner";
 import { OG_IMAGE, SITE_DESCRIPTION, SITE_NAME, SITE_TITLE } from "@/lib/seo";
 
-const REDIRECT_SECONDS = 3;
-
 function RootLayout() {
   return (
     <>
       <HeadContent />
-      <div className="relative flex min-h-svh flex-col bg-background text-foreground">
+      <div className="bg-background text-foreground relative flex min-h-svh flex-col">
         <SiteHeader />
-        <main className="relative flex-1 bg-[radial-gradient(var(--color-border)_1px,transparent_1px)] bg-background [background-size:16px_16px]">
+        <main className="bg-background relative flex-1 bg-[radial-gradient(var(--color-border)_1px,transparent_1px)] [background-size:16px_16px]">
           <Outlet />
         </main>
         <SiteFooter />
@@ -32,37 +29,32 @@ function RootLayout() {
 }
 
 function NotFoundPage() {
-  const navigate = useNavigate();
-  const [remaining, setRemaining] = useState(REDIRECT_SECONDS);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setRemaining((prev) => {
-        if (prev <= 1) {
-          clearInterval(interval);
-          void navigate({ to: "/", replace: true });
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [navigate]);
-
   return (
     <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-4 text-center">
-      <p className="font-mono text-muted-foreground text-sm">404</p>
-      <h1 className="text-balance font-semibold text-2xl">Page not found</h1>
-      <p className="max-w-md text-pretty text-muted-foreground text-sm">
-        The page you are looking for does not exist. Redirecting home in{" "}
-        <span className="text-foreground tabular-nums">{remaining}</span>
-        {remaining === 1 ? " second" : " seconds"}.
+      <p className="text-muted-foreground font-mono text-sm">404</p>
+      <h1 className="text-2xl font-semibold text-balance">Page not found</h1>
+      <p className="text-muted-foreground max-w-md text-sm text-pretty">
+        The page you are looking for does not exist.
       </p>
       <Button
         size="sm"
         nativeButton={false}
+        role="link"
         render={<Link to="/">Back to home</Link>}
       />
+    </div>
+  );
+}
+
+function ErrorPage({ reset }: ErrorComponentProps) {
+  return (
+    <div className="flex min-h-[60vh] flex-col items-center justify-center gap-4 px-4 text-center">
+      <h1 className="text-2xl font-semibold">Something went wrong</h1>
+      <p className="text-muted-foreground">
+        We could not load this page. Please try again.
+      </p>
+      <Button onClick={reset}>Try again</Button>
+      <Link to="/">Back to home</Link>
     </div>
   );
 }
@@ -70,7 +62,7 @@ function NotFoundPage() {
 export const Route = createRootRoute({
   component: RootLayout,
   notFoundComponent: NotFoundPage,
-  errorComponent: NotFoundPage,
+  errorComponent: ErrorPage,
   head: () => ({
     meta: [
       { title: SITE_TITLE },

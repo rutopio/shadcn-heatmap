@@ -6,17 +6,23 @@ const data = [
   { date: "2025-01-02", value: 0 }, // missed
 ];
 
-<TooltipProvider delayDuration={0}>
+<TooltipProvider delay={0}>
   <CalendarHeatmap data={data} levels={2}>
     <CalendarHeatmapBody>
-      {({ activity, dayIndex, weekIndex }) => <Tooltip>{/* ... */}</Tooltip>}
+      {({ activity, dayIndex, weekIndex }) => (
+        <CalendarHeatmapBlock
+          activity={activity}
+          dayIndex={dayIndex}
+          weekIndex={weekIndex}
+        />
+      )}
     </CalendarHeatmapBody>
     <CalendarHeatmapFooter>
       <CalendarHeatmapStat />
       <CalendarHeatmapLegend labels={{ less: "Missed", more: "Done" }} />
     </CalendarHeatmapFooter>
   </CalendarHeatmap>
-</TooltipProvider>
+</TooltipProvider>;
 `;
 
 export const binaryWeekdayHighlightLines = [1, 2, 3, 4, 8, 13];
@@ -27,16 +33,16 @@ const data = [
   { weekday: 1, hour: 10, value: 0 }, // free
 ];
 
-<TooltipProvider delayDuration={0}>
+<TooltipProvider delay={0}>
   <WeekdayHeatmap data={data} levels={2}>
     <WeekdayHeatmapBody>
-      {({ activity }) => <Tooltip>{/* ... */}</Tooltip>}
+      {({ activity }) => <WeekdayHeatmapBlock activity={activity} />}
     </WeekdayHeatmapBody>
     <WeekdayHeatmapFooter>
       <WeekdayHeatmapLegend labels={{ less: "Free", more: "Meeting" }} />
     </WeekdayHeatmapFooter>
   </WeekdayHeatmap>
-</TooltipProvider>
+</TooltipProvider>;
 `;
 
 export const binaryDateHighlightLines = [1, 2, 3, 4, 8, 13];
@@ -47,14 +53,18 @@ const data = [
   { date: "2025-12-02", hour: 11, value: 0 }, // failed
 ];
 
-<TooltipProvider delayDuration={0}>
+<TooltipProvider delay={0}>
   <DateHeatmap data={data} levels={2}>
     <DateHeatmapBody>
-      {({ activity, dateIndex }) => <Tooltip>{/* ... */}</Tooltip>}
+      {({ activity, dateIndex }) => (
+        <DateHeatmapBlock activity={activity} dateIndex={dateIndex} />
+      )}
     </DateHeatmapBody>
     <DateHeatmapFooter>
-      <DateHeatmapLegend labels={{ less: "Failed", more: "Pass" }} />
+      <DateHeatmapLegend
+        labels={{ less: "Failed or no run", more: "Passed" }}
+      />
     </DateHeatmapFooter>
   </DateHeatmap>
-</TooltipProvider>
+</TooltipProvider>;
 `;

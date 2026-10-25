@@ -4,7 +4,6 @@ import {
   LinkSimpleBreakIcon,
 } from "@phosphor-icons/react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import {
   CalendarDefaultDemo,
@@ -12,12 +11,13 @@ import {
   StatusDefaultDemo,
   WeekdayDefaultDemo,
 } from "@/docs";
+import { copyText } from "@/lib/clipboard";
 import { pageHead, SITE_DESCRIPTION, SITE_TITLE } from "@/lib/seo";
 
 const heatmaps = [
   {
     name: "CalendarHeatmap",
-    description: "Example of Github Contribution",
+    description: "GitHub-style contribution calendar",
     Demo: CalendarDefaultDemo,
     router: "calendar",
   },
@@ -29,7 +29,7 @@ const heatmaps = [
   },
   {
     name: "DateHeatmap",
-    description: "Annual rainfall in Cherrapunji across dry and wet seasons",
+    description: "Sample hourly rainfall in Cherrapunji",
     Demo: DateDefaultDemo,
     router: "date",
   },
@@ -44,14 +44,14 @@ const heatmaps = [
 function IndexPage() {
   return (
     <section className="relative overflow-hidden border-b">
-      <div className="container relative py-12 sm:py-28">
+      <div className="relative container py-12 sm:py-28">
         <div className="flex flex-col items-center gap-6">
-          <h1 className="max-w-6xl text-balance text-center font-semibold text-4xl leading-tight sm:text-5xl md:text-6xl">
+          <h1 className="max-w-6xl text-center text-4xl leading-tight font-semibold text-balance sm:text-5xl md:text-6xl">
             Heatmap components for React,
             <br className="hidden sm:block" /> built for{" "}
             <span className="text-muted-foreground">shadcn/ui</span>
           </h1>
-          <p className="max-w-2xl text-pretty text-base text-muted-foreground sm:text-center sm:text-lg">
+          <p className="text-muted-foreground max-w-2xl text-base text-pretty sm:text-center sm:text-lg">
             Four heatmap components for React: calendar, weekday, date, and
             status.
             <br />
@@ -64,9 +64,10 @@ function IndexPage() {
               size="lg"
               className="gap-2"
               nativeButton={false}
+              role="link"
               render={
                 <Link to="/install">
-                  Get Started{" "}
+                  Get started{" "}
                   <CodeIcon
                     aria-hidden="true"
                     weight="bold"
@@ -82,7 +83,7 @@ function IndexPage() {
             <div
               key={name}
               id={router}
-              className="flex flex-col overflow-hidden rounded-xl border bg-background"
+              className="bg-background flex flex-col overflow-hidden rounded-xl border"
             >
               <div className="flex items-stretch justify-between border-b">
                 <div className="px-4 py-4">
@@ -93,10 +94,7 @@ function IndexPage() {
                       className="h-6 p-0"
                       onClick={() => {
                         const url = `${window.location.origin}${window.location.pathname}#${router}`;
-                        void navigator.clipboard.writeText(url);
-                        toast.success("Link copied to clipboard", {
-                          description: url,
-                        });
+                        void copyText(url, "Link copied to clipboard", url);
                       }}
                       aria-label={`Copy link to ${name}`}
                     >
@@ -105,16 +103,16 @@ function IndexPage() {
                         className="size-4"
                       />
                     </Button>
-                    <h2 className="text-balance font-medium">{name}</h2>
+                    <h2 className="font-medium text-balance">{name}</h2>
                   </div>
-                  <p className="mt-1 text-pretty text-muted-foreground text-xs">
+                  <p className="text-muted-foreground mt-1 text-xs text-pretty">
                     {description}
                   </p>
                 </div>
                 <Link
                   to={router}
                   aria-label={`Explore ${name}`}
-                  className="flex shrink-0 items-center gap-1.5 border-l px-4 font-medium text-sm transition-colors hover:bg-muted"
+                  className="hover:bg-muted flex shrink-0 items-center gap-1.5 border-l px-4 text-sm font-medium transition-colors"
                 >
                   Explore
                   <ArrowRightIcon

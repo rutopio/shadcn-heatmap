@@ -5,7 +5,7 @@ import {
   XIcon,
 } from "@phosphor-icons/react";
 import { Link, useRouterState } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
@@ -23,25 +23,50 @@ const navLinks = [
 ];
 
 export function SiteHeader() {
-  const [menuState, setMenuState] = useState<"closed" | "open" | "closing">(
-    "closed",
-  );
+  const [menuOpen, setMenuOpen] = useState(false);
+  const headerRef = useRef<HTMLElement>(null);
+  const triggerRef = useRef<HTMLButtonElement>(null);
   const pathname = useRouterState({ select: (s) => s.location.pathname });
+  const closeMenu = () => setMenuOpen(false);
 
-  const openMenu = () => setMenuState("open");
-  const closeMenu = () => setMenuState((s) => (s === "open" ? "closing" : s));
-  const handleAnimationEnd = () =>
-    setMenuState((s) => (s === "closing" ? "closed" : s));
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setMenuOpen(false);
+        triggerRef.current?.focus();
+      }
+    };
+    const onPointerDown = (event: PointerEvent) => {
+      if (!headerRef.current?.contains(event.target as Node))
+        setMenuOpen(false);
+    };
+    const onFocusIn = (event: FocusEvent) => {
+      if (!headerRef.current?.contains(event.target as Node))
+        setMenuOpen(false);
+    };
+    document.addEventListener("keydown", onKeyDown);
+    document.addEventListener("pointerdown", onPointerDown);
+    document.addEventListener("focusin", onFocusIn);
+    return () => {
+      document.removeEventListener("keydown", onKeyDown);
+      document.removeEventListener("pointerdown", onPointerDown);
+      document.removeEventListener("focusin", onFocusIn);
+    };
+  }, [menuOpen]);
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b bg-background/80 backdrop-blur-sm">
+    <header
+      ref={headerRef}
+      className="bg-background/80 sticky top-0 z-40 w-full border-b backdrop-blur-sm"
+    >
       <div className="container flex h-14 items-center gap-4">
         <Link
           to="/"
           className="flex items-center gap-2 font-semibold"
           aria-label="shadcn-heatmap home"
           onClick={() => {
-            if (menuState !== "closed") closeMenu();
+            closeMenu();
           }}
         >
           <span className="flex size-7 items-center justify-center rounded-md">
@@ -142,6 +167,7 @@ export function SiteHeader() {
             variant="ghost"
             size="sm"
             nativeButton={false}
+            role="link"
             render={
               <Link to="/install">
                 Install
@@ -156,6 +182,7 @@ export function SiteHeader() {
               size="sm"
               className={cn("gap-2", pathname === link.to && "bg-muted")}
               nativeButton={false}
+              role="link"
               render={
                 <Link
                   to={link.to}
@@ -174,6 +201,7 @@ export function SiteHeader() {
             className="hidden md:inline-flex"
             aria-label="View source on GitHub (opens in new tab)"
             nativeButton={false}
+            role="link"
             render={
               <a href={GITHUB_URL} target="_blank" rel="noreferrer">
                 <GithubLogoIcon
@@ -190,15 +218,13 @@ export function SiteHeader() {
             variant="ghost"
             size="icon"
             className="size-10 md:hidden"
-            aria-label={menuState === "open" ? "Close menu" : "Open menu"}
-            aria-expanded={menuState === "open"}
+            aria-label={menuOpen ? "Close menu" : "Open menu"}
+            aria-expanded={menuOpen}
+            ref={triggerRef}
             aria-controls="mobile-nav"
-            onClick={() => {
-              if (menuState === "open") closeMenu();
-              else if (menuState === "closed") openMenu();
-            }}
+            onClick={() => setMenuOpen((open) => !open)}
           >
-            {menuState !== "closed" ? (
+            {menuOpen ? (
               <XIcon aria-hidden="true" weight="bold" className="size-5" />
             ) : (
               <ListIcon aria-hidden="true" weight="bold" className="size-5" />
@@ -207,21 +233,18 @@ export function SiteHeader() {
         </div>
       </div>
 
-      {menuState !== "closed" && (
+      {menuOpen && (
         <div
           id="mobile-nav"
-          onAnimationEnd={handleAnimationEnd}
           className={cn(
-            "absolute top-full right-0 left-0 z-50 border-b bg-background shadow-sm md:hidden",
-            menuState === "closing"
-              ? "fade-out slide-out-to-top-2 animate-out fill-mode-forwards duration-150"
-              : "fade-in slide-in-from-top-2 animate-in duration-200",
+            "bg-background absolute top-full right-0 left-0 z-50 border-b shadow-sm md:hidden",
+            "motion-safe:fade-in motion-safe:slide-in-from-top-2 motion-safe:animate-in duration-200",
           )}
         >
           <nav className="container flex flex-col py-3">
             <Link
               to="/install"
-              className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="hover:bg-muted focus-visible:ring-ring focus-visible:ring-offset-background flex items-center gap-2 rounded-md px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               onClick={closeMenu}
             >
               Install
@@ -232,7 +255,7 @@ export function SiteHeader() {
                 key={link.to}
                 to={link.to}
                 className={cn(
-                  "rounded-md px-3 py-2 text-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background",
+                  "hover:bg-muted focus-visible:ring-ring focus-visible:ring-offset-background rounded-md px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none",
                   pathname === link.to && "bg-muted font-medium",
                 )}
                 aria-current={pathname === link.to ? "page" : undefined}
@@ -246,7 +269,7 @@ export function SiteHeader() {
               target="_blank"
               rel="noreferrer"
               aria-label="rutopio/shadcn-heatmap on GitHub (opens in new tab)"
-              className="flex items-center gap-2 rounded-md px-3 py-2 text-sm hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+              className="hover:bg-muted focus-visible:ring-ring focus-visible:ring-offset-background flex items-center gap-2 rounded-md px-3 py-2 text-sm focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none"
               onClick={closeMenu}
             >
               <GithubLogoIcon

@@ -25,10 +25,10 @@ export function DemoFrame({
       {(title || description) && (
         <div className="flex flex-col gap-1">
           {title && (
-            <h2 className="text-balance font-semibold text-lg">{title}</h2>
+            <h2 className="text-lg font-semibold text-balance">{title}</h2>
           )}
           {description && (
-            <p className="text-pretty text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-sm text-pretty">
               {description}
             </p>
           )}
@@ -46,7 +46,7 @@ export function DemoFrame({
         >
           <div
             className={cn(
-              "flex min-h-30 items-center justify-center overflow-x-auto rounded-lg border bg-background p-4 sm:min-h-40 sm:p-6",
+              "bg-background flex min-h-30 items-center justify-center overflow-x-auto rounded-lg border p-4 sm:min-h-40 sm:p-6",
               previewClassName,
             )}
           >

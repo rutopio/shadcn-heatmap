@@ -22,7 +22,10 @@ async function getHighlighter(): Promise<HighlighterCore> {
         langs: [tsx.default, bash.default, json.default, css.default],
         engine: createOnigurumaEngine(import("shiki/wasm")),
       });
-    })();
+    })().catch((error) => {
+      highlighterPromise = null;
+      throw error;
+    });
   }
   return highlighterPromise;
 }
@@ -40,7 +43,7 @@ export type HighlightedLine = HighlightedToken[];
 
 /**
  * Tokenize code for rendering via React (no innerHTML required).
- * Returns lines of tokens with `light` and `dark` colour strings.
+ * Returns lines of tokens with `light` and `dark` color strings.
  */
 export async function highlightTokens(
   code: string,

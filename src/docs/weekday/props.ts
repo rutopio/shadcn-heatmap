@@ -11,19 +11,19 @@ export const weekdayProps: ComponentPropsSection[] = [
         type: "WeekdayHourlyActivity[]",
         required: true,
         description:
-          "`{ weekday: number, hour: number, value: number }[]`. `weekday` is `0..6` (Sun–Sat); `hour` is `0..23`.",
+          "`{ weekday: number, hour: number, value: number }[]`. `weekday` is `0..6` (Sunday to Saturday); `hour` is `0..23`.",
       },
       {
         name: "extraRow",
         type: "{ label: ReactNode; compute: (data: WeekdayHourlyActivity[]) => number[] }",
         description:
-          "Append an aggregate row below the grid. `compute(data)` must return exactly 24 numbers (one per hour). `label` appears in the left gutter. The extra row has an independent min–max colour scale.",
+          "Append an aggregate row below the grid. `compute(data)` must return exactly 24 numbers (one per hour). `label` appears in the left gutter. The extra row has an independent min-max color scale.",
       },
       {
         name: "extraColumn",
         type: "{ label: ReactNode; compute: (data: WeekdayHourlyActivity[]) => number[] }",
         description:
-          "Append an aggregate column to the right of the grid. `compute(data)` must return exactly 7 numbers (one per weekday, indexed 0–6). `label` appears in the top gutter. The extra column has an independent min–max colour scale.",
+          "Append an aggregate column to the right of the grid. `compute(data)` must return exactly 7 numbers (one per weekday, indexed 0 to 6). `label` appears in the top gutter. The extra column has an independent min-max color scale.",
       },
       {
         name: "emptyState",
@@ -42,14 +42,14 @@ export const weekdayProps: ComponentPropsSection[] = [
         type: "number",
         default: "5",
         description:
-          "Total number of cells shown in the legend. Non-normalized: 1 empty cell + `(levels - 1)` coloured steps from 20%→100% opacity. Normalized: `levels` coloured steps from 20%→100% opacity (no empty cell).",
+          "Number of legend cells. Use an integer of at least 2, or at least 1 when normalized. Non-normalized: 1 empty cell + `(levels - 1)` colored steps from 20%→100% opacity. Normalized: `levels` colored steps from 20%→100% opacity (no empty cell).",
       },
       {
         name: "isNormalized",
         type: "boolean",
         default: "false",
         description:
-          "When `true`, uses min–max normalization: min maps to level 1 and max to `levels`. Suitable for signed values. When `false`, values ≤ 0 are treated as empty (level 0) and the scale runs from 0 to max.",
+          "When `true`, uses min-max normalization: min maps to level 1 and max to `levels`. Suitable for signed values. When `false`, values ≤ 0 are treated as empty (level 0) and the scale runs from 0 to max.",
       },
       {
         name: "blockSize",
@@ -95,7 +95,7 @@ export const weekdayProps: ComponentPropsSection[] = [
         type: "boolean",
         default: "false",
         description:
-          "Switch the hour axis from 24-hour (`00`–`23`) to 12-hour AM/PM format. Can be combined with a custom `labels.hours` override.",
+          "Switch the hour axis from 24-hour (`00` to `23`) to 12-hour AM/PM format. Can be combined with a custom `labels.hours` override.",
       },
       {
         name: "locale",
@@ -107,7 +107,7 @@ export const weekdayProps: ComponentPropsSection[] = [
         name: "labels",
         type: "WeekdayHeatmapLabels",
         description:
-          "`{ weekdays?: string[7], hours?: string[24], endHour?: string | null, cellLabel?: string, stat?: string }`. `endHour` defaults to `'00'` / `'12'`; set to `null` to hide it. `cellLabel` is the aria-label template (placeholders: `{{weekday}}`, `{{hour}}`, `{{value}}`). Legend text goes on `<WeekdayHeatmapLegend labels={…}>`; stat text goes on `<WeekdayHeatmapStat label={…}>` — or set `labels.stat` here for a single i18n source. Extra row/column labels come from `extraRow.label` / `extraColumn.label`.",
+          "`{ weekdays?: string[7], hours?: string[24], endHour?: string | null, cellLabel?: string, stat?: string }`. `endHour` defaults to `'00'` / `'12'`; set to `null` to hide it. `cellLabel` is the aria-label template (placeholders: `{{weekday}}`, `{{hour}}`, `{{value}}`). Legend text goes on `<WeekdayHeatmapLegend labels={…}>`; stat text goes on `<WeekdayHeatmapStat label={…}>`, or set `labels.stat` here for a single i18n source. Extra row/column labels come from `extraRow.label` / `extraColumn.label`.",
       },
       {
         name: "totalCount",
@@ -127,7 +127,7 @@ export const weekdayProps: ComponentPropsSection[] = [
         type: "(args: { activity: WeekdayHourlyActivityWithLevel; weekdayIndex: number }) => ReactNode",
         required: true,
         description:
-          "Render-prop for each cell. `weekdayIndex` is the display row index (0–6, reordered per `weekStart`; 7 = extra row). Typically returns `<WeekdayHeatmapBlock activity={activity} />`.",
+          "Render-prop for each cell. `weekdayIndex` is the display row index (0 to 6, reordered per `weekStart`; 7 = extra row). Typically returns `<WeekdayHeatmapBlock activity={activity} />`.",
       },
       {
         name: "hideWeekdayLabels",
@@ -172,20 +172,20 @@ export const weekdayProps: ComponentPropsSection[] = [
         type: "WeekdayHourlyActivityWithLevel",
         required: true,
         description:
-          "The cell's activity record with its computed `level`. Contains `weekday` (0–6), `hour` (0–23), `value`, and `level`. Pass the value received from the `WeekdayHeatmapBody` render-prop.",
+          "The cell's activity record with its computed `level`. Contains `weekday` (0 to 6), `hour` (0 to 23), `value`, and `level`. Pass the value received from the `WeekdayHeatmapBody` render-prop.",
       },
       {
         name: "extra",
         type: "'row' | 'column' | undefined",
         description:
-          "Marks this block as an extra aggregate row or column cell. Controls positioning. Pass the value received from `renderExtraRow` / `renderExtraColumn`.",
+          "Overrides aggregate positioning. Defaults to `activity.extra`, which the body sets automatically.",
       },
       {
         name: "highlighted",
         type: "boolean",
         default: "false",
         description:
-          "Dims the block to 60% of its colour. Useful for selected/focus states. Also sets `data-highlighted` on the element for CSS targeting.",
+          "Dims the block to 60% of its color. Useful for selected/focus states. Also sets `data-highlighted` on the element for CSS targeting.",
       },
       {
         name: "onCellClick",
@@ -251,7 +251,7 @@ export const weekdayProps: ComponentPropsSection[] = [
   {
     componentName: "WeekdayHeatmapLegend",
     description:
-      "Displays the intensity legend (Less → More) with colour-coded blocks matching the root `levels` and `colors` settings.",
+      "Displays the intensity legend (Less → More) with color-coded blocks matching the root `levels` and `colors` settings.",
     props: [
       {
         name: "labels",
@@ -263,7 +263,7 @@ export const weekdayProps: ComponentPropsSection[] = [
         name: "children",
         type: "(props: { level: number }) => ReactNode",
         description:
-          "Custom render-prop called once per legend level. Receives `{ level }` (0 = empty up to `levels`). Replaces the default colour block.",
+          "Custom render-prop called once per legend level. Receives `{ level }`: 0 to `levels - 1`, or 1 to `levels` when normalized. Replaces the default color block.",
       },
       {
         name: "className",

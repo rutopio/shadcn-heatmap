@@ -1,6 +1,19 @@
+"use client";
+
 import type { Locale } from "date-fns";
-import { format } from "date-fns";
-import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
+import {
+  eachDayOfInterval,
+  format,
+  formatISO,
+  isValid,
+  parseISO,
+} from "date-fns";
+import type {
+  ComponentPropsWithRef,
+  CSSProperties,
+  HTMLAttributes,
+  ReactNode,
+} from "react";
 import { createContext, Fragment, use, useMemo } from "react";
 import { cn } from "@/lib/utils";
 
@@ -100,7 +113,7 @@ const resolveStatusLabel = (
   }
   switch (value) {
     case 0:
-      return "No Data";
+      return "No data";
     case 1:
       return "Critical";
     case 2:
@@ -120,6 +133,25 @@ const getStatusFill = (
   const base = resolveColor(value, colors);
   if (!highlighted) return base;
   return `color-mix(in oklch, ${base} 60%, transparent)`;
+};
+
+const normalizeData = (data: StatusActivity[]): StatusActivity[] => {
+  const cells = new Map<string, StatusActivity>();
+  for (const activity of data) {
+    if (!Number.isFinite(activity.value)) {
+      throw new RangeError("Heatmap values must be finite numbers.");
+    }
+    const date = parseISO(activity.date);
+    if (
+      !/^\d{4}-\d{2}-\d{2}$/.test(activity.date) ||
+      !isValid(date) ||
+      formatISO(date, { representation: "date" }) !== activity.date
+    ) {
+      throw new RangeError("Heatmap dates must be valid YYYY-MM-DD strings.");
+    }
+    cells.set(activity.date, activity);
+  }
+  return [...cells.values()].sort((a, b) => a.date.localeCompare(b.date));
 };
 
 const EMPTY_STYLE: CSSProperties = {};
@@ -160,38 +192,8 @@ export type StatusHeatmapProps = HTMLAttributes<HTMLDivElement> & {
   children: ReactNode;
 };
 
-/**
- * Status Heatmap
- *
- * A timeline indicator showing daily status over a period (e.g., 90 days).
- * Similar to Atlassian Statuspage - each day is represented by a vertical bar.
- * Supports 4 status values: 0=no-data, 1=critical, 2=degraded, 3=healthy
- *
- * @example
- * ```tsx
- * <StatusHeatmap data={data} blockAspectRatio={0.2}>
- *   <StatusHeatmapBody>
- *     {({ activity, dayIndex }) => (
- *       <StatusHeatmapBlock
- *         activity={activity}
- *         dayIndex={dayIndex}
- *       />
- *     )}
- *   </StatusHeatmapBody>
- *   <StatusHeatmapFooter>
- *     <StatusHeatmapStat />
- *     <StatusHeatmapLegend />
- *   </StatusHeatmapFooter>
- * </StatusHeatmap>
- * ```
- *
- * @param data - Array of activities with date (YYYY-MM-DD) and status value (0-3)
- * @param dateFormat - Date format string for tooltips. Default: "MMM d"
- * @param blockAspectRatio - Width/height ratio of blocks. Default: 0.2 (narrow vertical bars)
- * @param colors - Custom colors for critical, degraded, and healthy states
- */
 export const StatusHeatmap = ({
-  data,
+  data: inputData,
   dateFormat = "MMM d",
   blockSize = 40,
   blockMargin = 2,
@@ -209,10 +211,11 @@ export const StatusHeatmap = ({
   children,
   ...props
 }: StatusHeatmapProps) => {
+  const data = useMemo(() => normalizeData(inputData), [inputData]);
   const labels = useMemo<StatusHeatmapLabels>(
     () => ({
       statuses: {
-        noData: "No Data",
+        noData: "No data",
         critical: "Critical",
         degraded: "Degraded",
         healthy: "Healthy",
@@ -226,11 +229,11 @@ export const StatusHeatmap = ({
   );
 
   const dates = useMemo(() => {
-    const uniqueDates = new Set<string>();
-    data.forEach((activity) => {
-      uniqueDates.add(activity.date);
-    });
-    return Array.from(uniqueDates).sort();
+    if (!data.length) return [];
+    return eachDayOfInterval({
+      start: parseISO(data[0].date),
+      end: parseISO(data[data.length - 1].date),
+    }).map((date) => formatISO(date, { representation: "date" }));
   }, [data]);
 
   const blockWidth = blockSize * blockAspectRatio;
@@ -277,7 +280,7 @@ export const StatusHeatmap = ({
   );
 
   if (data.length === 0 || dates.length === 0) {
-    return emptyState ? emptyState : null;
+    return emptyState ?? null;
   }
 
   return (
@@ -294,7 +297,7 @@ export const StatusHeatmap = ({
   );
 };
 
-export type StatusHeatmapBlockProps = HTMLAttributes<SVGRectElement> & {
+export type StatusHeatmapBlockProps = ComponentPropsWithRef<"rect"> & {
   activity: StatusActivity;
   dayIndex: number;
   highlighted?: boolean;
@@ -317,9 +320,7 @@ export const StatusHeatmapBlock = ({
   className,
   style: styleProp,
   ...props
-}: StatusHeatmapBlockProps & {
-  ref?: React.RefObject<SVGRectElement | null>;
-}) => {
+}: StatusHeatmapBlockProps) => {
   const { blockSize, blockWidth, blockMargin, blockRadius, labels, colors } =
     useStatusHeatmap();
 
@@ -339,9 +340,9 @@ export const StatusHeatmapBlock = ({
       tabIndex={onCellClick ? 0 : -1}
       aria-label={ariaLabel}
       className={cn(
-        "motion-safe:transition-opacity motion-safe:hover:opacity-70",
+        "focus-visible:stroke-current focus-visible:stroke-2 focus-visible:outline-none motion-safe:transition-opacity motion-safe:hover:opacity-70",
         onCellClick &&
-          "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          "focus-visible:ring-ring cursor-pointer focus-visible:ring-2 focus-visible:outline-none",
         className,
       )}
       data-value={activity.value}
@@ -447,9 +448,9 @@ export const StatusHeatmapBody = ({
       {...props}
     >
       <svg
-        role="img"
+        role="group"
         aria-label={labels.heatmapLabel ?? "Status heatmap"}
-        className="block overflow-visible rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="focus-visible:ring-ring block overflow-visible rounded-sm focus-visible:ring-2 focus-visible:outline-none"
         height={height + labelHeight + PADDING * 2}
         viewBox={`${-PADDING} ${-PADDING} ${width + PADDING * 2} ${height + labelHeight + PADDING * 2}`}
         width={width + PADDING * 2}
@@ -478,7 +479,7 @@ export const StatusHeatmapBody = ({
                   textAnchor={anchor}
                   style={{ fontSize: `${labelFontSize}px` }}
                 >
-                  {format(new Date(date), dateFormat, { locale })}
+                  {format(parseISO(date), dateFormat, { locale })}
                 </text>
               );
             })}
@@ -541,7 +542,7 @@ export const StatusHeatmapStat = ({
     return <>{children({ value, data })}</>;
   }
 
-  const template = label ?? labels.stat ?? "{{value}} days healthy";
+  const template = label ?? labels.stat ?? "Healthy days: {{value}}";
 
   return (
     <div
@@ -603,7 +604,7 @@ export const StatusHeatmapLegend = ({
                 style={{ fill: getStatusFill(status.value, colors) }}
               />
             </svg>
-            <span className="font-medium text-muted-foreground text-xs">
+            <span className="text-muted-foreground text-xs font-medium">
               {status.label}
             </span>
           </div>

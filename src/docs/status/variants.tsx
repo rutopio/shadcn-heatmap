@@ -15,7 +15,6 @@ export const statusVariantItems = [
     description:
       "Use colors to theme the blocks, labelClassName to style date labels, className on Stat and Legend to style the footer, and blockSize/blockAspectRatio/blockMargin to adjust block dimensions.",
     preview: <StatusCustomStylingDemo />,
-    highlightLines: [3, 4, 5, 6, 7, 8, 9, 10, 12],
     code: `
 <StatusHeatmap
   data={data}
@@ -29,7 +28,9 @@ export const statusVariantItems = [
   }}
 >
   <StatusHeatmapBody labelClassName="text-destructive font-bold">
-    {({ activity, dayIndex }) => <Tooltip>{/* ... */}</Tooltip>}
+    {({ activity, dayIndex }) => (
+      <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
+    )}
   </StatusHeatmapBody>
   <StatusHeatmapFooter>
     <StatusHeatmapStat />
@@ -47,7 +48,9 @@ export const statusVariantItems = [
     code: `
 <StatusHeatmap data={data}>
   <StatusHeatmapBody>
-    {({ activity, dayIndex }) => <Tooltip>{/* ... */}</Tooltip>}
+    {({ activity, dayIndex }) => (
+      <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
+    )}
   </StatusHeatmapBody>
   <StatusHeatmapFooter>
     <StatusHeatmapStat />
@@ -58,15 +61,15 @@ export const statusVariantItems = [
   },
   {
     title: "Grid only",
-    description:
-      "Strip date labels — great for inline cards or a hero preview.",
+    description: "Strip date labels: great for inline cards or a hero preview.",
     preview: <StatusNoLabelsDemo />,
-    highlightLines: [2],
     deletedLines: [5, 6, 7, 8],
     code: `
 <StatusHeatmap data={data}>
   <StatusHeatmapBody hideDateLabels>
-    {({ activity, dayIndex }) => <Tooltip>{/* ... */}</Tooltip>}
+    {({ activity, dayIndex }) => (
+      <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
+    )}
   </StatusHeatmapBody>
   <StatusHeatmapFooter>
     <StatusHeatmapStat />
@@ -78,20 +81,19 @@ export const statusVariantItems = [
   {
     title: "Custom tooltip",
     description:
-      "Replace the default tooltip with any JSX — add emoji, charts, or extra metadata without touching the heatmap internals.",
+      "Replace the default tooltip with any JSX: add emoji, charts, or extra metadata without touching the heatmap internals.",
     preview: <StatusCustomTooltipDemo />,
-    highlightLines: [
-      3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22,
-      23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34,
-    ],
     code: `
 <StatusHeatmap data={data}>
   <StatusHeatmapBody>
     {({ activity, dayIndex }) => (
       <Tooltip>
-        <TooltipTrigger asChild>
-          <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
-        </TooltipTrigger>
+        <TooltipTrigger
+          tabIndex={0}
+          render={
+            <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
+          }
+        />
         <TooltipContent
           side="top"
           className="pointer-events-none"
@@ -131,12 +133,8 @@ export const statusVariantItems = [
     title: "i18n labels (e.g., Traditional Chinese)",
     slug: "i18n",
     description:
-      "Pass a date-fns locale to localise date formatting, and use labels to translate status names and the stat text.",
+      "Pass a date-fns locale to localize date formatting, and use labels to translate status names and the stat text.",
     preview: <StatusI18nDemo />,
-    highlightLines: [
-      1, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 17, 18, 19, 20, 21, 22, 23, 24, 25,
-      26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41,
-    ],
     code: `
 import { zhTW } from "date-fns/locale";
 
@@ -156,9 +154,12 @@ import { zhTW } from "date-fns/locale";
   <StatusHeatmapBody>
     {({ activity, dayIndex }) => (
       <Tooltip>
-        <TooltipTrigger asChild>
-          <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
-        </TooltipTrigger>
+        <TooltipTrigger
+          tabIndex={0}
+          render={
+            <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
+          }
+        />
         <TooltipContent
           side="top"
           className="pointer-events-none text-xs"
@@ -184,7 +185,7 @@ import { zhTW } from "date-fns/locale";
     <StatusHeatmapStat />
     <StatusHeatmapLegend />
   </StatusHeatmapFooter>
-</StatusHeatmap>
+</StatusHeatmap>;
 `,
   },
   {
@@ -193,11 +194,12 @@ import { zhTW } from "date-fns/locale";
     description:
       "Date labels are shown by default. Use `labelInterval` to control how often they appear.",
     preview: <StatusWithLabelsDemo />,
-    highlightLines: [2],
     code: `
 <StatusHeatmap data={data}>
   <StatusHeatmapBody labelInterval={15}>
-    {({ activity, dayIndex }) => <Tooltip>{/* ... */}</Tooltip>}
+    {({ activity, dayIndex }) => (
+      <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
+    )}
   </StatusHeatmapBody>
   <StatusHeatmapFooter>
     <StatusHeatmapStat />
@@ -211,8 +213,9 @@ import { zhTW } from "date-fns/locale";
     slug: "compact",
     description: "Show a shorter time period with smaller blocks.",
     preview: <StatusUptimeDemo />,
-    highlightLines: [2, 3, 4, 5],
     code: `
+const last30Days = data.slice(-30);
+
 <StatusHeatmap
   data={last30Days}
   blockSize={32}
@@ -220,13 +223,15 @@ import { zhTW } from "date-fns/locale";
   blockMargin={1.5}
 >
   <StatusHeatmapBody>
-    {({ activity, dayIndex }) => <Tooltip>{/* ... */}</Tooltip>}
+    {({ activity, dayIndex }) => (
+      <StatusHeatmapBlock activity={activity} dayIndex={dayIndex} />
+    )}
   </StatusHeatmapBody>
   <StatusHeatmapFooter>
     <StatusHeatmapStat />
     <StatusHeatmapLegend />
   </StatusHeatmapFooter>
-</StatusHeatmap>
+</StatusHeatmap>;
 `,
   },
 ];

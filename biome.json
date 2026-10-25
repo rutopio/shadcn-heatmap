@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.5.0/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.6.3/schema.json",
   "vcs": {
     "enabled": true,
     "clientKind": "git",
@@ -19,7 +19,10 @@
       "!**/routeTree.gen.ts",
       "!.tanstack",
       "!**/*.css",
-      "!public"
+      "!public",
+      "!registry.json",
+      "!playwright-report",
+      "!test-results"
     ]
   },
   "formatter": {
@@ -50,13 +53,9 @@
         "useAriaPropsSupportedByRole": "warn"
       },
       "nursery": {
-        "useSortedClasses": {
+        "useTailwindSortedClasses": {
           "level": "warn",
-          "fix": "safe",
-          "options": {
-            "attributes": ["className", "class"],
-            "functions": ["cn", "clsx", "cva", "cx"]
-          }
+          "fix": "safe"
         }
       }
     }

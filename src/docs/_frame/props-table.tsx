@@ -10,21 +10,18 @@ function parseDescription(text: string): ReactNode {
   const parts: ReactNode[] = [];
   let lastIndex = 0;
 
-  // Match `code` blocks
   const codeRegex = /`([^`]+)`/g;
   let match = codeRegex.exec(text);
 
   while (match !== null) {
-    // Add text before the code block
     if (match.index > lastIndex) {
       parts.push(text.slice(lastIndex, match.index));
     }
 
-    // Add the code element
     parts.push(
       <code
         key={match.index}
-        className="rounded bg-muted px-1 py-0.5 font-mono text-xs"
+        className="bg-muted rounded px-1 py-0.5 font-mono text-xs"
       >
         {match[1]}
       </code>,
@@ -34,7 +31,6 @@ function parseDescription(text: string): ReactNode {
     match = codeRegex.exec(text);
   }
 
-  // Add remaining text
   if (lastIndex < text.length) {
     parts.push(text.slice(lastIndex));
   }
@@ -44,17 +40,17 @@ function parseDescription(text: string): ReactNode {
 
 export function PropsTable({ sections }: PropsTableProps) {
   return (
-    <div className="space-y-8 bg-background">
+    <div className="bg-background space-y-8">
       {sections.map((section) => (
         <div key={section.componentName} className="space-y-3">
           <div className="flex flex-col gap-1">
             <h3
               id={`props-heading-${section.componentName}`}
-              className="text-balance font-mono font-semibold text-sm"
+              className="font-mono text-sm font-semibold text-balance"
             >
               {section.componentName}
             </h3>
-            <p className="text-pretty text-muted-foreground text-sm">
+            <p className="text-muted-foreground text-sm text-pretty">
               {section.description}
             </p>
           </div>
@@ -82,13 +78,13 @@ export function PropsTable({ sections }: PropsTableProps) {
                   >
                     <td className="px-4 py-3 align-top">
                       <div className="flex items-center gap-2">
-                        <code className="font-medium font-mono text-sm">
+                        <code className="font-mono text-sm font-medium">
                           {prop.name}
                         </code>
                         {prop.required && (
                           <Badge
                             variant="secondary"
-                            className="font-normal text-xs"
+                            className="text-xs font-normal"
                           >
                             required
                           </Badge>
@@ -96,20 +92,20 @@ export function PropsTable({ sections }: PropsTableProps) {
                       </div>
                     </td>
                     <td className="px-4 py-3 align-top">
-                      <code className="break-words font-mono text-chart-1 text-sm">
+                      <code className="text-chart-1 font-mono text-sm break-words">
                         {prop.type}
                       </code>
                     </td>
                     <td className="px-4 py-3 align-top">
                       {prop.default ? (
-                        <code className="font-mono text-muted-foreground text-sm">
+                        <code className="text-muted-foreground font-mono text-sm">
                           {prop.default}
                         </code>
                       ) : (
-                        <span className="text-muted-foreground/60">—</span>
+                        <span className="text-muted-foreground/60">None</span>
                       )}
                     </td>
-                    <td className="px-4 py-3 align-top text-muted-foreground">
+                    <td className="text-muted-foreground px-4 py-3 align-top">
                       {prop.description
                         ? parseDescription(prop.description)
                         : null}

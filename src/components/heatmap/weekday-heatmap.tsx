@@ -1,6 +1,13 @@
+"use client";
+
 import type { Locale, Day as WeekDay } from "date-fns";
 import { format } from "date-fns";
-import type { CSSProperties, HTMLAttributes, ReactNode } from "react";
+import type {
+  ComponentPropsWithRef,
+  CSSProperties,
+  HTMLAttributes,
+  ReactNode,
+} from "react";
 import { createContext, Fragment, use, useMemo } from "react";
 import { cn } from "@/lib/utils";
 
@@ -33,13 +40,14 @@ export type WeekdayHour =
   | 23;
 
 export type WeekdayHourlyActivity = {
-  weekday: number; // 0–6 (Sun–Sat)
-  hour: number; // 0–23
+  weekday: number; // 0 to 6 (Sunday to Saturday)
+  hour: number; // 0 to 23
   value: number;
 };
 
-type WeekdayHourlyActivityWithLevel = WeekdayHourlyActivity & {
+export type WeekdayHourlyActivityWithLevel = WeekdayHourlyActivity & {
   level: number;
+  extra?: "row" | "column";
 };
 
 export type WeekdayExtraRowSpec = {
@@ -49,7 +57,7 @@ export type WeekdayExtraRowSpec = {
 
 export type WeekdayExtraColumnSpec = {
   label: ReactNode;
-  compute: (data: WeekdayHourlyActivity[]) => number[]; // length 7, indexed by weekday 0–6
+  compute: (data: WeekdayHourlyActivity[]) => number[]; // length 7, indexed by weekday 0 to 6
 };
 
 type ResolvedExtraRow = {
@@ -170,6 +178,43 @@ const generateWeekdayLabels = (locale: Locale): string[] =>
     return format(date, "EEE", { locale });
   });
 
+const normalizeData = (
+  data: WeekdayHourlyActivity[],
+): WeekdayHourlyActivity[] => {
+  const cells = new Map<string, WeekdayHourlyActivity>();
+  for (const activity of data) {
+    if (!Number.isFinite(activity.value)) {
+      throw new RangeError("Heatmap values must be finite numbers.");
+    }
+    if (
+      !Number.isInteger(activity.hour) ||
+      activity.hour < 0 ||
+      activity.hour > 23
+    ) {
+      throw new RangeError("Heatmap hours must be integers from 0 to 23.");
+    }
+    if (
+      !Number.isInteger(activity.weekday) ||
+      activity.weekday < 0 ||
+      activity.weekday > 6
+    ) {
+      throw new RangeError("Heatmap weekdays must be integers from 0 to 6.");
+    }
+    cells.set(`${activity.weekday}:${activity.hour}`, activity);
+  }
+  return [...cells.values()].sort(
+    (a, b) => a.weekday - b.weekday || a.hour - b.hour,
+  );
+};
+
+const validateAggregate = (values: number[], expectedLength: number) => {
+  if (values.length !== expectedLength || !values.every(Number.isFinite)) {
+    throw new RangeError(
+      `Aggregate must return exactly ${expectedLength} finite values.`,
+    );
+  }
+};
+
 const EMPTY_STYLE: CSSProperties = {};
 const LABEL_MARGIN = 8;
 const PADDING = 20;
@@ -213,39 +258,8 @@ export type WeekdayHeatmapProps = HTMLAttributes<HTMLDivElement> & {
   children: ReactNode;
 };
 
-/**
- * Weekday Heatmap
- *
- * A GitHub punch card style heatmap showing activity distribution by weekday (rows) and hour (columns).
- * Renders a 7 × 24 grid with optional extra row (aggregated per hour) and extra column (aggregated per weekday).
- *
- * @example
- * ```tsx
- * <WeekdayHeatmap data={data} weekStart={1} use12Hour>
- *   <WeekdayHeatmapBody>
- *     {({ activity }) => (
- *       <WeekdayHeatmapBlock activity={activity} />
- *     )}
- *   </WeekdayHeatmapBody>
- *   <WeekdayHeatmapFooter>
- *     <WeekdayHeatmapStat />
- *     <WeekdayHeatmapLegend />
- *   </WeekdayHeatmapFooter>
- * </WeekdayHeatmap>
- * ```
- *
- * @param data - Array of activities with weekday (0-6 for Sun-Sat), hour (0-23), and numeric value
- * @param weekStart - First day of week (0=Sunday, 1=Monday). Default: 0
- * @param use12Hour - Use 12-hour format for hour labels. Default: false
- * @param blockSize - Block height in pixels. Default: 24
- * @param blockAspectRatio - Block width/height ratio. Default: 1 (square)
- * @param levels - Total number of legend cells (including empty when not normalized). Default: 5
- * @param isNormalized - When true, uses min-max normalization across the dataset (suitable for signed values like temperature). When false (default), treats 0 as empty and scales from 0 to max.
- * @param extraRow - Appends an aggregated row below the grid. `compute` receives all activities and must return 24 values (one per hour). Rendered through `renderExtraRow` on the body, or falls back to `children`.
- * @param extraColumn - Appends an aggregated column to the right of the grid. `compute` receives all activities and must return 7 values indexed by weekday 0–6. Rendered through `renderExtraColumn` on the body, or falls back to `children`.
- */
 export const WeekdayHeatmap = ({
-  data,
+  data: inputData,
   weekStart = 0,
   use12Hour = false,
   blockSize = 24,
@@ -267,12 +281,21 @@ export const WeekdayHeatmap = ({
   children,
   ...props
 }: WeekdayHeatmapProps) => {
-  const levels = Math.max(1, levelsProp);
+  const data = useMemo(() => normalizeData(inputData), [inputData]);
+  if (!Number.isInteger(weekStart) || weekStart < 0 || weekStart > 6) {
+    throw new RangeError("weekStart must be an integer from 0 to 6.");
+  }
+  const levels = levelsProp;
+  if (!Number.isInteger(levels) || levels < (isNormalized ? 1 : 2)) {
+    throw new RangeError(
+      "levels must be a positive integer, at least 2 when not normalized.",
+    );
+  }
 
   const dataWithLevels = useMemo((): WeekdayHourlyActivityWithLevel[] => {
     if (data.length === 0) return [];
 
-    const maxRegular = data.reduce((m, d) => Math.max(m, d.value), 1);
+    const maxRegular = data.reduce((m, d) => Math.max(m, d.value), -Infinity);
     const minRegular = isNormalized
       ? data.reduce((m, d) => Math.min(m, d.value), Infinity)
       : 0;
@@ -292,7 +315,8 @@ export const WeekdayHeatmap = ({
   const resolvedExtraRow = useMemo<ResolvedExtraRow | null>(() => {
     if (!extraRow) return null;
     const values = extraRow.compute(data);
-    const maxVal = values.reduce((m, v) => Math.max(m, v), 1);
+    validateAggregate(values, 24);
+    const maxVal = values.reduce((m, v) => Math.max(m, v), -Infinity);
     const minVal = isNormalized
       ? values.reduce((m, v) => Math.min(m, v), Infinity)
       : 0;
@@ -309,7 +333,8 @@ export const WeekdayHeatmap = ({
   const resolvedExtraColumn = useMemo<ResolvedExtraColumn | null>(() => {
     if (!extraColumn) return null;
     const values = extraColumn.compute(data);
-    const maxVal = values.reduce((m, v) => Math.max(m, v), 1);
+    validateAggregate(values, 7);
+    const maxVal = values.reduce((m, v) => Math.max(m, v), -Infinity);
     const minVal = isNormalized
       ? values.reduce((m, v) => Math.min(m, v), Infinity)
       : 0;
@@ -335,7 +360,7 @@ export const WeekdayHeatmap = ({
       cellLabel: "{{weekday}} {{hour}}: {{value}}",
       heatmapLabel: "Activity heatmap by weekday and hour",
       legendLabel: "Activity intensity legend",
-      legendLevelLabel: "{{level}} contributions",
+      legendLevelLabel: "Level {{level}}",
       ...labelsProp,
     };
   }, [locale, use12Hour, labelsProp]);
@@ -410,7 +435,7 @@ export const WeekdayHeatmap = ({
   );
 
   if (data.length === 0) {
-    return emptyState ? emptyState : null;
+    return emptyState ?? null;
   }
 
   return (
@@ -427,7 +452,7 @@ export const WeekdayHeatmap = ({
   );
 };
 
-export type WeekdayHeatmapBlockProps = HTMLAttributes<SVGRectElement> & {
+export type WeekdayHeatmapBlockProps = ComponentPropsWithRef<"rect"> & {
   activity: WeekdayHourlyActivityWithLevel;
   extra?: "row" | "column";
   highlighted?: boolean;
@@ -439,7 +464,7 @@ export type WeekdayHeatmapBlockProps = HTMLAttributes<SVGRectElement> & {
 export const WeekdayHeatmapBlock = ({
   ref,
   activity,
-  extra,
+  extra = activity.extra,
   highlighted = false,
   onCellClick,
   onCellHover,
@@ -450,9 +475,7 @@ export const WeekdayHeatmapBlock = ({
   className,
   style: styleProp,
   ...props
-}: WeekdayHeatmapBlockProps & {
-  ref?: React.RefObject<SVGRectElement | null>;
-}) => {
+}: WeekdayHeatmapBlockProps) => {
   const {
     blockSize,
     blockWidth,
@@ -465,6 +488,8 @@ export const WeekdayHeatmapBlock = ({
     weekStart,
     labels,
     colors,
+    extraRow,
+    extraColumn,
   } = useWeekdayHeatmap();
 
   const level = Math.max(
@@ -489,10 +514,14 @@ export const WeekdayHeatmapBlock = ({
     : labelWidth + (blockWidth + blockMargin) * activity.hour;
 
   const weekdayToken = isExtraRow
-    ? "extra"
+    ? typeof extraRow?.label === "string"
+      ? extraRow.label
+      : "Aggregate"
     : (labels.weekdays?.[activity.weekday] ?? String(activity.weekday));
   const hourToken = isExtraColumn
-    ? "extra"
+    ? typeof extraColumn?.label === "string"
+      ? extraColumn.label
+      : "Aggregate"
     : `${String(activity.hour).padStart(2, "0")}:00`;
   const ariaLabel = (labels.cellLabel ?? "{{weekday}} {{hour}}: {{value}}")
     .replace("{{weekday}}", weekdayToken)
@@ -507,9 +536,9 @@ export const WeekdayHeatmapBlock = ({
       tabIndex={onCellClick ? 0 : -1}
       aria-label={ariaLabel}
       className={cn(
-        "motion-safe:transition-opacity motion-safe:hover:opacity-70",
+        "focus-visible:stroke-current focus-visible:stroke-2 focus-visible:outline-none motion-safe:transition-opacity motion-safe:hover:opacity-70",
         onCellClick &&
-          "cursor-pointer focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+          "focus-visible:ring-ring cursor-pointer focus-visible:ring-2 focus-visible:outline-none",
         className,
       )}
       data-value={activity.value}
@@ -651,6 +680,7 @@ export const WeekdayHeatmapBody = ({
       return entry
         ? {
             activity: {
+              extra: "column" as const,
               weekday,
               hour: 0,
               value: entry.value,
@@ -659,20 +689,13 @@ export const WeekdayHeatmapBody = ({
             weekdayIndex: di,
           }
         : null;
-    }).filter(
-      (
-        a,
-      ): a is {
-        activity: WeekdayHourlyActivityWithLevel;
-        weekdayIndex: number;
-      } => a !== null,
-    );
+    }).filter((a): a is NonNullable<typeof a> => a !== null);
   }, [extraColumnMap, weekStart]);
 
   const extraRowActivities = useMemo(() => {
     if (!extraRow) return [];
     return extraRow.values.map(({ hour, value, level }) => ({
-      activity: { weekday: 0, hour, value, level },
+      activity: { extra: "row" as const, weekday: 0, hour, value, level },
       weekdayIndex: 7,
     }));
   }, [extraRow]);
@@ -705,11 +728,11 @@ export const WeekdayHeatmapBody = ({
       {...props}
     >
       <svg
-        role="img"
+        role="group"
         aria-label={
           labels.heatmapLabel ?? "Activity heatmap by weekday and hour"
         }
-        className="block overflow-visible rounded-sm focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
+        className="focus-visible:ring-ring block overflow-visible rounded-sm focus-visible:ring-2 focus-visible:outline-none"
         height={svgHeight + PADDING * 2}
         viewBox={`${-PADDING} ${-PADDING} ${svgWidth + PADDING * 2} ${svgHeight + PADDING * 2}`}
         width={svgWidth + PADDING * 2}
@@ -868,7 +891,7 @@ export const WeekdayHeatmapStat = ({
     return <>{children({ value, data })}</>;
   }
 
-  const template = label ?? labels.stat ?? "{{value}} contributions";
+  const template = label ?? labels.stat ?? "Contributions: {{value}}";
 
   return (
     <div
@@ -917,12 +940,12 @@ export const WeekdayHeatmapLegend = ({
       data-slot="weekday-heatmap-legend"
       aria-label={labels.legendLabel ?? "Activity intensity legend"}
       className={cn(
-        "ml-auto flex items-center gap-1 text-muted-foreground",
+        "text-muted-foreground ml-auto flex items-center gap-1",
         className,
       )}
       {...props}
     >
-      <span className="mr-1 font-medium text-xs">{lessLabel}</span>
+      <span className="mr-1 text-xs font-medium">{lessLabel}</span>
       {legendLevels.map((level) =>
         children ? (
           <Fragment key={`legend-level-${level}`}>
@@ -931,9 +954,10 @@ export const WeekdayHeatmapLegend = ({
         ) : (
           <svg
             role="img"
-            aria-label={(
-              labels.legendLevelLabel ?? "{{level}} contributions"
-            ).replace("{{level}}", String(level))}
+            aria-label={(labels.legendLevelLabel ?? "Level {{level}}").replace(
+              "{{level}}",
+              String(level),
+            )}
             height={blockSize}
             key={`legend-level-${level}`}
             width={blockWidth}
@@ -951,7 +975,7 @@ export const WeekdayHeatmapLegend = ({
           </svg>
         ),
       )}
-      <span className="ml-1 font-medium text-xs">{moreLabel}</span>
+      <span className="ml-1 text-xs font-medium">{moreLabel}</span>
     </fieldset>
   );
 };

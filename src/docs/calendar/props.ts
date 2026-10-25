@@ -30,14 +30,14 @@ export const calendarProps: ComponentPropsSection[] = [
         type: "number",
         default: "5",
         description:
-          "Total number of cells shown in the legend. Non-normalized: 1 empty cell + `(levels - 1)` coloured steps from 20%→100% opacity. Normalized: `levels` coloured steps from 20%→100% opacity (no empty cell).",
+          "Number of legend cells. Use an integer of at least 2, or at least 1 when normalized. Non-normalized: 1 empty cell + `(levels - 1)` colored steps from 20%→100% opacity. Normalized: `levels` colored steps from 20%→100% opacity (no empty cell).",
       },
       {
         name: "isNormalized",
         type: "boolean",
         default: "false",
         description:
-          "When `true`, uses min–max normalization: min maps to level 1 and max to `levels`. Suitable for signed values. When `false`, values ≤ 0 are treated as empty (level 0) and the scale runs from 0 to max.",
+          "When `true`, uses min-max normalization: min maps to level 1 and max to `levels`. Suitable for signed values. When `false`, values ≤ 0 are treated as empty (level 0) and the scale runs from 0 to max.",
       },
       {
         name: "blockSize",
@@ -102,7 +102,7 @@ export const calendarProps: ComponentPropsSection[] = [
         name: "labels",
         type: "Labels",
         description:
-          "`{ months?: string[12], weekdays?: string[7], cellLabel?: string, stat?: string }`. `cellLabel` is the aria-label template (placeholders: `{{date}}`, `{{value}}`). Legend text goes on `<CalendarHeatmapLegend labels={…}>`; stat text goes on `<CalendarHeatmapStat label={…}>` — or set `labels.stat` here for a single i18n source.",
+          "`{ months?: string[12], weekdays?: string[7], cellLabel?: string, stat?: string }`. `cellLabel` is the aria-label template (placeholders: `{{date}}`, `{{value}}`). Legend text goes on `<CalendarHeatmapLegend labels={…}>`; stat text goes on `<CalendarHeatmapStat label={…}>`, or set `labels.stat` here for a single i18n source.",
       },
       {
         name: "totalCount",
@@ -173,7 +173,7 @@ export const calendarProps: ComponentPropsSection[] = [
         type: "ActivityWithLevel",
         required: true,
         description:
-          "The day's activity record with its computed `level` (0 = empty, 1–levels = coloured). Pass the value received from the `CalendarHeatmapBody` render-prop.",
+          "The day's activity record with its computed `level` (0 = empty; colored levels end at levels - 1, or levels when normalized). Pass the value received from the `CalendarHeatmapBody` render-prop.",
       },
       {
         name: "dayIndex",
@@ -194,7 +194,7 @@ export const calendarProps: ComponentPropsSection[] = [
         type: "boolean",
         default: "false",
         description:
-          "Dims the block to 60% of its colour. Useful for selected/focus states. Also sets `data-highlighted` on the element for CSS targeting.",
+          "Dims the block to 60% of its color. Useful for selected/focus states. Also sets `data-highlighted` on the element for CSS targeting.",
       },
       {
         name: "onCellClick",
@@ -230,7 +230,7 @@ export const calendarProps: ComponentPropsSection[] = [
   {
     componentName: "CalendarHeatmapStat",
     description:
-      "Displays a summary statistic. Defaults to total contributions for the year. Customize the value with `compute` and the text with `label` (or `labels.stat`).",
+      "Displays a summary statistic. Defaults to total contributions across the supplied date range. Customize the value with `compute` and the text with `label` (or `labels.stat`).",
     props: [
       {
         name: "compute",
@@ -260,7 +260,7 @@ export const calendarProps: ComponentPropsSection[] = [
   {
     componentName: "CalendarHeatmapLegend",
     description:
-      "Displays the intensity legend (Less → More) with colour-coded blocks matching the root `levels` and `colors` settings.",
+      "Displays the intensity legend (Less → More) with color-coded blocks matching the root `levels` and `colors` settings.",
     props: [
       {
         name: "labels",
@@ -272,7 +272,7 @@ export const calendarProps: ComponentPropsSection[] = [
         name: "children",
         type: "(props: { level: number }) => ReactNode",
         description:
-          "Custom render-prop called once per legend level. Receives `{ level }` (0 = empty up to `levels`). Replaces the default colour block.",
+          "Custom render-prop called once per legend level. Receives `{ level }`: 0 to `levels - 1`, or 1 to `levels` when normalized. Replaces the default color block.",
       },
       {
         name: "className",

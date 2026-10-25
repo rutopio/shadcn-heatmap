@@ -7,13 +7,7 @@ import { defineConfig } from "vite";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 
-// Injects <link rel="preload"> for the fonts that would otherwise flash on
-// first paint (FOUT with font-display: swap). The body/heading fonts come from
-// @fontsource and are hashed at build time, so their final paths are only known
-// after bundling — this plugin reads them from the emitted assets. Paper Mono
-// has a fixed public/ path. Preloading gives these top priority so they usually
-// arrive before first paint, making the swap invisible while swap still
-// guarantees the custom font is eventually used (unlike `optional`).
+// Fontsource asset names are only available after bundling.
 const PRELOAD_FONT_MATCHERS = [
   /albert-sans-latin-wght-normal.*\.woff2$/,
   /host-grotesk-latin-wght-normal.*\.woff2$/,
@@ -53,7 +47,7 @@ export default defineConfig({
     tanstackRouter({
       routesDirectory: "./src/routes",
       generatedRouteTree: "./src/routeTree.gen.ts",
-      autoCodeSplitting: false,
+      autoCodeSplitting: true,
     }),
     react(),
     tailwindcss(),

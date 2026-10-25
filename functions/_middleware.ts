@@ -1,15 +1,12 @@
 /// <reference types="@cloudflare/workers-types" />
 
-// Canonical-host redirect. Any *.pages.dev host (<project>.pages.dev and every
-// <hash>.<project>.pages.dev preview URL) is 301'd to the custom domain, path +
-// query preserved, so the pages.dev origin never gets indexed or linked.
+// Assign the path separately so a leading "//" cannot change the host.
 export const onRequest: PagesFunction = async ({ request, next }) => {
   const url = new URL(request.url);
   if (url.hostname.endsWith(".pages.dev")) {
-    const target = new URL(
-      url.pathname + url.search,
-      "https://heatmap.chingru.com",
-    );
+    const target = new URL("https://heatmap.chingru.com");
+    target.pathname = url.pathname;
+    target.search = url.search;
     return Response.redirect(target.toString(), 301);
   }
   return next();

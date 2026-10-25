@@ -1,20 +1,9 @@
-# lockfiles
+node_modules/
+dist/
+public/r/
+public/registry.json
+registry.json
 pnpm-lock.yaml
-package-lock.json
-yarn.lock
-bun.lock
-
-# misc
-routeTree.gen.ts
-.tanstack/
-drizzle/
-.drizzle/
-
-# build outputs
-.vercel
-.output
-.wrangler
-.netlify
-dist
-
-deprecated/
+src/routeTree.gen.ts
+playwright-report/
+test-results/

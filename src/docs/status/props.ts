@@ -11,7 +11,7 @@ export const statusProps: ComponentPropsSection[] = [
         type: "StatusActivity[]",
         required: true,
         description:
-          "`{ date: 'YYYY-MM-DD', value: number }[]`. `0` = no data. Built-in values: `1` = critical (red), `2` = degraded (amber), `3` = healthy (green). Custom numeric values are supported — supply matching entries in `colors` and `labels.statuses`, and add them to `statusValues` to appear in the legend.",
+          "`{ date: 'YYYY-MM-DD', value: number }[]`. `0` = no data. Built-in values: `1` = critical (red), `2` = degraded (amber), `3` = healthy (green). Custom numeric values are supported: supply matching entries in `colors` and `labels.statuses`, and add them to `statusValues` to appear in the legend.",
       },
       {
         name: "emptyState",
@@ -88,7 +88,7 @@ export const statusProps: ComponentPropsSection[] = [
         name: "labels",
         type: "StatusHeatmapLabels",
         description:
-          "`{ statuses?: Record<number, string> & { noData?, critical?, degraded?, healthy? }, cellLabel?: string, stat?: string }`. `statuses` labels are shared by the Block aria-label and the Legend. `cellLabel` is the aria-label template (placeholders: `{{date}}`, `{{status}}`). Stat text goes on `<StatusHeatmapStat label={…}>` — or set `labels.stat` here for a single i18n source. The Legend can also override `statuses` locally via `<StatusHeatmapLegend labels={…}>`.",
+          "`{ statuses?: Record<number, string> & { noData?, critical?, degraded?, healthy? }, cellLabel?: string, stat?: string }`. `statuses` labels are shared by the Block aria-label and the Legend. `cellLabel` is the aria-label template (placeholders: `{{date}}`, `{{status}}`). Stat text goes on `<StatusHeatmapStat label={…}>`, or set `labels.stat` here for a single i18n source. The Legend can also override `statuses` locally via `<StatusHeatmapLegend labels={…}>`.",
       },
     ],
   },
@@ -149,7 +149,7 @@ export const statusProps: ComponentPropsSection[] = [
         type: "boolean",
         default: "false",
         description:
-          "Dims the block to 60% of its colour. Useful for selected/focus states. Also sets `data-highlighted` on the element for CSS targeting.",
+          "Dims the block to 60% of its color. Useful for selected/focus states. Also sets `data-highlighted` on the element for CSS targeting.",
       },
       {
         name: "onCellClick",
@@ -215,7 +215,7 @@ export const statusProps: ComponentPropsSection[] = [
   {
     componentName: "StatusHeatmapLegend",
     description:
-      "Displays the status legend. Renders one entry per value in `statusValues` with its colour swatch and label.",
+      "Displays the status legend. Renders one entry per value in `statusValues` with its color swatch and label.",
     props: [
       {
         name: "labels",

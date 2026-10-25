@@ -5,10 +5,9 @@
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <link rel="apple-touch-icon" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- Static fallbacks before hydration; per-route values are set via the
-         TanStack Router head (see src/lib/seo.ts and route head configs). -->
+    <!-- Build-time route metadata replaces these development defaults. -->
     <title>
-      shadcn-heatmap — Heatmap components for React, built for shadcn/ui
+      shadcn-heatmap: Heatmap components for React, built for shadcn/ui
     </title>
     <meta
       name="description"
@@ -31,7 +30,7 @@
           const isDark = stored ? stored === "dark" : false;
           if (isDark) document.documentElement.classList.add("dark");
         } catch (_e) {
-          // ignore
+          // Storage may be unavailable in private browsing.
         }
       })();
     </script>
@@ -49,7 +48,7 @@
       gtag("config", "G-BVTE4PJMST", { send_page_view: false });
     </script>
   </head>
-  <body>
+  <body id="top">
     <div id="root"></div>
     <script type="module" src="/src/main.tsx"></script>
   </body>

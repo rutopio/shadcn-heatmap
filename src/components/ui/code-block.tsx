@@ -1,6 +1,6 @@
 import { CopyIcon } from "@phosphor-icons/react";
 import * as React from "react";
-import { toast } from "sonner";
+import { copyText } from "@/lib/clipboard";
 import type { HighlightedLine, SupportedLang } from "@/lib/shiki";
 import { highlightTokens } from "@/lib/shiki";
 import { cn } from "@/lib/utils";
@@ -56,35 +56,47 @@ export function CodeBlock({
   highlightLines,
   deletedLines,
 }: CodeBlockProps) {
-  const [lines, setLines] = React.useState<HighlightedLine[] | null>(null);
+  const [highlighted, setHighlighted] = React.useState<{
+    code: string;
+    lang: SupportedLang;
+    lines: HighlightedLine[];
+  } | null>(null);
 
   const trimmedCode = code.trim();
+  const lines =
+    highlighted?.code === trimmedCode && highlighted.lang === lang
+      ? highlighted.lines
+      : null;
 
   React.useEffect(() => {
     let cancelled = false;
-    highlightTokens(trimmedCode, lang).then((result) => {
-      if (!cancelled) setLines(result);
-    });
+    highlightTokens(trimmedCode, lang)
+      .then((result) => {
+        if (!cancelled)
+          setHighlighted({ code: trimmedCode, lang, lines: result });
+      })
+      .catch(() => {
+        if (!cancelled) setHighlighted(null);
+      });
     return () => {
       cancelled = true;
     };
   }, [trimmedCode, lang]);
 
   const handleCopy = React.useCallback(async () => {
-    await navigator.clipboard.writeText(trimmedCode);
-    toast.success("Copied to clipboard");
+    await copyText(trimmedCode);
   }, [trimmedCode]);
 
   return (
     <div
       className={cn(
-        "group relative overflow-hidden rounded-lg border bg-background",
+        "group bg-background relative overflow-hidden rounded-lg border",
         className,
       )}
     >
       {filename && (
-        <div className="flex items-center justify-between border-b bg-muted/60 px-4 py-4">
-          <span className="font-mono text-muted-foreground text-xs">
+        <div className="bg-muted/60 flex items-center justify-between border-b px-4 py-4">
+          <span className="text-muted-foreground font-mono text-xs">
             {filename}
           </span>
         </div>
@@ -96,7 +108,7 @@ export function CodeBlock({
         )}
         style={!scrollClassName && maxHeight ? { maxHeight } : undefined}
       >
-        <pre className="py-4 font-mono text-foreground/80 text-sm leading-relaxed">
+        <pre className="text-foreground/80 py-4 font-mono text-sm leading-relaxed">
           <code>
             {/* Static syntax highlighting - line order is stable, index keys are safe */}
             {lines
@@ -117,7 +129,7 @@ export function CodeBlock({
                         <span
                           aria-hidden="true"
                           className={cn(
-                            "w-10 shrink-0 select-none pr-3 text-right text-xs leading-6.5 sm:w-16 sm:pr-4",
+                            "w-10 shrink-0 pr-3 text-right text-xs leading-6.5 select-none sm:w-16 sm:pr-4",
                             isDeleted
                               ? "text-red-400"
                               : isHighlighted
@@ -153,7 +165,6 @@ export function CodeBlock({
                   );
                 })
               : trimmedCode}
-            {/* eslint-enable @eslint-react/no-array-index-key */}
           </code>
         </pre>
       </div>

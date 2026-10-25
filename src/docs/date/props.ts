@@ -17,13 +17,13 @@ export const dateProps: ComponentPropsSection[] = [
         name: "extraRow",
         type: "{ label: ReactNode; compute: (data: DateHourlyActivity[]) => number[] }",
         description:
-          "Append an aggregate row below the grid. `compute(data)` must return exactly 24 numbers (one per hour). `label` appears in the left gutter. The extra row has an independent min–max colour scale.",
+          "Append an aggregate row below the grid. `compute(data)` must return exactly 24 numbers (one per hour). `label` appears in the left gutter. The extra row has an independent min-max color scale.",
       },
       {
         name: "extraColumn",
         type: "{ label: ReactNode; compute: (data: DateHourlyActivity[], dates: string[]) => number[] }",
         description:
-          "Append an aggregate column to the right of the grid. `compute(data, dates)` must return one number per date (aligned to the sorted `dates` array). `label` appears in the top gutter. The extra column has an independent min–max colour scale.",
+          "Append an aggregate column to the right of the grid. `compute(data, dates)` must return one number per date (aligned to the sorted `dates` array). `label` appears in the top gutter. The extra column has an independent min-max color scale.",
       },
       {
         name: "emptyState",
@@ -42,14 +42,14 @@ export const dateProps: ComponentPropsSection[] = [
         type: "number",
         default: "5",
         description:
-          "Total number of cells shown in the legend. Non-normalized: 1 empty cell + `(levels - 1)` coloured steps from 20%→100% opacity. Normalized: `levels` coloured steps from 20%→100% opacity (no empty cell).",
+          "Number of legend cells. Use an integer of at least 2, or at least 1 when normalized. Non-normalized: 1 empty cell + `(levels - 1)` colored steps from 20%→100% opacity. Normalized: `levels` colored steps from 20%→100% opacity (no empty cell).",
       },
       {
         name: "isNormalized",
         type: "boolean",
         default: "false",
         description:
-          "When `true`, uses min–max normalization: min maps to level 1 and max to `levels`. Suitable for signed values. When `false`, values ≤ 0 are treated as empty (level 0) and the scale runs from 0 to max.",
+          "When `true`, uses min-max normalization: min maps to level 1 and max to `levels`. Suitable for signed values. When `false`, values ≤ 0 are treated as empty (level 0) and the scale runs from 0 to max.",
       },
       {
         name: "blockSize",
@@ -88,7 +88,7 @@ export const dateProps: ComponentPropsSection[] = [
         type: "boolean",
         default: "false",
         description:
-          "Switch the hour axis from 24-hour (`00`–`23`) to 12-hour AM/PM format. Can be combined with a custom `labels.hours` override.",
+          "Switch the hour axis from 24-hour (`00` to `23`) to 12-hour AM/PM format. Can be combined with a custom `labels.hours` override.",
       },
       {
         name: "locale",
@@ -107,7 +107,7 @@ export const dateProps: ComponentPropsSection[] = [
         name: "labels",
         type: "DateHeatmapLabels",
         description:
-          "`{ hours?: string[24], endHour?: string | null, cellLabel?: string, stat?: string }`. `endHour` defaults to `'00'` / `'12'`; set to `null` to hide it. `cellLabel` is the aria-label template (placeholders: `{{date}}`, `{{hour}}`, `{{value}}`). Legend text goes on `<DateHeatmapLegend labels={…}>`; stat text goes on `<DateHeatmapStat label={…}>` — or set `labels.stat` here for a single i18n source. Extra row/column labels come from `extraRow.label` / `extraColumn.label`.",
+          "`{ hours?: string[24], endHour?: string | null, cellLabel?: string, stat?: string }`. `endHour` defaults to `'00'` / `'12'`; set to `null` to hide it. `cellLabel` is the aria-label template (placeholders: `{{date}}`, `{{hour}}`, `{{value}}`). Legend text goes on `<DateHeatmapLegend labels={…}>`; stat text goes on `<DateHeatmapStat label={…}>`, or set `labels.stat` here for a single i18n source. Extra row/column labels come from `extraRow.label` / `extraColumn.label`.",
       },
       {
         name: "totalCount",
@@ -171,7 +171,7 @@ export const dateProps: ComponentPropsSection[] = [
         type: "DateHourlyActivityWithLevel",
         required: true,
         description:
-          "The cell's activity record with its computed `level`. Contains `date`, `hour` (0–23), `value`, and `level`. Pass the value received from the `DateHeatmapBody` render-prop.",
+          "The cell's activity record with its computed `level`. Contains `date`, `hour` (0 to 23), `value`, and `level`. Pass the value received from the `DateHeatmapBody` render-prop.",
       },
       {
         name: "dateIndex",
@@ -184,14 +184,14 @@ export const dateProps: ComponentPropsSection[] = [
         name: "extra",
         type: "'row' | 'column' | undefined",
         description:
-          "Marks this block as an extra aggregate row or column cell. Controls positioning. Pass the value received from `renderExtraRow` / `renderExtraColumn`.",
+          "Overrides aggregate positioning. Defaults to `activity.extra`, which the body sets automatically.",
       },
       {
         name: "highlighted",
         type: "boolean",
         default: "false",
         description:
-          "Dims the block to 60% of its colour. Useful for selected/focus states. Also sets `data-highlighted` on the element for CSS targeting.",
+          "Dims the block to 60% of its color. Useful for selected/focus states. Also sets `data-highlighted` on the element for CSS targeting.",
       },
       {
         name: "onCellClick",
@@ -257,7 +257,7 @@ export const dateProps: ComponentPropsSection[] = [
   {
     componentName: "DateHeatmapLegend",
     description:
-      "Displays the intensity legend (Less → More) with colour-coded blocks matching the root `levels` and `colors` settings.",
+      "Displays the intensity legend (Less → More) with color-coded blocks matching the root `levels` and `colors` settings.",
     props: [
       {
         name: "labels",
@@ -269,7 +269,7 @@ export const dateProps: ComponentPropsSection[] = [
         name: "children",
         type: "(props: { level: number }) => ReactNode",
         description:
-          "Custom render-prop called once per legend level. Receives `{ level }` (0 = empty up to `levels`). Replaces the default colour block.",
+          "Custom render-prop called once per legend level. Receives `{ level }`: 0 to `levels - 1`, or 1 to `levels` when normalized. Replaces the default color block.",
       },
       {
         name: "className",

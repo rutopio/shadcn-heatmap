@@ -34,7 +34,7 @@ import {
 
 export function CalendarBinaryDemo() {
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delay={0}>
       <CalendarHeatmap
         data={calendarBinaryData}
         levels={2}
@@ -73,7 +73,7 @@ export function CalendarBinaryDemo() {
 
 export function WeekdayBinaryDemo() {
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delay={0}>
       <WeekdayHeatmap
         data={weekdayBinaryData}
         levels={2}
@@ -108,7 +108,7 @@ export function WeekdayBinaryDemo() {
 
 export function DateBinaryDemo() {
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delay={0}>
       <DateHeatmap
         data={dateBinaryData}
         levels={2}
@@ -124,7 +124,15 @@ export function DateBinaryDemo() {
                     {`${String(activity.hour).padStart(2, "0")}:00`}
                   </p>
                   <p className="text-muted-foreground">
-                    {activity.value === 1 ? "Pass" : "Failed"}
+                    {activity.value === 1
+                      ? "Passed"
+                      : dateBinaryData.some(
+                            (entry) =>
+                              entry.date === activity.date &&
+                              entry.hour === activity.hour,
+                          )
+                        ? "Failed"
+                        : "No run"}
                   </p>
                 </>
               }
@@ -134,7 +142,9 @@ export function DateBinaryDemo() {
           )}
         </DateHeatmapBody>
         <DateHeatmapFooter>
-          <DateHeatmapLegend labels={{ less: "Failed", more: "Pass" }} />
+          <DateHeatmapLegend
+            labels={{ less: "Failed or no run", more: "Passed" }}
+          />
         </DateHeatmapFooter>
       </DateHeatmap>
     </TooltipProvider>

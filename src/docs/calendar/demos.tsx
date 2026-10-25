@@ -1,6 +1,5 @@
 import { format, parseISO } from "date-fns";
 import { de } from "date-fns/locale";
-
 import {
   CalendarHeatmap,
   CalendarHeatmapBlock,
@@ -17,6 +16,7 @@ import {
 } from "@/components/ui/tooltip";
 import multiYearData from "@/data/calendar-multi-year.json";
 import monthData from "@/data/calendar-sample.json";
+import { CalendarExample } from "@/examples/calendar";
 
 function CalendarTooltip({
   activity,
@@ -38,46 +38,26 @@ function CalendarTooltip({
 }
 
 export function CalendarDefaultDemo() {
-  return (
-    <TooltipProvider delayDuration={0}>
-      <CalendarHeatmap data={monthData}>
-        <CalendarHeatmapBody>
-          {({ activity, dayIndex, weekIndex }) => (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <CalendarHeatmapBlock
-                  activity={activity}
-                  dayIndex={dayIndex}
-                  weekIndex={weekIndex}
-                />
-              </TooltipTrigger>
-              <CalendarTooltip activity={activity} />
-            </Tooltip>
-          )}
-        </CalendarHeatmapBody>
-        <CalendarHeatmapFooter>
-          <CalendarHeatmapStat />
-          <CalendarHeatmapLegend />
-        </CalendarHeatmapFooter>
-      </CalendarHeatmap>
-    </TooltipProvider>
-  );
+  return <CalendarExample data={monthData} />;
 }
 
 export function CalendarMondayStartDemo() {
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delay={0}>
       <CalendarHeatmap data={monthData} weekStart={1}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
             <Tooltip>
-              <TooltipTrigger asChild>
-                <CalendarHeatmapBlock
-                  activity={activity}
-                  dayIndex={dayIndex}
-                  weekIndex={weekIndex}
-                />
-              </TooltipTrigger>
+              <TooltipTrigger
+                tabIndex={0}
+                render={
+                  <CalendarHeatmapBlock
+                    activity={activity}
+                    dayIndex={dayIndex}
+                    weekIndex={weekIndex}
+                  />
+                }
+              />
               <CalendarTooltip activity={activity} />
             </Tooltip>
           )}
@@ -93,18 +73,21 @@ export function CalendarMondayStartDemo() {
 
 export function CalendarChunkyDemo() {
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delay={0}>
       <CalendarHeatmap data={monthData} continuousMonths={false}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
             <Tooltip>
-              <TooltipTrigger asChild>
-                <CalendarHeatmapBlock
-                  activity={activity}
-                  dayIndex={dayIndex}
-                  weekIndex={weekIndex}
-                />
-              </TooltipTrigger>
+              <TooltipTrigger
+                tabIndex={0}
+                render={
+                  <CalendarHeatmapBlock
+                    activity={activity}
+                    dayIndex={dayIndex}
+                    weekIndex={weekIndex}
+                  />
+                }
+              />
               <CalendarTooltip activity={activity} />
             </Tooltip>
           )}
@@ -120,18 +103,21 @@ export function CalendarChunkyDemo() {
 
 export function CalendarTenLevelsDemo() {
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delay={0}>
       <CalendarHeatmap data={monthData} levels={10}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
             <Tooltip>
-              <TooltipTrigger asChild>
-                <CalendarHeatmapBlock
-                  activity={activity}
-                  dayIndex={dayIndex}
-                  weekIndex={weekIndex}
-                />
-              </TooltipTrigger>
+              <TooltipTrigger
+                tabIndex={0}
+                render={
+                  <CalendarHeatmapBlock
+                    activity={activity}
+                    dayIndex={dayIndex}
+                    weekIndex={weekIndex}
+                  />
+                }
+              />
               <CalendarTooltip activity={activity} />
             </Tooltip>
           )}
@@ -147,18 +133,21 @@ export function CalendarTenLevelsDemo() {
 
 export function CalendarGermanDemo() {
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delay={0}>
       <CalendarHeatmap data={monthData} locale={de}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
             <Tooltip>
-              <TooltipTrigger asChild>
-                <CalendarHeatmapBlock
-                  activity={activity}
-                  dayIndex={dayIndex}
-                  weekIndex={weekIndex}
-                />
-              </TooltipTrigger>
+              <TooltipTrigger
+                tabIndex={0}
+                render={
+                  <CalendarHeatmapBlock
+                    activity={activity}
+                    dayIndex={dayIndex}
+                    weekIndex={weekIndex}
+                  />
+                }
+              />
               <TooltipContent
                 side="top"
                 className="pointer-events-none text-xs"
@@ -185,11 +174,15 @@ export function CalendarGermanDemo() {
 
 const calendarMultiYear = multiYearData;
 
-const multiYearYears = [2024, 2025];
+const multiYearYears = [
+  ...new Set(
+    multiYearData.map((activity) => Number(activity.date.slice(0, 4))),
+  ),
+].sort();
 
 export function CalendarMultiYearDemo() {
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delay={0}>
       <CalendarHeatmap data={calendarMultiYear}>
         <CalendarHeatmapBody
           renderYearFooter={({ year, totalCount }) => {
@@ -206,13 +199,16 @@ export function CalendarMultiYearDemo() {
         >
           {({ activity, dayIndex, weekIndex }) => (
             <Tooltip>
-              <TooltipTrigger asChild>
-                <CalendarHeatmapBlock
-                  activity={activity}
-                  dayIndex={dayIndex}
-                  weekIndex={weekIndex}
-                />
-              </TooltipTrigger>
+              <TooltipTrigger
+                tabIndex={0}
+                render={
+                  <CalendarHeatmapBlock
+                    activity={activity}
+                    dayIndex={dayIndex}
+                    weekIndex={weekIndex}
+                  />
+                }
+              />
               <CalendarTooltip activity={activity} />
             </Tooltip>
           )}
@@ -224,18 +220,21 @@ export function CalendarMultiYearDemo() {
 
 export function CalendarNoFooterDemo() {
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delay={0}>
       <CalendarHeatmap data={monthData}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
             <Tooltip>
-              <TooltipTrigger asChild>
-                <CalendarHeatmapBlock
-                  activity={activity}
-                  dayIndex={dayIndex}
-                  weekIndex={weekIndex}
-                />
-              </TooltipTrigger>
+              <TooltipTrigger
+                tabIndex={0}
+                render={
+                  <CalendarHeatmapBlock
+                    activity={activity}
+                    dayIndex={dayIndex}
+                    weekIndex={weekIndex}
+                  />
+                }
+              />
               <CalendarTooltip activity={activity} />
             </Tooltip>
           )}
@@ -247,18 +246,21 @@ export function CalendarNoFooterDemo() {
 
 export function CalendarMiniDemo() {
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delay={0}>
       <CalendarHeatmap data={monthData}>
         <CalendarHeatmapBody hideMonthLabels hideWeekdayLabels hideYearLabels>
           {({ activity, dayIndex, weekIndex }) => (
             <Tooltip>
-              <TooltipTrigger asChild>
-                <CalendarHeatmapBlock
-                  activity={activity}
-                  dayIndex={dayIndex}
-                  weekIndex={weekIndex}
-                />
-              </TooltipTrigger>
+              <TooltipTrigger
+                tabIndex={0}
+                render={
+                  <CalendarHeatmapBlock
+                    activity={activity}
+                    dayIndex={dayIndex}
+                    weekIndex={weekIndex}
+                  />
+                }
+              />
               <CalendarTooltip activity={activity} />
             </Tooltip>
           )}
@@ -270,25 +272,28 @@ export function CalendarMiniDemo() {
 
 export function CalendarCustomTooltipDemo() {
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delay={0}>
       <CalendarHeatmap data={monthData}>
         <CalendarHeatmapBody>
           {({ activity, dayIndex, weekIndex }) => (
             <Tooltip>
-              <TooltipTrigger asChild>
-                <CalendarHeatmapBlock
-                  activity={activity}
-                  dayIndex={dayIndex}
-                  weekIndex={weekIndex}
-                />
-              </TooltipTrigger>
+              <TooltipTrigger
+                tabIndex={0}
+                render={
+                  <CalendarHeatmapBlock
+                    activity={activity}
+                    dayIndex={dayIndex}
+                    weekIndex={weekIndex}
+                  />
+                }
+              />
               <TooltipContent
                 side="top"
                 className="pointer-events-none"
                 sideOffset={6}
               >
                 <div className="flex flex-col gap-1">
-                  <p className="font-semibold text-xs">
+                  <p className="text-xs font-semibold">
                     {format(parseISO(activity.date), "EEEE, MMM d")}
                   </p>
                   <div className="flex items-center gap-1.5">
@@ -322,7 +327,7 @@ export function CalendarCustomTooltipDemo() {
 
 export function CalendarCustomStylingDemo() {
   return (
-    <TooltipProvider delayDuration={0}>
+    <TooltipProvider delay={0}>
       <CalendarHeatmap
         data={monthData}
         blockSize={18}
@@ -335,13 +340,16 @@ export function CalendarCustomStylingDemo() {
         >
           {({ activity, dayIndex, weekIndex }) => (
             <Tooltip>
-              <TooltipTrigger asChild>
-                <CalendarHeatmapBlock
-                  activity={activity}
-                  dayIndex={dayIndex}
-                  weekIndex={weekIndex}
-                />
-              </TooltipTrigger>
+              <TooltipTrigger
+                tabIndex={0}
+                render={
+                  <CalendarHeatmapBlock
+                    activity={activity}
+                    dayIndex={dayIndex}
+                    weekIndex={weekIndex}
+                  />
+                }
+              />
               <CalendarTooltip activity={activity} />
             </Tooltip>
           )}
