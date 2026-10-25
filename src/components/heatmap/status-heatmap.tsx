@@ -101,13 +101,15 @@ const resolveColor = (
 const resolveStatusLabel = (
   value: StatusValue,
   labels?: StatusHeatmapLabels["statuses"],
+  fallbackLabels?: StatusHeatmapLabels["statuses"],
 ): string => {
-  if (labels) {
-    const numeric = labels[value];
+  for (const source of [labels, fallbackLabels]) {
+    if (!source) continue;
+    const numeric = source[value];
     if (typeof numeric === "string") return numeric;
     const semanticKey = SEMANTIC_KEYS[value];
     if (semanticKey) {
-      const semantic = labels[semanticKey];
+      const semantic = source[semanticKey];
       if (typeof semantic === "string") return semantic;
     }
   }
@@ -211,7 +213,34 @@ export const StatusHeatmap = ({
   children,
   ...props
 }: StatusHeatmapProps) => {
+  if (!Number.isFinite(healthyValue)) {
+    throw new RangeError("healthyValue must be a finite number.");
+  }
+  if (
+    !Array.isArray(statusValues) ||
+    !Array.from(statusValues).every(Number.isFinite) ||
+    new Set(statusValues).size !== statusValues.length
+  ) {
+    throw new RangeError("statusValues must contain unique finite numbers.");
+  }
   const data = useMemo(() => normalizeData(inputData), [inputData]);
+  for (const [name, value] of Object.entries({
+    blockSize,
+    blockAspectRatio,
+    fontSize,
+  })) {
+    if (!Number.isFinite(value) || value <= 0) {
+      throw new RangeError(`${name} must be a finite number greater than 0.`);
+    }
+  }
+  for (const [name, value] of Object.entries({ blockMargin, blockRadius })) {
+    if (!Number.isFinite(value) || value < 0) {
+      throw new RangeError(
+        `${name} must be a finite number greater than or equal to 0.`,
+      );
+    }
+  }
+
   const labels = useMemo<StatusHeatmapLabels>(
     () => ({
       statuses: {
@@ -239,6 +268,10 @@ export const StatusHeatmap = ({
   const blockWidth = blockSize * blockAspectRatio;
   const width = dates.length * (blockWidth + blockMargin) - blockMargin;
   const height = blockSize;
+
+  if (![blockWidth, width, height].every(Number.isFinite)) {
+    throw new RangeError("Heatmap layout dimensions must remain finite.");
+  }
 
   const contextValue = useMemo<StatusHeatmapContextType>(
     () => ({
@@ -327,8 +360,8 @@ export const StatusHeatmapBlock = ({
   const statusText = resolveStatusLabel(activity.value, labels.statuses);
 
   const ariaLabel = (labels.cellLabel ?? "{{date}}: {{status}}")
-    .replace("{{date}}", activity.date)
-    .replace("{{status}}", statusText);
+    .replaceAll("{{date}}", () => activity.date)
+    .replaceAll("{{status}}", () => statusText);
 
   const xPosition = (blockWidth + blockMargin) * dayIndex;
 
@@ -405,6 +438,9 @@ export const StatusHeatmapBody = ({
   children,
   ...props
 }: StatusHeatmapBodyProps) => {
+  if (!Number.isInteger(labelInterval) || labelInterval < 1) {
+    throw new RangeError("labelInterval must be a positive integer.");
+  }
   const {
     data,
     dates,
@@ -538,6 +574,12 @@ export const StatusHeatmapStat = ({
     ? compute(data)
     : data.filter((a) => a.value === healthyValue).length;
 
+  if (typeof value !== "string" && !Number.isFinite(value)) {
+    throw new RangeError(
+      "Stat compute must return a finite number or a string.",
+    );
+  }
+
   if (children) {
     return <>{children({ value, data })}</>;
   }
@@ -550,7 +592,7 @@ export const StatusHeatmapStat = ({
       className={cn("text-muted-foreground tabular-nums", className)}
       {...props}
     >
-      {template.replace("{{value}}", String(value))}
+      {template.replaceAll("{{value}}", () => String(value))}
     </div>
   );
 };
@@ -574,7 +616,7 @@ export const StatusHeatmapLegend = ({
 
   const statuses = statusValues.map((value) => ({
     value,
-    label: resolveStatusLabel(value, labelsProp ?? labels.statuses),
+    label: resolveStatusLabel(value, labelsProp, labels.statuses),
   }));
 
   return (

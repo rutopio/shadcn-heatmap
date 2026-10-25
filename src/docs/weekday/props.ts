@@ -7,23 +7,42 @@ export const weekdayProps: ComponentPropsSection[] = [
       "Root provider for the weekday × hour matrix (7 rows × 24 columns). Pass `extraRow` / `extraColumn` to append an aggregate row / column with a custom compute function.",
     props: [
       {
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Compose the grid and optional footer with WeekdayHeatmapBody, WeekdayHeatmapStat, and WeekdayHeatmapLegend.",
+      },
+      {
+        name: "className",
+        type: "string",
+        description:
+          "Additional CSS classes for the root div. Common HTML attributes are also supported.",
+      },
+      {
+        name: "style",
+        type: "CSSProperties",
+        description:
+          "Inline styles for the root div. Use layout props to change SVG block geometry.",
+      },
+      {
         name: "data",
         type: "WeekdayHourlyActivity[]",
         required: true,
         description:
-          "`{ weekday: number, hour: number, value: number }[]`. `weekday` is `0..6` (Sunday to Saturday); `hour` is `0..23`.",
+          "`{ weekday: number, hour: number, value: number }[]`. `weekday` must be an integer from 0 to 6 (Sunday to Saturday); `hour` must be an integer from 0 to 23. Values must be finite. Duplicate slots use the last record. Missing slots render with value and level 0 and are excluded from Stat and aggregate compute callbacks.",
       },
       {
         name: "extraRow",
         type: "{ label: ReactNode; compute: (data: WeekdayHourlyActivity[]) => number[] }",
         description:
-          "Append an aggregate row below the grid. `compute(data)` must return exactly 24 numbers (one per hour). `label` appears in the left gutter. The extra row has an independent min-max color scale.",
+          "Append an aggregate row below the grid. `compute(data)` must return exactly 24 numbers (one per hour). `label` appears in the left gutter. The extra row has its own scale: 0 to maximum by default, or min-max when `isNormalized` is true. Values must be finite with no array holes. The callback receives sorted, deduplicated input without filled cells and is skipped for empty data.",
       },
       {
         name: "extraColumn",
         type: "{ label: ReactNode; compute: (data: WeekdayHourlyActivity[]) => number[] }",
         description:
-          "Append an aggregate column to the right of the grid. `compute(data)` must return exactly 7 numbers (one per weekday, indexed 0 to 6). `label` appears in the top gutter. The extra column has an independent min-max color scale.",
+          "Append an aggregate column to the right of the grid. `compute(data)` must return exactly 7 numbers (one per weekday, indexed 0 to 6). `label` appears in the top gutter. The extra column has its own scale: 0 to maximum by default, or min-max when `isNormalized` is true. Values must be finite with no array holes. The callback receives sorted, deduplicated input without filled cells and is skipped for empty data.",
       },
       {
         name: "emptyState",
@@ -42,46 +61,48 @@ export const weekdayProps: ComponentPropsSection[] = [
         type: "number",
         default: "5",
         description:
-          "Number of legend cells. Use an integer of at least 2, or at least 1 when normalized. Non-normalized: 1 empty cell + `(levels - 1)` colored steps from 20%→100% opacity. Normalized: `levels` colored steps from 20%→100% opacity (no empty cell).",
+          "Number of legend cells. Use an integer of at least 2, or at least 1 when normalized. The default scale has one empty cell and `levels - 1` colored steps; normalized scales have `levels` colored steps. Colored steps range from 20% to 100% color strength. A single colored step uses 100%.",
       },
       {
         name: "isNormalized",
         type: "boolean",
         default: "false",
         description:
-          "When `true`, uses min-max normalization: min maps to level 1 and max to `levels`. Suitable for signed values. When `false`, values ≤ 0 are treated as empty (level 0) and the scale runs from 0 to max.",
+          "When `true`, scales supplied values from their minimum (level 1) to maximum (`levels`), including negative values. Equal values all use level 1. Missing cells keep level 0. When `false`, values at or below 0 use the empty color; positive values scale from 0 to the maximum. This changes colors, not stored values or totals.",
       },
       {
         name: "blockSize",
         type: "number",
         default: "24",
         description:
-          "Block height in pixels. Block width is `blockSize × blockAspectRatio`.",
+          "Finite block height in pixels, greater than 0. Block width is `blockSize × blockAspectRatio`.",
       },
       {
         name: "blockAspectRatio",
         type: "number",
         default: "1",
         description:
-          "Width-to-height ratio for each block. `1` = square, `2` = landscape, `0.5` = portrait.",
+          "Finite width-to-height ratio greater than 0 for each block. `1` = square, `2` = landscape, `0.5` = portrait.",
       },
       {
         name: "blockMargin",
         type: "number",
         default: "4",
-        description: "Gap between adjacent blocks, in pixels.",
+        description:
+          "Finite gap between adjacent blocks in pixels, at least 0.",
       },
       {
         name: "blockRadius",
         type: "number",
         default: "2",
-        description: "Corner radius (`rx`/`ry`) of each block, in pixels.",
+        description: "Finite corner radius (`rx`/`ry`) in pixels, at least 0.",
       },
       {
         name: "fontSize",
         type: "number",
         default: "14",
-        description: "Base font size for axis labels, in pixels.",
+        description:
+          "Finite base font size for axis labels in pixels, greater than 0.",
       },
       {
         name: "weekStart",
@@ -107,13 +128,13 @@ export const weekdayProps: ComponentPropsSection[] = [
         name: "labels",
         type: "WeekdayHeatmapLabels",
         description:
-          "`{ weekdays?: string[7], hours?: string[24], endHour?: string | null, cellLabel?: string, stat?: string }`. `endHour` defaults to `'00'` / `'12'`; set to `null` to hide it. `cellLabel` is the aria-label template (placeholders: `{{weekday}}`, `{{hour}}`, `{{value}}`). Legend text goes on `<WeekdayHeatmapLegend labels={…}>`; stat text goes on `<WeekdayHeatmapStat label={…}>`, or set `labels.stat` here for a single i18n source. Extra row/column labels come from `extraRow.label` / `extraColumn.label`.",
+          "`weekdays` and `hours` override axis labels; supply 7 weekdays starting with Sunday and 24 hours starting at midnight. `endHour` defaults to '00' or '12'; use null to hide it. `cellLabel` formats cell aria-labels using `{{weekday}}`, `{{hour}}`, and `{{value}}`. `stat` sets the default Stat template. `heatmapLabel` labels the SVG; `legendLabel` labels the legend; `legendLevelLabel` labels each swatch using `{{level}}`. All placeholder occurrences are replaced. Aggregate labels come from `extraRow.label` and `extraColumn.label`. Set legend endpoint text on WeekdayHeatmapLegend.",
       },
       {
         name: "totalCount",
         type: "number",
         description:
-          "Override the auto-computed sum. Useful when the visible window is a slice of a larger dataset.",
+          "Override the sum of input values, not the number of records. Must be finite; negative totals are allowed. Without an override, input values must sum to a finite number. A Stat `compute` callback takes precedence.",
       },
     ],
   },
@@ -122,6 +143,12 @@ export const weekdayProps: ComponentPropsSection[] = [
     description:
       "Renders the SVG grid. `children` is a render-prop called once per visible cell (including extra row/column cells when present).",
     props: [
+      {
+        name: "className",
+        type: "string",
+        description:
+          "Additional CSS classes for the scroll container div. Common HTML attributes are also supported.",
+      },
       {
         name: "children",
         type: "(args: { activity: WeekdayHourlyActivityWithLevel; weekdayIndex: number }) => ReactNode",
@@ -185,7 +212,7 @@ export const weekdayProps: ComponentPropsSection[] = [
         type: "boolean",
         default: "false",
         description:
-          "Dims the block to 60% of its color. Useful for selected/focus states. Also sets `data-highlighted` on the element for CSS targeting.",
+          "Reduces colored blocks to 60% of their color strength. Empty blocks keep their empty color. Useful for selected/focus states. Also sets `data-highlighted` on the element for CSS targeting.",
       },
       {
         name: "onCellClick",
@@ -227,7 +254,7 @@ export const weekdayProps: ComponentPropsSection[] = [
         name: "compute",
         type: "(data: WeekdayHourlyActivityWithLevel[]) => number | string",
         description:
-          "Custom function to derive the displayed value from all activity records. Defaults to summing `value`. Example: `(data) => (data.reduce((s, d) => s + d.value, 0) / data.length).toFixed(1)` for an average.",
+          "Compute a finite number or a string from sorted, deduplicated input records. Filled cells and aggregate cells are excluded. Defaults to summing `value`. Example: `(data) => (data.reduce((s, d) => s + d.value, 0) / data.length).toFixed(1)` for an average.",
       },
       {
         name: "label",
@@ -239,7 +266,7 @@ export const weekdayProps: ComponentPropsSection[] = [
         name: "children",
         type: "(args: { value: number | string; data: WeekdayHourlyActivityWithLevel[] }) => ReactNode",
         description:
-          "Render-prop that fully replaces the default output. Use for rich content (multi-line, icons, etc.).",
+          "Render-prop that replaces the default output and its wrapper. Container attributes such as `className` do not apply when this is provided.",
       },
       {
         name: "className",

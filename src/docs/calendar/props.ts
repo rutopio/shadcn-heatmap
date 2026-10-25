@@ -4,14 +4,33 @@ export const calendarProps: ComponentPropsSection[] = [
   {
     componentName: "CalendarHeatmap",
     description:
-      "Root provider. Accepts the activity array and layout options and shares them with its children via context.",
+      "Root provider for calendar activity and layout. CalendarActivity and CalendarHeatmapLabels are descriptive aliases for the existing Activity and Labels types.",
     props: [
       {
-        name: "data",
-        type: "Activity[]",
+        name: "children",
+        type: "ReactNode",
         required: true,
         description:
-          "`{ date: 'YYYY-MM-DD', value: number }[]`. Missing days between the first and last date are auto-filled with `value: 0`.",
+          "Compose the grid and optional footer with CalendarHeatmapBody, CalendarHeatmapStat, and CalendarHeatmapLegend.",
+      },
+      {
+        name: "className",
+        type: "string",
+        description:
+          "Additional CSS classes for the root div. Common HTML attributes are also supported.",
+      },
+      {
+        name: "style",
+        type: "CSSProperties",
+        description:
+          "Inline styles for the root div. Use layout props to change SVG block geometry.",
+      },
+      {
+        name: "data",
+        type: "CalendarActivity[]",
+        required: true,
+        description:
+          "`{ date: 'YYYY-MM-DD', value: number }[]`. Dates must be valid calendar dates. Values must be finite numbers. Duplicate dates use the last record. Missing days between the first and last date render with `value: 0` and level 0, but are excluded from Stat callbacks.",
       },
       {
         name: "emptyState",
@@ -30,46 +49,48 @@ export const calendarProps: ComponentPropsSection[] = [
         type: "number",
         default: "5",
         description:
-          "Number of legend cells. Use an integer of at least 2, or at least 1 when normalized. Non-normalized: 1 empty cell + `(levels - 1)` colored steps from 20%→100% opacity. Normalized: `levels` colored steps from 20%→100% opacity (no empty cell).",
+          "Number of legend cells. Use an integer of at least 2, or at least 1 when normalized. The default scale has one empty cell and `levels - 1` colored steps; normalized scales have `levels` colored steps. Colored steps range from 20% to 100% color strength. A single colored step uses 100%.",
       },
       {
         name: "isNormalized",
         type: "boolean",
         default: "false",
         description:
-          "When `true`, uses min-max normalization: min maps to level 1 and max to `levels`. Suitable for signed values. When `false`, values ≤ 0 are treated as empty (level 0) and the scale runs from 0 to max.",
+          "When `true`, scales supplied values from their minimum (level 1) to maximum (`levels`), including negative values. Equal values all use level 1. Missing cells keep level 0. When `false`, values at or below 0 use the empty color; positive values scale from 0 to the maximum. This changes colors, not stored values or totals.",
       },
       {
         name: "blockSize",
         type: "number",
         default: "12",
         description:
-          "Block height in pixels. Block width is `blockSize × blockAspectRatio`.",
+          "Finite block height in pixels, greater than 0. Block width is `blockSize × blockAspectRatio`.",
       },
       {
         name: "blockAspectRatio",
         type: "number",
         default: "1",
         description:
-          "Width-to-height ratio for each block. `1` = square, `2` = landscape, `0.5` = portrait.",
+          "Finite width-to-height ratio greater than 0 for each block. `1` = square, `2` = landscape, `0.5` = portrait.",
       },
       {
         name: "blockMargin",
         type: "number",
         default: "4",
-        description: "Gap between adjacent blocks, in pixels.",
+        description:
+          "Finite gap between adjacent blocks in pixels, at least 0.",
       },
       {
         name: "blockRadius",
         type: "number",
         default: "2",
-        description: "Corner radius (`rx`/`ry`) of each block, in pixels.",
+        description: "Finite corner radius (`rx`/`ry`) in pixels, at least 0.",
       },
       {
         name: "fontSize",
         type: "number",
         default: "14",
-        description: "Base font size for axis labels, in pixels.",
+        description:
+          "Finite base font size for axis labels in pixels, greater than 0.",
       },
       {
         name: "weekStart",
@@ -100,15 +121,15 @@ export const calendarProps: ComponentPropsSection[] = [
       },
       {
         name: "labels",
-        type: "Labels",
+        type: "CalendarHeatmapLabels",
         description:
-          "`{ months?: string[12], weekdays?: string[7], cellLabel?: string, stat?: string }`. `cellLabel` is the aria-label template (placeholders: `{{date}}`, `{{value}}`). Legend text goes on `<CalendarHeatmapLegend labels={…}>`; stat text goes on `<CalendarHeatmapStat label={…}>`, or set `labels.stat` here for a single i18n source.",
+          "`months` and `weekdays` override locale labels; supply 12 months starting with January and 7 weekdays starting with Sunday. `cellLabel` formats cell aria-labels using `{{date}}` and `{{value}}`. `stat` sets the default Stat template. `heatmapLabel` labels each SVG and supports `{{year}}`. `legendLabel` labels the legend; `legendLevelLabel` labels each swatch using `{{level}}`. All placeholder occurrences are replaced. Set legend endpoint text on CalendarHeatmapLegend.",
       },
       {
         name: "totalCount",
         type: "number",
         description:
-          "Override the auto-computed sum. Useful when the visible window is a slice of a larger dataset.",
+          "Override the sum of input values, not the number of records. Must be finite; negative totals are allowed. Without an override, input values must sum to a finite number. A Stat `compute` callback takes precedence.",
       },
     ],
   },
@@ -118,8 +139,14 @@ export const calendarProps: ComponentPropsSection[] = [
       "Renders the SVG grid. `children` is a render-prop called once per visible day cell.",
     props: [
       {
+        name: "className",
+        type: "string",
+        description:
+          "Additional CSS classes for the scroll container div. Common HTML attributes are also supported.",
+      },
+      {
         name: "children",
-        type: "(args: { activity: ActivityWithLevel; dayIndex: number; weekIndex: number }) => ReactNode",
+        type: "(args: { activity: CalendarActivityWithLevel; dayIndex: number; weekIndex: number }) => ReactNode",
         required: true,
         description:
           "Render-prop for each day cell. Typically returns `<CalendarHeatmapBlock activity={activity} dayIndex={dayIndex} weekIndex={weekIndex} />`.",
@@ -159,7 +186,7 @@ export const calendarProps: ComponentPropsSection[] = [
         name: "renderYearFooter",
         type: "(props: { year: number; totalCount: number }) => ReactNode",
         description:
-          "Render-prop called after each year row. Receives `{ year, totalCount }`. Useful for per-year summaries in multi-year layouts.",
+          "Called after each year row with the year and sum of its input values. This sum must be finite and is independent of the root `totalCount` override.",
       },
     ],
   },
@@ -170,7 +197,7 @@ export const calendarProps: ComponentPropsSection[] = [
     props: [
       {
         name: "activity",
-        type: "ActivityWithLevel",
+        type: "CalendarActivityWithLevel",
         required: true,
         description:
           "The day's activity record with its computed `level` (0 = empty; colored levels end at levels - 1, or levels when normalized). Pass the value received from the `CalendarHeatmapBody` render-prop.",
@@ -194,17 +221,17 @@ export const calendarProps: ComponentPropsSection[] = [
         type: "boolean",
         default: "false",
         description:
-          "Dims the block to 60% of its color. Useful for selected/focus states. Also sets `data-highlighted` on the element for CSS targeting.",
+          "Reduces colored blocks to 60% of their color strength. Empty blocks keep their empty color. Useful for selected/focus states. Also sets `data-highlighted` on the element for CSS targeting.",
       },
       {
         name: "onCellClick",
-        type: "(activity: ActivityWithLevel) => void",
+        type: "(activity: CalendarActivityWithLevel) => void",
         description:
           "Typed click handler receiving the cell's activity object. Fires alongside the native `onClick`.",
       },
       {
         name: "onCellHover",
-        type: "(activity: ActivityWithLevel | null) => void",
+        type: "(activity: CalendarActivityWithLevel | null) => void",
         description:
           "Typed hover handler. Receives the activity on `mouseenter`, `null` on `mouseleave`. Fires alongside `onMouseEnter`/`onMouseLeave`.",
       },
@@ -234,21 +261,21 @@ export const calendarProps: ComponentPropsSection[] = [
     props: [
       {
         name: "compute",
-        type: "(data: ActivityWithLevel[]) => number | string",
+        type: "(data: CalendarActivityWithLevel[]) => number | string",
         description:
-          "Custom function to derive the displayed value from all activity records. Defaults to summing `value`. Example: `(data) => Math.max(...data.map(d => d.value))`.",
+          "Compute a finite number or a string from sorted, deduplicated input records. Filled cells are excluded. Defaults to summing `value`. Example: `(data) => Math.max(...data.map(d => d.value))`.",
       },
       {
         name: "label",
         type: "string",
         description:
-          "Template string for the stat text. Placeholders: `{{value}}`, `{{year}}`. Overrides `labels.stat`. Example: `'Peak: {{value}}'`.",
+          "Template string for the stat text. Placeholders: `{{value}}`, `{{year}}`. Overrides `labels.stat`. `{{year}}` is the displayed year or year range. The render-prop `year` is the first year. Example: `'Peak: {{value}}'`.",
       },
       {
         name: "children",
-        type: "(args: { value: number | string; data: ActivityWithLevel[]; year: number }) => ReactNode",
+        type: "(args: { value: number | string; data: CalendarActivityWithLevel[]; year: number }) => ReactNode",
         description:
-          "Render-prop that fully replaces the default output. Use for rich content (multi-line, icons, etc.).",
+          "Render-prop that replaces the default output and its wrapper. Container attributes such as `className` do not apply when this is provided.",
       },
       {
         name: "className",

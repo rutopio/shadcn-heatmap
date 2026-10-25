@@ -123,7 +123,11 @@ const calculateLevel = (
   if (!Number.isFinite(value)) return isNormalized ? 1 : 0;
   if (isNormalized) {
     if (maxValue <= minValue) return 1;
-    const percentage = (value - minValue) / (maxValue - minValue);
+    const range = maxValue - minValue;
+    // Halving keeps opposite-signed finite extremes from overflowing.
+    const percentage = Number.isFinite(range)
+      ? (value - minValue) / range
+      : (value / 2 - minValue / 2) / (maxValue / 2 - minValue / 2);
     return Math.max(1, Math.min(steps, Math.ceil(percentage * steps)));
   }
   if (value <= 0 || maxValue <= 0) return 0;
@@ -208,7 +212,11 @@ const normalizeData = (
 };
 
 const validateAggregate = (values: number[], expectedLength: number) => {
-  if (values.length !== expectedLength || !values.every(Number.isFinite)) {
+  if (
+    !Array.isArray(values) ||
+    values.length !== expectedLength ||
+    !Array.from(values).every(Number.isFinite)
+  ) {
     throw new RangeError(
       `Aggregate must return exactly ${expectedLength} finite values.`,
     );
@@ -282,6 +290,23 @@ export const WeekdayHeatmap = ({
   ...props
 }: WeekdayHeatmapProps) => {
   const data = useMemo(() => normalizeData(inputData), [inputData]);
+  for (const [name, value] of Object.entries({
+    blockSize,
+    blockAspectRatio,
+    fontSize,
+  })) {
+    if (!Number.isFinite(value) || value <= 0) {
+      throw new RangeError(`${name} must be a finite number greater than 0.`);
+    }
+  }
+  for (const [name, value] of Object.entries({ blockMargin, blockRadius })) {
+    if (!Number.isFinite(value) || value < 0) {
+      throw new RangeError(
+        `${name} must be a finite number greater than or equal to 0.`,
+      );
+    }
+  }
+
   if (!Number.isInteger(weekStart) || weekStart < 0 || weekStart > 6) {
     throw new RangeError("weekStart must be an integer from 0 to 6.");
   }
@@ -313,7 +338,7 @@ export const WeekdayHeatmap = ({
   }, [data, levels, isNormalized]);
 
   const resolvedExtraRow = useMemo<ResolvedExtraRow | null>(() => {
-    if (!extraRow) return null;
+    if (!extraRow || data.length === 0) return null;
     const values = extraRow.compute(data);
     validateAggregate(values, 24);
     const maxVal = values.reduce((m, v) => Math.max(m, v), -Infinity);
@@ -331,7 +356,7 @@ export const WeekdayHeatmap = ({
   }, [extraRow, data, levels, isNormalized]);
 
   const resolvedExtraColumn = useMemo<ResolvedExtraColumn | null>(() => {
-    if (!extraColumn) return null;
+    if (!extraColumn || data.length === 0) return null;
     const values = extraColumn.compute(data);
     validateAggregate(values, 7);
     const maxVal = values.reduce((m, v) => Math.max(m, v), -Infinity);
@@ -368,9 +393,14 @@ export const WeekdayHeatmap = ({
   const labelWidth = fontSize * 3.5 + LABEL_MARGIN;
 
   const totalCount =
-    typeof totalCountProp === "number"
+    totalCountProp !== undefined
       ? totalCountProp
       : dataWithLevels.reduce((sum, a) => sum + a.value, 0);
+  if (!Number.isFinite(totalCount)) {
+    throw new RangeError(
+      "totalCount and the sum of heatmap values must be finite numbers.",
+    );
+  }
 
   const blockWidth = blockSize * blockAspectRatio;
   const labelHeight = fontSize + LABEL_MARGIN;
@@ -388,6 +418,10 @@ export const WeekdayHeatmap = ({
     extraRowGap -
     blockMargin +
     labelHeight;
+
+  if (![blockWidth, width, height].every(Number.isFinite)) {
+    throw new RangeError("Heatmap layout dimensions must remain finite.");
+  }
 
   const contextValue = useMemo<WeekdayHeatmapContextType>(
     () => ({
@@ -524,9 +558,9 @@ export const WeekdayHeatmapBlock = ({
       : "Aggregate"
     : `${String(activity.hour).padStart(2, "0")}:00`;
   const ariaLabel = (labels.cellLabel ?? "{{weekday}} {{hour}}: {{value}}")
-    .replace("{{weekday}}", weekdayToken)
-    .replace("{{hour}}", hourToken)
-    .replace("{{value}}", String(activity.value));
+    .replaceAll("{{weekday}}", () => weekdayToken)
+    .replaceAll("{{hour}}", () => hourToken)
+    .replaceAll("{{value}}", String(activity.value));
 
   return (
     <rect
@@ -887,6 +921,12 @@ export const WeekdayHeatmapStat = ({
 
   const value = compute ? compute(data) : totalCount;
 
+  if (typeof value !== "string" && !Number.isFinite(value)) {
+    throw new RangeError(
+      "Stat compute must return a finite number or a string.",
+    );
+  }
+
   if (children) {
     return <>{children({ value, data })}</>;
   }
@@ -899,7 +939,7 @@ export const WeekdayHeatmapStat = ({
       className={cn("text-muted-foreground tabular-nums", className)}
       {...props}
     >
-      {template.replace("{{value}}", String(value))}
+      {template.replaceAll("{{value}}", () => String(value))}
     </div>
   );
 };
@@ -954,10 +994,9 @@ export const WeekdayHeatmapLegend = ({
         ) : (
           <svg
             role="img"
-            aria-label={(labels.legendLevelLabel ?? "Level {{level}}").replace(
-              "{{level}}",
-              String(level),
-            )}
+            aria-label={(
+              labels.legendLevelLabel ?? "Level {{level}}"
+            ).replaceAll("{{level}}", String(level))}
             height={blockSize}
             key={`legend-level-${level}`}
             width={blockWidth}

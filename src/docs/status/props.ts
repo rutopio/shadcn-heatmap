@@ -7,11 +7,30 @@ export const statusProps: ComponentPropsSection[] = [
       "Root provider for a status timeline. Each day is represented by a vertical bar (similar to Atlassian Statuspage).",
     props: [
       {
+        name: "children",
+        type: "ReactNode",
+        required: true,
+        description:
+          "Compose the grid and optional footer with StatusHeatmapBody, StatusHeatmapStat, and StatusHeatmapLegend.",
+      },
+      {
+        name: "className",
+        type: "string",
+        description:
+          "Additional CSS classes for the root div. Common HTML attributes are also supported.",
+      },
+      {
+        name: "style",
+        type: "CSSProperties",
+        description:
+          "Inline styles for the root div. Use layout props to change SVG block geometry.",
+      },
+      {
         name: "data",
         type: "StatusActivity[]",
         required: true,
         description:
-          "`{ date: 'YYYY-MM-DD', value: number }[]`. `0` = no data. Built-in values: `1` = critical (red), `2` = degraded (amber), `3` = healthy (green). Custom numeric values are supported: supply matching entries in `colors` and `labels.statuses`, and add them to `statusValues` to appear in the legend.",
+          "`{ date: 'YYYY-MM-DD', value: number }[]`. Dates must be valid calendar dates and values must be finite numbers, including custom negative or fractional values. Duplicate dates use the last record. Missing days render as 0 but are excluded from Stat callbacks. `0` = no data. Built-in values: `1` = critical (red), `2` = degraded (amber), `3` = healthy (green). Custom numeric values are supported: supply matching entries in `colors` and `labels.statuses`, and add them to `statusValues` to appear in the legend.",
       },
       {
         name: "emptyState",
@@ -30,46 +49,48 @@ export const statusProps: ComponentPropsSection[] = [
         type: "number[]",
         default: "[0, 1, 2, 3]",
         description:
-          "Which status values are shown in the legend, in the order they appear. Extend for custom statuses (e.g. `[0, 1, 2, 3, 4]`).",
+          "Unique finite status values to show in the legend, in display order. An empty array hides all entries. This does not restrict values in `data`. Extend for custom statuses (e.g. `[0, 1, 2, 3, 4]`).",
       },
       {
         name: "healthyValue",
         type: "number",
         default: "3",
         description:
-          "The status value counted by the default `StatusHeatmapStat` compute function. Change this if your healthy state uses a different numeric value.",
+          "Finite status value counted by the default `StatusHeatmapStat` compute function. Only supplied records are counted, including when this is 0. Change this if your healthy state uses a different numeric value.",
       },
       {
         name: "blockSize",
         type: "number",
         default: "40",
         description:
-          "Block height in pixels. Block width is `blockSize × blockAspectRatio`.",
+          "Finite block height in pixels, greater than 0. Block width is `blockSize × blockAspectRatio`.",
       },
       {
         name: "blockAspectRatio",
         type: "number",
         default: "0.2",
         description:
-          "Width-to-height ratio for each block. `0.2` = narrow vertical bar (default), `0.5` = wider bar, `1` = square.",
+          "Finite width-to-height ratio greater than 0 for each block. `0.2` = narrow vertical bar (default), `0.5` = wider bar, `1` = square.",
       },
       {
         name: "blockMargin",
         type: "number",
         default: "2",
-        description: "Gap between adjacent blocks, in pixels.",
+        description:
+          "Finite gap between adjacent blocks in pixels, at least 0.",
       },
       {
         name: "blockRadius",
         type: "number",
         default: "2",
-        description: "Corner radius (`rx`/`ry`) of each block, in pixels.",
+        description: "Finite corner radius (`rx`/`ry`) in pixels, at least 0.",
       },
       {
         name: "fontSize",
         type: "number",
         default: "14",
-        description: "Base font size for axis labels, in pixels.",
+        description:
+          "Finite base font size for axis labels in pixels, greater than 0.",
       },
       {
         name: "locale",
@@ -88,7 +109,7 @@ export const statusProps: ComponentPropsSection[] = [
         name: "labels",
         type: "StatusHeatmapLabels",
         description:
-          "`{ statuses?: Record<number, string> & { noData?, critical?, degraded?, healthy? }, cellLabel?: string, stat?: string }`. `statuses` labels are shared by the Block aria-label and the Legend. `cellLabel` is the aria-label template (placeholders: `{{date}}`, `{{status}}`). Stat text goes on `<StatusHeatmapStat label={…}>`, or set `labels.stat` here for a single i18n source. The Legend can also override `statuses` locally via `<StatusHeatmapLegend labels={…}>`.",
+          "`statuses` maps numeric or semantic status keys to text shared by cells and the legend. `cellLabel` formats cell aria-labels using `{{date}}` and `{{status}}`. `stat` sets the default Stat template. `heatmapLabel` labels the SVG; `legendLabel` labels the legend. All placeholder occurrences are replaced. Override legend status text locally with StatusHeatmapLegend.labels.",
       },
     ],
   },
@@ -97,6 +118,12 @@ export const statusProps: ComponentPropsSection[] = [
     description:
       "Renders the SVG timeline. `children` is a render-prop called once per day cell.",
     props: [
+      {
+        name: "className",
+        type: "string",
+        description:
+          "Additional CSS classes for the scroll container div. Common HTML attributes are also supported.",
+      },
       {
         name: "children",
         type: "(args: { activity: StatusActivity; dayIndex: number }) => ReactNode",
@@ -115,7 +142,7 @@ export const statusProps: ComponentPropsSection[] = [
         type: "number",
         default: "30",
         description:
-          "Show a date label every N days. The first and last dates are always labelled. Only applies when `hideDateLabels` is `false`.",
+          "Show a date label every N days. Must be a positive integer. The first and last dates are always labelled. Only applies when `hideDateLabels` is `false`.",
       },
       {
         name: "labelClassName",
@@ -191,7 +218,7 @@ export const statusProps: ComponentPropsSection[] = [
         name: "compute",
         type: "(data: StatusActivity[]) => number | string",
         description:
-          "Custom function to derive the displayed value from all activity records. Defaults to counting days where `value === healthyValue`. Example: `(data) => data.filter(d => d.value === 1).length` for critical-day count.",
+          "Compute a finite number or a string from sorted, deduplicated input records. Filled cells are excluded. Defaults to counting days where `value === healthyValue`. Example: `(data) => data.filter(d => d.value === 1).length` for critical-day count.",
       },
       {
         name: "label",
@@ -203,7 +230,7 @@ export const statusProps: ComponentPropsSection[] = [
         name: "children",
         type: "(args: { value: number | string; data: StatusActivity[] }) => ReactNode",
         description:
-          "Render-prop that fully replaces the default output. Use for rich content (multi-line, icons, etc.).",
+          "Render-prop that replaces the default output and its wrapper. Container attributes such as `className` do not apply when this is provided.",
       },
       {
         name: "className",
@@ -221,7 +248,7 @@ export const statusProps: ComponentPropsSection[] = [
         name: "labels",
         type: "Record<number, string> & { noData?: string; critical?: string; degraded?: string; healthy?: string }",
         description:
-          "Override status text labels for this legend only. Falls back to root `labels.statuses`, then built-in defaults. Use this when the legend text should differ from the Block aria-label text.",
+          "Override status text labels for this legend only. Each missing label falls back to root `labels.statuses`, then built-in defaults. Local labels take precedence even when the root uses a numeric key and the local override uses its semantic alias. Use this when the legend text should differ from the Block aria-label text.",
       },
       {
         name: "children",

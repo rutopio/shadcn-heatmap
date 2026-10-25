@@ -29,6 +29,9 @@ type ActivityWithLevel = Activity & {
   level: number;
 };
 
+export type CalendarActivity = Activity;
+export type CalendarActivityWithLevel = ActivityWithLevel;
+
 type Week = Array<ActivityWithLevel | undefined>;
 
 type YearRow = {
@@ -45,6 +48,8 @@ export type Labels = {
   legendLabel?: string; // aria-label for the legend fieldset
   legendLevelLabel?: string; // aria-label template for legend swatches. Placeholder: {{level}}
 };
+
+export type CalendarHeatmapLabels = Labels;
 
 export type ColorConfig = {
   empty?: string;
@@ -90,7 +95,11 @@ const calculateLevel = (
   if (!Number.isFinite(value)) return isNormalized ? 1 : 0;
   if (isNormalized) {
     if (maxValue <= minValue) return 1;
-    const percentage = (value - minValue) / (maxValue - minValue);
+    const range = maxValue - minValue;
+    // Halving keeps opposite-signed finite extremes from overflowing.
+    const percentage = Number.isFinite(range)
+      ? (value - minValue) / range
+      : (value / 2 - minValue / 2) / (maxValue / 2 - minValue / 2);
     return Math.max(1, Math.min(steps, Math.ceil(percentage * steps)));
   }
   if (value <= 0 || maxValue <= 0) return 0;
@@ -366,6 +375,23 @@ export const CalendarHeatmap = ({
   ...props
 }: CalendarHeatmapProps) => {
   const data = useMemo(() => normalizeData(inputData), [inputData]);
+  for (const [name, value] of Object.entries({
+    blockSize,
+    blockAspectRatio,
+    fontSize,
+  })) {
+    if (!Number.isFinite(value) || value <= 0) {
+      throw new RangeError(`${name} must be a finite number greater than 0.`);
+    }
+  }
+  for (const [name, value] of Object.entries({ blockMargin, blockRadius })) {
+    if (!Number.isFinite(value) || value < 0) {
+      throw new RangeError(
+        `${name} must be a finite number greater than or equal to 0.`,
+      );
+    }
+  }
+
   if (!Number.isInteger(weekStart) || weekStart < 0 || weekStart > 6) {
     throw new RangeError("weekStart must be an integer from 0 to 6.");
   }
@@ -425,13 +451,22 @@ export const CalendarHeatmap = ({
       : new Date().getFullYear();
 
   const totalCount =
-    typeof totalCountProp === "number"
+    totalCountProp !== undefined
       ? totalCountProp
       : dataWithLevels.reduce((sum, activity) => sum + activity.value, 0);
+  if (!Number.isFinite(totalCount)) {
+    throw new RangeError(
+      "totalCount and the sum of heatmap values must be finite numbers.",
+    );
+  }
 
   const blockWidth = blockSize * blockAspectRatio;
   const width = weeks.length * (blockWidth + blockMargin) - blockMargin;
   const height = labelHeight + (blockSize + blockMargin) * 7 - blockMargin;
+
+  if (![blockWidth, width, height].every(Number.isFinite)) {
+    throw new RangeError("Heatmap layout dimensions must remain finite.");
+  }
 
   const contextValue = useMemo<CalendarHeatmapContextType>(
     () => ({
@@ -545,8 +580,8 @@ export const CalendarHeatmapBlock = ({
   );
 
   const ariaLabel = (labels.cellLabel ?? "{{date}}: contributions {{value}}")
-    .replace("{{date}}", activity.date)
-    .replace("{{value}}", String(activity.value));
+    .replaceAll("{{date}}", () => activity.date)
+    .replaceAll("{{value}}", String(activity.value));
 
   return (
     <rect
@@ -653,6 +688,11 @@ export const CalendarHeatmapBody = ({
       const yearTotalCount = data
         .filter((activity) => getYear(parseISO(activity.date)) === yearRow.year)
         .reduce((sum, activity) => sum + activity.value, 0);
+      if (!Number.isFinite(yearTotalCount)) {
+        throw new RangeError(
+          "The sum of heatmap values for each year must be finite.",
+        );
+      }
 
       return {
         yearRow,
@@ -695,7 +735,7 @@ export const CalendarHeatmapBody = ({
             role="group"
             aria-label={(
               labels.heatmapLabel ?? "Contribution heatmap for {{year}}"
-            ).replace("{{year}}", String(yearRow.year))}
+            ).replaceAll("{{year}}", String(yearRow.year))}
             className="focus-visible:ring-ring block overflow-visible rounded-sm focus-visible:ring-2 focus-visible:outline-none"
             height={height + strokePadding * 2}
             viewBox={`0 0 ${totalWidth} ${height + strokePadding * 2}`}
@@ -820,6 +860,12 @@ export const CalendarHeatmapStat = ({
 
   const value = compute ? compute(data) : totalCount;
 
+  if (typeof value !== "string" && !Number.isFinite(value)) {
+    throw new RangeError(
+      "Stat compute must return a finite number or a string.",
+    );
+  }
+
   if (children) {
     return <>{children({ value, data, year })}</>;
   }
@@ -835,7 +881,9 @@ export const CalendarHeatmapStat = ({
       className={cn("text-muted-foreground tabular-nums", className)}
       {...props}
     >
-      {template.replace("{{value}}", String(value)).replace("{{year}}", period)}
+      {template
+        .replaceAll("{{value}}", () => String(value))
+        .replaceAll("{{year}}", () => period)}
     </div>
   );
 };
@@ -890,10 +938,9 @@ export const CalendarHeatmapLegend = ({
         ) : (
           <svg
             role="group"
-            aria-label={(labels.legendLevelLabel ?? "Level {{level}}").replace(
-              "{{level}}",
-              String(level),
-            )}
+            aria-label={(
+              labels.legendLevelLabel ?? "Level {{level}}"
+            ).replaceAll("{{level}}", String(level))}
             height={blockSize}
             key={`legend-level-${level}`}
             width={blockWidth}
