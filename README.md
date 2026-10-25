@@ -92,7 +92,6 @@ See the [installation guide](https://heatmap.chingru.com/install) for a step-by-
 
 2. **Add the `cn` helper** (if not already present). Create `src/lib/utils.ts`:
 
-   <!-- prettier-ignore -->
    ```ts
    import { clsx, type ClassValue } from "clsx";
    import { twMerge } from "tailwind-merge";
@@ -374,7 +373,7 @@ pnpm test:registry  # installs through shadcn in temporary projects; requires ne
 
 The registry check tests full URLs and a local `@heatmap` namespace with the generated files. It installs WeekdayHeatmap first to check its dependencies, then compiles all four components in clean projects. It does not publish the registry.
 
-Default examples live in `src/examples/`. The demo and its displayed code use these same files. Run `pnpm format` to format code and snippets, or `pnpm fix` for automatic lint fixes.
+Default examples live in `src/examples/`. The demo and its displayed code use these same files. Biome handles JavaScript, TypeScript, and JSON formatting and linting. Code snippets use the same `biome.json` settings. Run `pnpm format` to format code and snippets, or `pnpm fix` for automatic lint fixes.
 
 To rebuild social images after changing the examples:
 

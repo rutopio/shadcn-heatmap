@@ -1,9 +1,0 @@
-node_modules/
-dist/
-public/r/
-public/registry.json
-registry.json
-pnpm-lock.yaml
-src/routeTree.gen.ts
-playwright-report/
-test-results/

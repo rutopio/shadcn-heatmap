@@ -60,7 +60,6 @@
     "@types/react": "19.2.17",
     "@types/react-dom": "19.2.3",
     "@vitejs/plugin-react": "6.1.2",
-    "prettier": "3.9.10",
     "shiki": "4.5.0",
     "tailwindcss": "4.3.3",
     "tsx": "4.23.15",
