@@ -2,7 +2,7 @@
 
 > Four heatmap components for React: calendar, weekday, date, and status. Built on SVG and Tailwind v4 tokens, following shadcn/ui conventions. Install via the shadcn CLI or copy the source and own it entirely.
 
-shadcn-heatmap is a component registry, not an npm package. Each component is a single self-contained `.tsx` file installed into your project with `npx shadcn@latest add @heatmap/<name>`. Runtime dependencies are `clsx`, `tailwind-merge`, and `date-fns`. Tooltips are optional and use your own shadcn `tooltip` component.
+shadcn-heatmap is a component registry, not an npm package. Each component is a single self-contained `.tsx` file installed into your project with `npx shadcn@latest add @heatmap/<name>`. Runtime dependencies are `cn` and `date-fns`. Tooltips are optional and use your own shadcn `tooltip` component.
 
 ## Components
 

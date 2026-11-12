@@ -121,7 +121,7 @@ for (const comp of components) {
     type: "registry:component",
     title: comp.title,
     description: comp.description,
-    dependencies: ["clsx", "tailwind-merge", ...comp.extraDeps],
+    dependencies: ["cn", ...comp.extraDeps],
     registryDependencies: [],
     files,
     cssVars,

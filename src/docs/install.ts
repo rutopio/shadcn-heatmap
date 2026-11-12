@@ -10,19 +10,14 @@ export const cliInstallCommands = {
 } as const;
 
 export const packageManagerCommands = {
-  npm: "npm install date-fns clsx tailwind-merge",
-  pnpm: "pnpm add date-fns clsx tailwind-merge",
-  yarn: "yarn add date-fns clsx tailwind-merge",
-  bun: "bun add date-fns clsx tailwind-merge",
+  npm: "npm install date-fns cn",
+  pnpm: "pnpm add date-fns cn",
+  yarn: "yarn add date-fns cn",
+  bun: "bun add date-fns cn",
 } as const;
 
 export const utilsSnippet = `// src/lib/utils.ts
-import { clsx, type ClassValue } from "clsx";
-import { twMerge } from "tailwind-merge";
-
-export function cn(...inputs: ClassValue[]) {
-  return twMerge(clsx(inputs));
-}`;
+export { cn } from "cn";`;
 
 export const themeTokensSnippet = `/* src/styles.css (Tailwind v4) */
 @import "tailwindcss";

@@ -73,7 +73,7 @@ See the [installation guide](https://heatmap.chingru.com/install) for a step-by-
 2. **Ensure the runtime dependencies exist.** The components only need these: the CLI installs them automatically, listed here for reference.
 
    ```bash
-   pnpm add date-fns clsx tailwind-merge
+   pnpm add date-fns cn
    ```
 
 3. **(Optional) Add a tooltip for hover details.** The components render fine without it; the demos wrap blocks in a tooltip to show activity details on hover. Use any tooltip you like, or the shadcn one:
@@ -87,18 +87,13 @@ See the [installation guide](https://heatmap.chingru.com/install) for a step-by-
 1. **Install peer dependencies.**
 
    ```bash
-   pnpm add date-fns clsx tailwind-merge
+   pnpm add date-fns cn
    ```
 
 2. **Add the `cn` helper** (if not already present). Create `src/lib/utils.ts`:
 
    ```ts
-   import { clsx, type ClassValue } from "clsx";
-   import { twMerge } from "tailwind-merge";
-
-   export function cn(...inputs: ClassValue[]) {
-     return twMerge(clsx(inputs));
-   }
+   export { cn } from "cn";
    ```
 
 3. **Expose theme tokens used by the blocks.** The heatmaps reference `--color-chart-1` for activity colors, `--color-secondary` for empty cells, and `--color-muted-foreground` for labels. Use the `colors` prop for block colors and `labelClassName` for axis text.

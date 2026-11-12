@@ -10,8 +10,7 @@
       "title": "CalendarHeatmap",
       "description": "GitHub-style yearly contribution heatmap with multi-year, weekStart, and i18n support.",
       "dependencies": [
-        "clsx",
-        "tailwind-merge",
+        "cn",
         "date-fns"
       ],
       "registryDependencies": [],
@@ -37,8 +36,7 @@
       "title": "WeekdayHeatmap",
       "description": "Weekday by hour grid with optional aggregate rows and columns.",
       "dependencies": [
-        "clsx",
-        "tailwind-merge",
+        "cn",
         "date-fns"
       ],
       "registryDependencies": [],
@@ -64,8 +62,7 @@
       "title": "DateHeatmap",
       "description": "Date by hour grid with optional aggregate rows and columns.",
       "dependencies": [
-        "clsx",
-        "tailwind-merge",
+        "cn",
         "date-fns"
       ],
       "registryDependencies": [],
@@ -91,8 +88,7 @@
       "title": "StatusHeatmap",
       "description": "Timeline status indicator showing daily activity over a period (e.g. 90 days). Similar to Atlassian Statuspage.",
       "dependencies": [
-        "clsx",
-        "tailwind-merge",
+        "cn",
         "date-fns"
       ],
       "registryDependencies": [],

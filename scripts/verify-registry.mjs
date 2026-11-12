@@ -55,8 +55,7 @@ try {
             "@base-ui/react": manifest.dependencies["@base-ui/react"],
             react: manifest.dependencies.react,
             "react-dom": manifest.dependencies["react-dom"],
-            clsx: manifest.dependencies.clsx,
-            "tailwind-merge": manifest.dependencies["tailwind-merge"],
+            cn: manifest.dependencies.cn,
           },
           devDependencies: {
             typescript: manifest.devDependencies.typescript,

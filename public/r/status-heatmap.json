@@ -5,8 +5,7 @@
   "title": "StatusHeatmap",
   "description": "Timeline status indicator showing daily activity over a period (e.g. 90 days). Similar to Atlassian Statuspage.",
   "dependencies": [
-    "clsx",
-    "tailwind-merge",
+    "cn",
     "date-fns"
   ],
   "registryDependencies": [],

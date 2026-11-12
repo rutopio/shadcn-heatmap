@@ -5,8 +5,7 @@
   "title": "WeekdayHeatmap",
   "description": "Weekday by hour grid with optional aggregate rows and columns.",
   "dependencies": [
-    "clsx",
-    "tailwind-merge",
+    "cn",
     "date-fns"
   ],
   "registryDependencies": [],
